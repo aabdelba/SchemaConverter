@@ -1,0 +1,51 @@
+{
+	"name": "AgentRecommendationList",
+	"type": "record",
+	"fields": [
+		{
+			"name": "userid",
+			"type": "string"
+		},
+		{
+			"name": "friends",
+			"type": {
+				"type": "array",
+				"items": {
+					"name": "SchoolFriends",
+					"type": "record",
+					"fields": [
+						{
+							"name": "Name",
+							"type": "string"
+						},
+						{
+							"name": "phoneNumber",
+							"type": "string"
+						},
+						{
+							"name": "email",
+							"type": "string"
+						}
+					]
+				}
+			}
+		},
+		{
+			"name": "jobs",
+			"type": {
+				"name": "job",
+				"type": "record",
+				"fields": [
+					{
+						"name": "title",
+						"type": "string"
+					},
+					{
+						"name": "organization",
+						"type": "string"
+					}
+				]
+			}
+		}
+	]
+}

@@ -1,0 +1,23 @@
+{
+    "userid": "12345",
+    "personalInfo": {
+        "firstName": "Ali",
+        "lastName": "Abdelbadie"
+    },
+    "friends": [{
+            "Name": "Flea",
+            "phoneNumber": "613-123-4567",
+            "email": "slappindabeas@gmail.com"
+        }, {
+            "Name": "Anthony",
+            "phoneNumber": "613-123-1234",
+            "email": "bigbaws@gmail.com"
+        }
+    ],
+
+    "jobs": {
+        "title": "l33t hacker",
+        "organization": "home"
+    }
+
+}
