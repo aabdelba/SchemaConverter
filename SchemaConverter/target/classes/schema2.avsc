@@ -36,6 +36,23 @@
 			}
 		},
 		{
+			"name": "personalInfoBlock",
+			"type": {
+				"name": "personalInfo",
+				"type": "record",
+				"fields": [
+					{
+						"name": "firstName",
+						"type": "string"
+					},
+					{
+						"name": "lastName",
+						"type": "string"
+					}
+				]
+			}
+		},
+		{
 			"name": "jobs",
 			"type": {
 				"type": "array",

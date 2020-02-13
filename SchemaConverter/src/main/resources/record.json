@@ -1,6 +1,6 @@
 {
     "userid": "12345",
-    "personalInfo": {
+    "personalInfoBlock": {
         "firstName": "Ali",
         "lastName": "Abdelbadie"
     },

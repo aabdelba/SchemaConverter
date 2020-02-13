@@ -153,12 +153,8 @@ public class SchemaConditioner {
 				JsonNode oldNode = oldEntry.getValue();
 				JsonNode latestType = latestNode.get("type");
 				JsonNode oldType = oldNode.get("type");		
-			
-				
-				
-				
-				
-				if(latestType.toString().equals("\"record\"") && oldType.toString().equals("\"record\"")) {
+
+				/*if(latestType.toString().equals("\"record\"") && oldType.toString().equals("\"record\"")) {
 					JsonNode latestName = latestNode.get("name");
 					JsonNode oldName = oldNode.get("name");
 					
@@ -171,15 +167,8 @@ public class SchemaConditioner {
 					}
 //					ObjectMapper mapper = new ObjectMapper();
 //					goInsideNode(mapper.readTree("{\"fields\":"+oldNode.get("fields")+"}"), mapper.readTree("{\"fields\":"+latestNode.get("fields")+"}"),latestPath);	
-					goInsideNode(oldType,latestType,latestPath+"type/");
-
-				
-				
-				
-				
-				
-								
-				} else if(latestType.toString().equals("\"array\"") && oldType.toString().equals("\"array\"")) {
+					goInsideNode(oldType,latestType,latestPath+"type/");			
+				} else*/ if(latestType.toString().equals("\"array\"") && oldType.toString().equals("\"array\"")) {
 					
 					JsonNode oldItems = oldNode.get("items");
 					JsonNode latestItems = latestNode.get("items");
@@ -190,20 +179,12 @@ public class SchemaConditioner {
 
 						if(areTheSameRenamedObject(oldItems,latestItems)) {
 							ConversionScenarios.latestSchema_addAliasToFieldInSchemaArray(this,latestEntry,oldEntry,latestPath);
-				
-							
-							
-							
-							System.out.println("DEBUG");
-							System.out.println(latestEntry);
-							
 							startConversion();
 							return;
 						}						
 					}
 					
 					goInsideNode(oldItems, latestItems, latestPath);
-//				} else if(latestType.toString().equals("\"record\"") && oldType.toString().equals("\"record\"")) {
 				} else if (!latestType.equals(oldType)) {
 					if (latestType.toString().equals("\"record\"") && oldType.toString().equals("\"array\""))
 						ConversionScenarios.oldSchema_unwrapRecordFromArray(this, oldEntry, latestEntry);
