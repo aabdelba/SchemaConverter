@@ -1,1 +1,0 @@
-# SchemaConverter tool to convert JSON data from one .avsc schema to the other
