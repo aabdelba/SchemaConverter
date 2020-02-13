@@ -7,6 +7,23 @@
 			"type": "string"
 		},
 		{
+			"name": "personalInfoBlock",
+			"type": {
+				"name": "personalInfo",
+				"type": "record",
+				"fields": [
+					{
+						"name": "firstName",
+						"type": "string"
+					},
+					{
+						"name": "lastName",
+						"type": "string"
+					}
+				]
+			}
+		},
+		{
 			"name": "friends",
 			"type": {
 				"type": "array",
