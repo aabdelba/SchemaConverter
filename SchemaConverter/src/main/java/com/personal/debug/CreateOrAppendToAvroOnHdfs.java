@@ -1,15 +1,9 @@
 package com.personal.debug;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URL;
 
 import org.apache.avro.Schema;
-import org.apache.avro.file.DataFileReader;
 import org.apache.avro.file.DataFileWriter;
-import org.apache.avro.file.FileReader;
-import org.apache.avro.file.SeekableInput;
-import org.apache.avro.generic.GenericData;
 import org.apache.avro.generic.GenericDatumReader;
 import org.apache.avro.generic.GenericDatumWriter;
 import org.apache.avro.generic.GenericRecord;
@@ -18,7 +12,7 @@ import org.apache.avro.io.Decoder;
 import org.apache.avro.io.DecoderFactory;
 
 //import com.personal.commonfunctions.FileUtilities;
-import com.personal.schemaconversion.SchemaObject;
+
 
 public class CreateOrAppendToAvroOnHdfs {
 

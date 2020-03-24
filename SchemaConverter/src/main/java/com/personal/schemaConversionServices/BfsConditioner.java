@@ -1,14 +1,9 @@
 
-package com.personal.schemaconversion;
-
+package com.personal.schemaConversionServices;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.TreeMap;
 import java.util.Map.Entry;
 
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -17,29 +12,28 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeType;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 // objects of this type are used to iterate through the old and new schemas by treating each schema as a tree node and by using breadth-first
-public class SchemaConditioner {
+public class BfsConditioner {
 
 	// basic POJO starts here
-	
-	private static SchemaConditioner bfsUtilsInstance = null;//sigleton class
+
+	private static BfsConditioner bfsUtilsInstance = null;//singleton class
 	private JsonNode oldSchema;
 	private JsonNode latestSchema;
 
 	private JsonNode oldJson;
-	private Set<String> renamedFields;
+	private HashMap<String,String> renamedFields;
 
-	public Set<String> getRenamedFields() {
+	public HashMap<String, String> getRenamedFields() {
 		return renamedFields;
 	}
 
-	public void setRenamedFields(Set<String> renamedFields) {
+	public void setRenamedFields(HashMap<String, String> renamedFields) {
 		this.renamedFields = renamedFields;
 	}
 
-	private SchemaConditioner(SchemaObject oldSchemaObject, SchemaObject latestSchemaObject, JsonNode oldJson, Set<String> renamedFields) throws IOException {
+	private BfsConditioner(SchemaObject oldSchemaObject, SchemaObject latestSchemaObject, JsonNode oldJson, HashMap<String,String> renamedFields) throws IOException {
 		setOldSchema(oldSchemaObject.getSchemaAsJsonNode());
 		setLatestSchema(latestSchemaObject.getSchemaAsJsonNode());
 		setOldJson(oldJson);
@@ -54,10 +48,10 @@ public class SchemaConditioner {
 		this.oldJson = oldJson;
 	}
 
-	public static SchemaConditioner getInstance(SchemaObject oldSchemaObject, SchemaObject latestSchemaObject, String oldJson, Set<String> renamedFields) throws IOException {
+	public static BfsConditioner getInstance(SchemaObject oldSchemaObject, SchemaObject latestSchemaObject, String oldJson, HashMap<String,String> renamedFields) throws IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		if(bfsUtilsInstance == null) {
-			bfsUtilsInstance = new SchemaConditioner(oldSchemaObject, latestSchemaObject, mapper.readTree(oldJson), renamedFields);
+			bfsUtilsInstance = new BfsConditioner(oldSchemaObject, latestSchemaObject, mapper.readTree(oldJson), renamedFields);
 		} else {
 			bfsUtilsInstance.setLatestSchema(latestSchemaObject.getSchemaAsJsonNode());
 			bfsUtilsInstance.setOldSchema(oldSchemaObject.getSchemaAsJsonNode());
@@ -67,7 +61,7 @@ public class SchemaConditioner {
 		return bfsUtilsInstance;
 	}
 
-	public SchemaConditioner getInstance() {
+	public BfsConditioner getInstance() {
 		return bfsUtilsInstance;
 	}
 
@@ -86,11 +80,11 @@ public class SchemaConditioner {
 	public void setLatestSchema(JsonNode latestSchema) {
 		this.latestSchema = latestSchema;
 	}
-	
+
 	// basic POJO ends here
 
-	
-	
+
+
 	public void startConversion() throws IOException, SchemaConverterException {
 		goInsideNode(oldSchema, latestSchema,"/");
 	}
@@ -120,7 +114,7 @@ public class SchemaConditioner {
 					break;
 				} finally {
 					if (oldEntry.getKey().equals(latestEntry.getKey()))
-						compareNodes(oldEntry, latestEntry, oldParent, latestParent, latestPath);					
+						compareNodes(oldEntry, latestEntry, oldParent, latestParent, latestPath);
 				}
 			}
 		}
@@ -148,42 +142,42 @@ public class SchemaConditioner {
 			JsonNodeType latestNodeType = latestEntry.getValue().getNodeType();
 			switch (latestNodeType) {
 
-			case OBJECT:
-				JsonNode latestNode = latestEntry.getValue();
-				JsonNode oldNode = oldEntry.getValue();
-				JsonNode latestType = latestNode.get("type");
-				JsonNode oldType = oldNode.get("type");		
+				case OBJECT:
+					JsonNode latestNode = latestEntry.getValue();
+					JsonNode oldNode = oldEntry.getValue();
+					JsonNode latestType = latestNode.get("type");
+					JsonNode oldType = oldNode.get("type");
 
 				/*if(latestType.toString().equals("\"record\"") && oldType.toString().equals("\"record\"")) {
 					JsonNode latestName = latestNode.get("name");
 					JsonNode oldName = oldNode.get("name");
-					
+
 					if (!oldName.equals(latestName) && !foundInAliases(oldName, latestEntry.getValue())) {
 						if(areTheSameRenamedObject(oldEntry.getValue(),latestEntry.getValue())) {
 							ConversionScenarios.latestSchema_addAliasToFieldInArray(this,latestEntry,oldEntry.getValue(),latestPath);
 							startConversion();
 							return;
-						}						
+						}
 					}
 //					ObjectMapper mapper = new ObjectMapper();
-//					goInsideNode(mapper.readTree("{\"fields\":"+oldNode.get("fields")+"}"), mapper.readTree("{\"fields\":"+latestNode.get("fields")+"}"),latestPath);	
-					goInsideNode(oldType,latestType,latestPath+"type/");			
+//					goInsideNode(mapper.readTree("{\"fields\":"+oldNode.get("fields")+"}"), mapper.readTree("{\"fields\":"+latestNode.get("fields")+"}"),latestPath);
+					goInsideNode(oldType,latestType,latestPath+"type/");
 				} else*/ if(latestType.toString().equals("\"array\"") && oldType.toString().equals("\"array\"")) {
-					
+
 					JsonNode oldItems = oldNode.get("items");
 					JsonNode latestItems = latestNode.get("items");
 					JsonNode oldName = oldItems.get("name");
 					JsonNode latestName = latestItems.get("name");
-					
+
 					if (!oldName.equals(latestName) && !foundInAliases(oldName, latestItems)) {
 
 						if(areTheSameRenamedObject(oldItems,latestItems)) {
 							ConversionScenarios.latestSchema_addAliasToFieldInSchemaArray(this,latestEntry,oldEntry,latestPath);
 							startConversion();
 							return;
-						}						
+						}
 					}
-					
+
 					goInsideNode(oldItems, latestItems, latestPath);
 				} else if (!latestType.equals(oldType)) {
 					if (latestType.toString().equals("\"record\"") && oldType.toString().equals("\"array\""))
@@ -199,21 +193,21 @@ public class SchemaConditioner {
 					throw (new SchemaConverterException("Unhandled case\nold: " + oldNode + "\nnew: " + latestNode));
 				}
 
-				break;// case
+					break;// case
 
-			case ARRAY:
-				if (!nodesAreEqual(oldEntry,latestEntry)) {
-					if(isArrayOfObjects(oldEntry,latestEntry))
-						processArray(oldEntry,latestEntry,oldParent,latestParent, latestPath);
-					else
-						processArray(oldEntry,latestEntry);
-				}
-				break;
+				case ARRAY:
+					if (!nodesAreEqual(oldEntry,latestEntry)) {
+						if(isArrayOfObjects(oldEntry,latestEntry))
+							processArray(oldEntry,latestEntry,oldParent,latestParent, latestPath);
+						else
+							processArray(oldEntry,latestEntry);
+					}
+					break;
 
-			default:				
-				if(!(oldEntry.getKey().equals("name") && latestEntry.getKey().equals("name")))
-					throw (new SchemaConverterException("Unhandled case\nold: " + oldEntry + "\nnew: " + latestEntry));
-				break;
+				default:
+					if(!(oldEntry.getKey().equals("name") && latestEntry.getKey().equals("name")))
+						throw (new SchemaConverterException("Unhandled case\nold: " + oldEntry + "\nnew: " + latestEntry));
+					break;
 			}
 		}
 	}
@@ -237,12 +231,12 @@ public class SchemaConditioner {
 							return;
 						}
 					}
-				} 
-			}		
+				}
+			}
 			i++;
 		}
 	}
-	
+
 	// process a JSON array that does not contain any JSON objects
 	private void processArray(Entry<String, JsonNode> oldEntry, Entry<String, JsonNode> latestEntry) {
 		boolean arrayEntryWasFoundInLatest = false;
@@ -253,21 +247,21 @@ public class SchemaConditioner {
 					arrayEntryWasFoundInLatest = true;
 			}
 			if (!arrayEntryWasFoundInLatest)
-				ConversionScenarios.latestSchema_addType(this,oldEntry,latestEntry,oldArrayEntry);			
+				ConversionScenarios.latestSchema_addType(this,oldEntry,latestEntry,oldArrayEntry);
 			arrayEntryWasFoundInLatest = false;
 		}
 	}
-	
+
 	private Entry<String, JsonNode> skipIrrelevantAvroFields(Iterator<Entry<String, JsonNode>> fieldsIterator,
-			Entry<String, JsonNode> nodeEntry) {
+															 Entry<String, JsonNode> nodeEntry) {
 		while (nodeEntry.getKey().equals("doc") || nodeEntry.getKey().equals("namespace")
 				|| nodeEntry.getKey().equals("aliases"))
 			nodeEntry = fieldsIterator.next();
 		return nodeEntry;
 	}
-	
+
 	///////////////////////////////////////////////////////////////////////////////////// BOOLEAN METHODS THAT HELP SchemaConverter /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
+
 	boolean areTheSameRenamedObject(JsonNode oldNode, JsonNode latestNode) {
 
 		String oldName = oldNode.get("name").toString().replace("\"", "");
@@ -275,10 +269,11 @@ public class SchemaConditioner {
 
 		return checkRenamedList(oldName,latestName);
 	}
-	
+
 	private boolean checkRenamedList(String oldName, String latestName) {
-		for (String renamedFields : getRenamedFields()) {
-			if(oldName.equals(renamedFields.split("=")[1]) && latestName.equals(renamedFields.split("=")[0]) )
+		HashMap<String, String> renamedFieldsMap = getRenamedFields();
+		for (String key : renamedFieldsMap.keySet()) {
+			if(latestName.equals(key) && oldName.equals(renamedFieldsMap.get(key)) )
 				return true;
 		}
 		return false;
@@ -326,15 +321,15 @@ public class SchemaConditioner {
 		else
 			return true;
 	}
-	
+
 	private void searchForElement(JsonNode oldParent, JsonNode latestNode, JsonNode latestParent, String latestPath) throws IOException, SchemaConverterException {
-		
+
 		throw new SchemaConverterException("Unhandled case: latest schema has extra record - do nothing since it is handled by avro\noldParent" + oldParent + "\nlatestParent: " + latestParent);
 		// NOTE: this method has never been used during run-time
 		// however, if it does get used, it may need debugging
 		// For now, if this is ever encountered, throw exception. If this code is needed, uncomment the following lines
-		
-		
+
+
 //		//search for oldEntry inside oldParent
 //		//search result is true if oldEntry name is the same as latestEntry name
 //		//uses aliases supplied from latestParent to search for oldEntry
@@ -347,7 +342,7 @@ public class SchemaConditioner {
 //			if ( ((searchEntry.getKey().equals("name")) && searchEntry.getValue().equals(latestNode)) ||
 //					foundInAliases(searchEntry.getValue(),latestParent) ||
 //					areTheSameRenamedObject(searchEntry.getValue(), latestNode) ) {
-//				
+//
 //				nameWasFound = true;
 //
 //				ObjectMapper mapper = new ObjectMapper();
@@ -355,7 +350,7 @@ public class SchemaConditioner {
 //				break;
 //			}
 //		}
-//		
+//
 //		if (!nameWasFound) {
 //			System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!! latest schema has extra record - do nothing since it is handled by avro !!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 //			System.out.println("   " + latestNode);
@@ -363,4 +358,3 @@ public class SchemaConditioner {
 	}
 
 }
-

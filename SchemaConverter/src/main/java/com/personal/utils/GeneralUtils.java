@@ -5,14 +5,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
-public class GeneralUtils {
+public final class GeneralUtils {
 
 	public static String readPropertyFromSystem(String propertyName, Properties prop) {
 		if ((System.getProperty(propertyName)) != null && !(System.getProperty(propertyName)).isEmpty()
@@ -22,15 +17,21 @@ public class GeneralUtils {
 			return prop.getProperty(propertyName);
 	}
 
-	public static Set<String> getSetFromCommaSeperatedString(String renamedWithNoAlias) {
+	public static HashMap<String,String> getMapFromNewlineSeperatedString(String renamedWithNoAlias) {
 
-		renamedWithNoAlias = renamedWithNoAlias.replace("\n", "").replace("\r", "");
+		renamedWithNoAlias = renamedWithNoAlias.replace("\r", "\n");
 
-		ArrayList<String> listOfRenames = new ArrayList<>();
-		for (String renamedField : renamedWithNoAlias.split(",")) {
-			listOfRenames.add(renamedField.trim());
+		HashMap<String,String> mapOfRenames = new HashMap<>();
+		for (String keyValuePair : renamedWithNoAlias.split("\n")) {
+			keyValuePair=keyValuePair.trim().replace(" ","");
+			if(keyValuePair.length()>=3) {
+				//renamedFieldWithNoAliasCommaSeperated list format: latestName=oldName
+				String key = keyValuePair.split("=")[0];
+				String value = keyValuePair.split("=")[1];
+				mapOfRenames.put(key, value);
+			}
 		}
-		return new HashSet<>(listOfRenames);
+		return mapOfRenames;
 	}
 
 	public static String convertFileContentToString(String fileName) throws IOException {
@@ -47,6 +48,13 @@ public class GeneralUtils {
 	}
 
 
+	public static String getJsonStringFromFile(String jsonFile) throws IOException {
+		return GeneralUtils.convertFileContentToString(jsonFile)
+				.replace("\n", "")
+				.replace("\t", "")
+				.replace("\r", "")
+				.replace(" ", "");
+	}
 }
 
 

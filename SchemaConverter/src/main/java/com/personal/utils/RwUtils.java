@@ -1,9 +1,6 @@
 package com.personal.utils;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 import org.apache.avro.AvroTypeException;
 import org.apache.avro.Schema;
@@ -20,26 +17,9 @@ import org.apache.avro.io.EncoderFactory;
 
 import tech.allegro.schema.json2avro.converter.JsonGenericRecordReader;
 
-public class AvroRW {
+public final class RwUtils {
 
-	public static byte[] writeAvro(Schema writerSchema, Object datum) throws IOException {
-
-		GenericDatumWriter<Object> writer = new GenericDatumWriter<Object>(writerSchema);
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		Encoder e = EncoderFactory.get().binaryEncoder(outputStream, null);
-		writer.write(datum, e);
-		e.flush();
-
-		// write to a file
-		DataFileWriter<Object> dataFileWriter = new DataFileWriter<>(writer);
-		dataFileWriter.create(writerSchema, new File("src/main/resources/result/result.avro"));
-		dataFileWriter.append(datum);
-		dataFileWriter.close();
-
-		return outputStream.toByteArray();
-	}
-
-	public static byte[] writeAvro(Schema writerSchema, Object datum, String trCaseId) throws IOException {
+	public static byte[] writeAvro(String fullFilePath,Schema writerSchema, Object datum) throws IOException {
 
 		GenericDatumWriter<Object> writer = new GenericDatumWriter<Object>(writerSchema);
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
@@ -49,7 +29,7 @@ public class AvroRW {
 
 		// write to a file
 		DataFileWriter<Object> dataFileWriter = new DataFileWriter<>(writer);
-		dataFileWriter.create(writerSchema, new File("src/main/resources/result/" + trCaseId + ".avro"));
+		dataFileWriter.create(writerSchema, new File(fullFilePath));
 		dataFileWriter.append(datum);
 		dataFileWriter.close();
 
@@ -123,13 +103,6 @@ public class AvroRW {
 		}
 	}
 
-	public static void writeJson(Record record, String testCaseId) throws IOException {
-		File file = new File("src/main/resources/result/" + testCaseId + ".avro");
-		FileWriter wr = new FileWriter(file);
-		wr.write(record.toString());
-		wr.close();
-	}
-
 	public static Record readUndetailedJson(Schema schema, String json) throws IOException {
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		BinaryEncoder encoder = EncoderFactory.get().binaryEncoder(outputStream, null);
@@ -157,5 +130,9 @@ public class AvroRW {
 		}
 	}
 
+	public static void writeJson(String fileStr, String jsonStr) throws IOException {
+		Writer writer = new FileWriter(fileStr);
+		writer.write(jsonStr);
+		writer.close();
+	}
 }
-
