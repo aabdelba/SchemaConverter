@@ -1,11 +1,6 @@
 package com.personal.models;
 
-import com.personal.schemaConversionServices.SchemaConverterException;
-import com.personal.schemaConversionServices.SchemaObject;
-import com.personal.utils.RwUtils;
 import com.personal.utils.ConfigProp;
-import com.personal.utils.GeneralUtils;
-import org.apache.avro.generic.GenericData;
 
 import java.io.IOException;
 import java.util.*;
@@ -15,7 +10,7 @@ public class SchemaConverterModel {
     private ConfigProp configProp = ConfigProp.getInstance();
     private String latestSchemaFile;
     private String oldSchemaFile;
-    private List<java.lang.String> oldJsonFiles;
+    private List<String> oldJsonFiles;
     private HashMap<String,String> renamedFieldsWithNoAliasMap;
 
     public String getLatestSchemaFile() {
@@ -77,34 +72,6 @@ public class SchemaConverterModel {
         String key = keyValuePair.split("=")[0];
         String value = keyValuePair.split("=")[1];
         this.renamedFieldsWithNoAliasMap.put(key,value);
-    }
-
-    public void runConversion() throws IOException, SchemaConverterException {
-
-        ConfigProp configProp = ConfigProp.getInstance();
-        String inputDir = System.getProperty("user.dir")+configProp.getProperty("input.dir");
-        String outputDir = System.getProperty("user.dir") + configProp.getProperty("output.dir");
-
-        SchemaObject oldSchema = new SchemaObject(inputDir + "avsc/" + oldSchemaFile);
-        SchemaObject latestSchema = new SchemaObject(inputDir + "avsc/" + latestSchemaFile);
-
-        for (String oldJsonFile : oldJsonFiles) {
-            //match schemas
-            oldSchema.setJson(GeneralUtils.getJsonStringFromFile(inputDir + "json/" + oldJsonFile));
-            oldSchema.matchToSchema(latestSchema,renamedFieldsWithNoAliasMap);// add new schema entities to the old schema. Only do if they are non compliant to schema evolution standards
-    
-            System.out.println("\nDEBUG OLD:\n"+ oldSchema.getSchema());
-            System.out.println("DEBUG latest:\n"+ latestSchema.getSchema());
-    
-            //read old json into a record object
-            GenericData.Record record = RwUtils.readDetailedJson(latestSchema.getSchema(), oldSchema.getSchema(), oldSchema.getJson());// read in the input to record object
-            System.out.println("\nJSON record in old schema:\n"+ oldSchema.getJson());
-            System.out.println("\nJSON record in new schema:\n"+record);
-    
-            //write new json into avro file
-            RwUtils.writeJson(outputDir+"json/"+oldJsonFile,record.toString());
-            RwUtils.writeAvro(outputDir+"avro/"+oldJsonFile.substring(0,oldJsonFile.indexOf('.'))+".avro", latestSchema.getSchema(), record);// write record object into .avro file
-        }
     }
 
 }

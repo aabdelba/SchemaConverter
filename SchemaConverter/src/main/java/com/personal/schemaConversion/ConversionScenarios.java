@@ -1,4 +1,4 @@
-package com.personal.schemaConversionServices;
+package com.personal.schemaConversion;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
