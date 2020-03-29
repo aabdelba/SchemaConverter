@@ -1,5 +1,5 @@
 
-package com.personal.schemaConversionServices;
+package com.personal.schemaConversion;
 
 public class SchemaConverterException extends Exception{
 

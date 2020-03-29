@@ -1,4 +1,4 @@
-package com.personal.schemaConversionServices;
+package com.personal.schemaConversion;
 
 import java.io.BufferedReader;
 import java.io.IOException;

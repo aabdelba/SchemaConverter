@@ -1,5 +1,5 @@
 
-package com.personal.schemaConversionServices;
+package com.personal.schemaConversion;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
