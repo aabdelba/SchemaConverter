@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <link type="text/css" rel="stylesheet" href="/css/style.css"/>
+
+
+    <title>Schema Converter | Form</title>
+</head>
+<body>
+
+<header>
+    <nav class="empty-200-row navBar">
+        <div class="container">
+        <div class="row empty-40-row"></div>
+        <div class="row">
+            <div class="col-xl-5 col-lg-5 col-md-6 col-sm-12 col-xs-12">
+                <p class="header-title">Schema Converter</p>
+            </div>
+
+            <div class="col-xl-7 col-lg-6 col-md-6"></div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <p class="header-text">Welcome guest</p>
+            </div>
+
+        </div>
+
+        <div class="row empty-15-row"></div>
+
+        <div class="row">
+
+            <div class="col-xl-10 col-lg-9 col-md-8 col-sm-7 col-xs-6"></div>
+
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-5 col-xs-4">
+
+
+                <div class="header-btn-container-r">
+                    <form action="/" method="get" id="logoutForm">
+                        <button class="btn btn-info" type="submit" form="logoutForm" value="Submit">Logout</button>
+                    </form>
+                </div>
+
+
+
+                <div class="header-btn-container-l">
+                    <form action="/form" method="get" id="historyForm">
+                        <button class="btn btn-info" type="submit" form="historyForm" value="Submit">History</button>
+                    </form>
+                </div>
+
+
+            </div>
+
+
+            </div>
+        </div>
+
+
+    </nav>
+</header>
+
+<div class="container">
+
+    <div class="row empty-50-row"></div>
+
+
+    <p class="paragraph-text">Please provide the required fields for data conversion</p>
+
+    <div class="row empty-10-row"></div>
+
+
+    <div class="row carousel-background">
+        <div class="container">
+
+
+
+<!--TODO-->
+            <form action="/loading" method="post" id="form1">
+
+
+
+
+
+                <div class="row empty-50-row"></div>
+
+                <div class="form-group">
+                    <label for="oldJsonText">Old json records (separated by ';'):</label>
+                    <div class="container">
+                        <textarea id="oldJsonText" placeholder="old json records"></textarea>
+                        <input type="file" class="form-control-file file-col-width" id="oldJsonFiles" multiple placeholder="old json records">
+                    </div>
+
+                </div>
+
+
+                <div class="row empty-50-row"></div>
+
+                <div class="form-group">
+                    <label for="oldSchemaText">Old avro schema:</label>
+                    <div class="container">
+                        <textarea id="oldSchemaText" placeholder="old avro schema"></textarea>
+                        <input type="file" class="form-control-file file-col-width" id="oldSchemaFiles" multiple placeholder="old avro schema">
+                    </div>
+
+                </div>
+
+
+                <div class="row empty-50-row"></div>
+
+                <div class="form-group">
+                    <label for="newSchemaText">New avro schema:</label>
+                    <div class="container">
+                        <textarea id="newSchemaText" placeholder="new avro schema"></textarea>
+                        <input type="file" class="form-control-file file-col-width" id="newSchemaFiles" multiple placeholder="new avro schema">
+                    </div>
+
+                </div>
+
+
+                <div class="row empty-50-row"></div>
+
+                <div class="form-group">
+                    <label for="renamedFieldsText">Renamed avro fields that may not have alias (optional):</label>
+                    <div class="container">
+                        <textarea id="renamedFieldsText" placeholder="renamed schema fields"></textarea>
+                        <input type="file" class="form-control-file file-col-width" id="renamedFieldsFile" multiple placeholder="renamed schema fields">
+                    </div>
+
+                </div>
+
+                <div class="row empty-50-row"></div>
+
+            </form>
+
+        </div>
+
+
+    </div>
+
+    <div class="row empty-25-row"></div>
+
+    <div class="row">
+        <div class="col-xl-5 col-lg-5 col-md-5 col-sm-4 col-xs-4"></div>
+        <button type="submit" form="form1" class="button-height col-xl-2 col-lg-2 col-md-2 col-sm-4 col-xs-4 text-center btn btn-primary">Start conversion</button>
+        <div class="col-xl-5 col-lg-5 col-md-5 col-sm-4 col-xs-4"></div>
+    </div>
+
+
+</div>
+
+<div class="row empty-50-row"></div>
+
+<footer>
+
+
+
+    <div class="container" id="footerDiv">
+        <div class="row empty-50-row"></div>
+        <div class="row">
+            <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
+            <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 col-xs-1"><a href="https://www.linkedin.com/in/ali-abdelbadie/"><img class="footer-image" src="/images/Linkedin_Icon.gif"></a></div>
+            <div class="col-xl-10 col-lg-10 col-md-10 col-sm-10 col-xs-10"></div>
+        </div>
+        <div class="row empty-20-row"></div>
+        <div class="row">
+            <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
+            <div class="col-xl-5 col-lg-5 col-md-7 col-sm-7 col-xs-7">
+                <p class="footer-text">AliAbdelbadie@gmail.com</p>
+                <p class="footer-text">+1(613)700-2089</p>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-4 col-sm-4 col-xs-4"></div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+</footer>
+
+
+
+
+
+<script>
+// Add the following code if you want the name of the file appear on select
+$(".custom-file-input").on("change", function() {
+  var fileName = $(this).val().split("\\").pop();
+  $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+});
+</script>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>
+</html>
