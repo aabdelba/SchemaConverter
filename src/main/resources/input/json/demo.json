@@ -1,0 +1,25 @@
+
+
+
+
+		{
+			"id": "25738",
+			"age": 37,
+			"firstName": "john",
+			"lastName": "doe",
+			"organization": {
+				"organizationName": "companyA",
+				"listOfDepartments": [
+					{
+						"name": "sales",
+						"numberOfYears": 5
+					},
+					{
+						"name": "R&D",
+						"numberOfYears": 3
+					}
+				]
+			}
+		}
+		
+		
