@@ -17,6 +17,15 @@
 </head>
 <body>
 
+
+
+
+
+
+
+
+
+
 <header>
     <nav class="empty-200-row navBar">
         <div class="container">
@@ -48,7 +57,7 @@
 
 
                 <div class="header-btn-container-r">
-                    <form action="/" method="get" id="logoutForm">
+                    <form action="" method="" id="logoutForm">
                         <button class="btn btn-info" type="submit" form="logoutForm" value="Submit">Logout</button>
                     </form>
                 </div>
@@ -77,18 +86,22 @@
     <div class="row empty-50-row"></div>
 
 
-    <p class="paragraph-text">Please provide the required fields for data conversion</p>
-
-    <div class="row empty-10-row"></div>
+    <form action="/runConversion" method="post" id="form1">
 
 
-    <div class="row carousel-background">
+    <div id="formLoadingToggle">
+
+        <p class="paragraph-text">Please provide the required fields for data conversion</p>
+
+        <div class="row empty-10-row"></div>
+
+
+        <div class="row carousel-background">
         <div class="container">
 
 
 
-<!--TODO-->
-            <form action="/loading" method="post" id="form1">
+            <!--TODO-->
 
 
 
@@ -143,7 +156,6 @@
 
                 <div class="row empty-50-row"></div>
 
-            </form>
 
         </div>
 
@@ -159,9 +171,22 @@
     </div>
 
 
-</div>
+    </div>
 
-<div class="row empty-50-row"></div>
+
+
+
+
+
+
+    </form>
+
+
+
+
+    <div class="row empty-50-row"></div>
+
+</div>
 
 <footer>
 
@@ -197,17 +222,6 @@
 </footer>
 
 
-
-
-
-<script>
-// Add the following code if you want the name of the file appear on select
-$(".custom-file-input").on("change", function() {
-  var fileName = $(this).val().split("\\").pop();
-  $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
-});
-</script>
-
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
@@ -219,5 +233,9 @@ $(".custom-file-input").on("change", function() {
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
+
+
+<script src="/js/main.js"></script>
+
 </body>
 </html>
