@@ -1,4 +1,4 @@
-package com.bassboy.schemaConversion;
+package com.bassboy.schemaconversion;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,12 +7,14 @@ import java.io.StringReader;
 import java.util.*;
 
 import com.bassboy.utils.ConfigProp;
+import com.bassboy.utils.RwUtils;
 import org.apache.avro.Schema;
 import org.apache.avro.Schema.Parser;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.bassboy.utils.GeneralUtils;
+import org.apache.avro.generic.GenericData;
 
 // objects of this type can read in schemas and store it in its own internal attribute
 // the attribute in this class that the schema is stored in is of type Schema
@@ -93,18 +95,6 @@ public class SchemaObject {
 		setSchema(parser.parse(text));
 	}
 
-	public void matchToSchema(SchemaObject latestSchemaObject, HashMap<String,String> renamedFields) throws IOException, SchemaConverterException {
 
-		BfsConditioner schemaConditioner = BfsConditioner.getInstance(this, latestSchemaObject, getJson(), renamedFields);//get singleton instance of SchemaConditioner
-
-		schemaConditioner.startConversion();// this is the method to start the breadth-first process
-
-		Parser parser = new Parser();//create new parser
-		setSchema(parser.parse(schemaConditioner.getOldSchema().toString()));//set updated old schema
-		setJson(schemaConditioner.getOldJson().toString());//set updated old json that has a modified structure if there were array wrappings/unwrappings in the schemas
-		parser = new Parser();//reset the parser
-		latestSchemaObject.setSchema(parser.parse(schemaConditioner.getLatestSchema().toString()));//set updated latest schema
-
-	}
 
 }

@@ -13,9 +13,18 @@
     <link type="text/css" rel="stylesheet" href="/css/style.css"/>
 
 
-    <title>Schema Converter | Processing...</title>
+    <title>Schema Converter | Processing</title>
 </head>
 <body>
+
+
+
+
+
+
+
+
+
 
 <header>
     <nav class="empty-200-row navBar">
@@ -77,37 +86,31 @@
     <div class="row empty-50-row"></div>
 
 
-    <form action="/startConversion" method="post" id="startConversion" value="Submit">
-    </form>
+
+
+     <div class="row empty-100-row"></div>
 
 
 
-        <p class="text-center">Running the conversion...</p>
 
-        <div class="row empty-10-row"></div>
+    <h1>Something went wrong! </h1>
+    <h2>Our Engineers are on it</h2>
+    <a href="/">Go Home</a>
 
-        <div class="center-button">
-        <div class="spinner-border text-primary" role="status">
-            <span class="sr-only">Loading...</span>
-        </div>
-        </div>
 
-    <div class="row empty-25-row"></div>
 
-    <div class="center-button">
 
-            <form action="/form" method="post" id="cancelForm">
-                <button class="btn btn-danger" type="submit" form="cancelForm" value="Submit">Cancel</button>
-            </form>
 
-    </div>
 
+     <div class="row empty-100-row"></div>
+
+
+
+
+
+    <div class="row empty-50-row"></div>
 
 </div>
-
-<div class="row empty-50-row"></div>
-
-
 
 <footer>
 
@@ -143,17 +146,6 @@
 </footer>
 
 
-
-
-
-<script>
-// Add the following code if you want the name of the file appear on select
-$(".custom-file-input").on("change", function() {
-  var fileName = $(this).val().split("\\").pop();
-  $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
-});
-</script>
-
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
@@ -165,5 +157,9 @@ $(".custom-file-input").on("change", function() {
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
+
+
+<script src="/js/main.js"></script>
+
 </body>
 </html>
