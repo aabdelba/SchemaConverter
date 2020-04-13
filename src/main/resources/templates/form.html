@@ -6,6 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
 
+    <script>
+function refresh() {
+  window.history.back()
+}
+</script>
+
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -57,7 +63,7 @@
 
 
                 <div class="header-btn-container-r">
-                    <form action="" method="" id="logoutForm">
+                    <form action="/" method="get" id="logoutForm">
                         <button class="btn btn-info" type="submit" form="logoutForm" value="Submit">Logout</button>
                     </form>
                 </div>
@@ -86,12 +92,50 @@
     <div class="row empty-50-row"></div>
 
 
-    <form action="/runConversion" method="post" id="form1">
+
+    <div class="hidden" id="loadingToggle">
 
 
-    <div id="formLoadingToggle">
 
-        <p class="paragraph-text">Please provide the required fields for data conversion</p>
+
+
+
+            <div class="row empty-100-row"></div>
+
+
+
+            <p class="text-center">Running the conversion...</p>
+
+            <div class="row empty-10-row"></div>
+
+            <div class="center-button">
+                <div class="spinner-border text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+            </div>
+
+            <div class="row empty-25-row"></div>
+
+            <div class="center-button">
+
+                    <button onclick="refresh()" id="cancelButton" class="btn btn-danger">Cancel</button>
+
+            </div>
+
+            <div class="row empty-100-row"></div>
+
+
+
+
+
+
+
+    </div>
+    <form action="/run_conversion" method="POST" id="form1" enctype="multipart/form-data">
+
+    <div id="formToggle">
+
+        <p class="paragraph-text">Please provide fields for data conversion</p>
 
         <div class="row empty-10-row"></div>
 
@@ -110,10 +154,10 @@
                 <div class="row empty-50-row"></div>
 
                 <div class="form-group">
-                    <label for="oldJsonText">Old json records (separated by ';'):</label>
+                    <label for="oldJsonText">Old json records (separated by ';' or in separate files):</label>
                     <div class="container">
-                        <textarea id="oldJsonText" placeholder="old json records"></textarea>
-                        <input type="file" class="form-control-file file-col-width" id="oldJsonFiles" multiple placeholder="old json records">
+                        <textarea name="oldJsonText" form="form1"  id="oldJsonText" placeholder="old json records"></textarea>
+                        <input name="oldJsonFiles" type="file" class="form-control-file file-col-width" id="oldJsonFiles" multiple placeholder="old json records">
                     </div>
 
                 </div>
@@ -124,8 +168,8 @@
                 <div class="form-group">
                     <label for="oldSchemaText">Old avro schema:</label>
                     <div class="container">
-                        <textarea id="oldSchemaText" placeholder="old avro schema"></textarea>
-                        <input type="file" class="form-control-file file-col-width" id="oldSchemaFiles" multiple placeholder="old avro schema">
+                        <textarea name="oldSchemaText" form="form1"  id="oldSchemaText" placeholder="old avro schema"></textarea>
+                        <input name="oldSchemaFile" type="file" class="form-control-file file-col-width" id="oldSchemaFiles" placeholder="old avro schema">
                     </div>
 
                 </div>
@@ -136,8 +180,8 @@
                 <div class="form-group">
                     <label for="newSchemaText">New avro schema:</label>
                     <div class="container">
-                        <textarea id="newSchemaText" placeholder="new avro schema"></textarea>
-                        <input type="file" class="form-control-file file-col-width" id="newSchemaFiles" multiple placeholder="new avro schema">
+                        <textarea name="newSchemaText" form="form1"  id="newSchemaText" placeholder="new avro schema"></textarea>
+                        <input name="newSchemaFile" type="file" class="form-control-file file-col-width" id="newSchemaFiles" placeholder="new avro schema">
                     </div>
 
                 </div>
@@ -147,14 +191,26 @@
 
                 <div class="form-group">
                     <label for="renamedFieldsText">Renamed avro fields that may not have alias (optional):</label>
+                    <p>    list format: latestName=oldName, new-line seprated or comma seperated</p>
                     <div class="container">
-                        <textarea id="renamedFieldsText" placeholder="renamed schema fields"></textarea>
-                        <input type="file" class="form-control-file file-col-width" id="renamedFieldsFile" multiple placeholder="renamed schema fields">
+                        <textarea name="renamedText" form="form1"  id="renamedFieldsText" placeholder="renamed schema fields"></textarea>
+                        <input name="renamedFile" type="file" class="form-control-file file-col-width" id="renamedFieldsFile" placeholder="renamed schema fields">
                     </div>
 
                 </div>
 
                 <div class="row empty-50-row"></div>
+
+            <div class="form-group">
+                <label for="exampleFormControlSelect1">File download format:</label>
+                <select name="fileFormat" id="exampleFormControlSelect1">
+                    <option>json</option>
+                    <option>avro</option>
+                    <option>txt</option>
+                </select>
+            </div>
+
+            <div class="row empty-50-row"></div>
 
 
         </div>
@@ -167,6 +223,7 @@
     <div class="row">
         <div class="col-xl-5 col-lg-5 col-md-5 col-sm-4 col-xs-4"></div>
         <button type="submit" form="form1" class="button-height col-xl-2 col-lg-2 col-md-2 col-sm-4 col-xs-4 text-center btn btn-primary">Start conversion</button>
+
         <div class="col-xl-5 col-lg-5 col-md-5 col-sm-4 col-xs-4"></div>
     </div>
 
@@ -236,6 +293,7 @@
 
 
 <script src="/js/main.js"></script>
+<script src="/js/validation.js"></script>
 
 </body>
 </html>
