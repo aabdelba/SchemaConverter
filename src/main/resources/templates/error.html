@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
 
+    <script>
+</script>
+
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
@@ -94,8 +97,10 @@
 
 
     <h1>Something went wrong! </h1>
-    <h2>Our Engineers are on it</h2>
-    <a href="/">Go Home</a>
+    <h2 th:text="${status} + ' - ' + ${errorTitle}"></h2>
+    <h2 th:text="${message}"></h2>
+    <button class="btn btn-primary" onclick="goBack()">Go back</button>
+
 
 
 
@@ -160,6 +165,8 @@
 
 
 <script src="/js/main.js"></script>
+
+
 
 </body>
 </html>
