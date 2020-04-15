@@ -1,0 +1,2 @@
+SchoolFriend=SchoolFriends;;;
+emailAddress=email

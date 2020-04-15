@@ -4,117 +4,112 @@ import com.bassboy.schemaconversion.BfsConditioner;
 import com.bassboy.schemaconversion.SchemaConverterException;
 import com.bassboy.schemaconversion.SchemaObject;
 import com.bassboy.utils.ConfigProp;
-import com.bassboy.utils.GeneralUtils;
 import com.bassboy.utils.RwUtils;
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericData;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
 public class SchemaConverterModel {
 
     private ConfigProp configProp = ConfigProp.getInstance();
-    private String latestSchemaFile;
-    private String oldSchemaFile;
-    private List<String> oldJsonFiles;
-    private HashMap<String,String> renamedFieldsWithNoAliasMap;
+    private MultipartFile[] oldJsonFiles;
+    private MultipartFile oldSchemaFile;
+    private MultipartFile newSchemaFile;
+    private MultipartFile renamedFile;
+    private String oldJsonText;
+    private String oldSchemaText;
+    private String newSchemaText;
+    private String renamedText;
+    private String fileFormat;
 
-    public String getLatestSchemaFile() {
-        return latestSchemaFile;
+    public SchemaConverterModel() throws IOException {
     }
 
-    public void setLatestSchemaFile(String latestSchemaFile) {
-        this.latestSchemaFile = latestSchemaFile;
-    }
-
-    public String getOldSchemaFile() {
-        return oldSchemaFile;
-    }
-
-    public void setOldSchemaFile(String oldSchemaFile) {
+    public SchemaConverterModel(MultipartFile[] oldJsonFiles, MultipartFile oldSchemaFile, MultipartFile newSchemaFile, MultipartFile renamedFile, String oldJsonText, String oldSchemaText, String newSchemaText, String renamedText, String fileFormat) throws IOException {
+        this.oldJsonFiles = oldJsonFiles;
         this.oldSchemaFile = oldSchemaFile;
+        this.newSchemaFile = newSchemaFile;
+        this.renamedFile = renamedFile;
+        this.oldJsonText = oldJsonText;
+        this.oldSchemaText = oldSchemaText;
+        this.newSchemaText = newSchemaText;
+        this.renamedText = renamedText;
+        this.fileFormat = fileFormat;
     }
 
-    public List<String> getOldJsonFiles() {
+    public MultipartFile[] getOldJsonFiles() {
         return oldJsonFiles;
     }
 
-    public void setOldJsonFiles(List<String> oldJsonFiles) {
+    public void setOldJsonFiles(MultipartFile[] oldJsonFiles) {
         this.oldJsonFiles = oldJsonFiles;
     }
 
-    public HashMap<String, String> getRenamedFieldsWithNoAliasMap() {
-        return renamedFieldsWithNoAliasMap;
+    public MultipartFile getOldSchemaFile() {
+        return oldSchemaFile;
     }
 
-    public void setRenamedFieldsWithNoAliasMap(HashMap<String, String> renamedFieldsWithNoAliasMap) {
-        this.renamedFieldsWithNoAliasMap = renamedFieldsWithNoAliasMap;
-    }
-
-    public SchemaConverterModel(String oldSchemaFile, String latestSchemaFile, List<String> oldJsonFiles, HashMap<String, String> renamedFieldsWithNoAliasMap) throws IOException {
-        this.latestSchemaFile = latestSchemaFile;
+    public void setOldSchemaFile(MultipartFile oldSchemaFile) {
         this.oldSchemaFile = oldSchemaFile;
-        this.oldJsonFiles = oldJsonFiles;
-        this.renamedFieldsWithNoAliasMap = renamedFieldsWithNoAliasMap;
     }
 
-    public void addAnOldJson(String oldJson) {
-        this.oldJsonFiles.add(oldJson);
+    public MultipartFile getNewSchemaFile() {
+        return newSchemaFile;
     }
 
-    public void addARenamedFieldWithNoAlias(String keyValuePair) {
-        //renamedFieldWithNoAliasCommaSeperated list format: latestName=oldName
-        String key = keyValuePair.split("=")[0];
-        String value = keyValuePair.split("=")[1];
-        this.renamedFieldsWithNoAliasMap.put(key,value);
+    public void setNewSchemaFile(MultipartFile newSchemaFile) {
+        this.newSchemaFile = newSchemaFile;
     }
 
-
-
-    public void matchToSchema() throws IOException, SchemaConverterException {
-
-        ConfigProp configProp = ConfigProp.getInstance();
-        String inputDir = System.getProperty("user.dir")+configProp.getProperty("input.dir");
-        String outputDir = System.getProperty("user.dir") + configProp.getProperty("output.dir");
-
-        SchemaObject oldSchema = new SchemaObject(inputDir + "avsc/" + oldSchemaFile);
-        SchemaObject latestSchema = new SchemaObject(inputDir + "avsc/" + latestSchemaFile);
-
-        for (String oldJsonFile : oldJsonFiles) {
-
-            //run BFS
-            conditionSchemaUsingBFS(oldSchema,latestSchema,oldJsonFile,renamedFieldsWithNoAliasMap,inputDir);
-
-            //read old json into a record object
-            GenericData.Record record = RwUtils.readDetailedJson(latestSchema.getSchema(), oldSchema.getSchema(), oldSchema.getJson());// read in the input to record object
-            System.out.println("\nJSON record in old schema:\n"+ oldSchema.getJson());
-            System.out.println("\nJSON record in new schema:\n"+record);
-
-            //write new json into avro file
-            RwUtils.writeJson(outputDir+"json/"+oldJsonFile,record.toString());
-            RwUtils.writeAvro(outputDir+"avro/"+oldJsonFile.substring(0,oldJsonFile.indexOf('.'))+".avro", latestSchema.getSchema(), record);// write record object into .avro file
-        }
-
+    public MultipartFile getRenamedFile() {
+        return renamedFile;
     }
 
-    private void conditionSchemaUsingBFS(SchemaObject oldSchema, SchemaObject latestSchema, String oldJsonFile, HashMap<String,String> renamedWithNoAliasMap, String inputDir) throws IOException, SchemaConverterException {
-
-        oldSchema.setJson(GeneralUtils.getJsonStringFromFile(inputDir + "json/" + oldJsonFile));
-
-        BfsConditioner schemaConditioner = BfsConditioner.getInstance(oldSchema, latestSchema, oldSchema.getJson(), renamedWithNoAliasMap);//get singleton instance of SchemaConditioner
-
-        schemaConditioner.startConversion();// this is the method to start the breadth-first process
-
-        Schema.Parser parser = new Schema.Parser();//create new parser
-        oldSchema.setSchema(parser.parse(schemaConditioner.getOldSchema().toString()));//set updated old schema
-        oldSchema.setJson(schemaConditioner.getOldJson().toString());//set updated old json that has a modified structure if there were array wrappings/unwrappings in the schemas
-        parser = new Schema.Parser();//reset the parser
-        latestSchema.setSchema(parser.parse(schemaConditioner.getLatestSchema().toString()));//set updated latest schema
-
-        System.out.println("\nDEBUG OLD:\n"+ oldSchema.getSchema());
-        System.out.println("DEBUG latest:\n"+ latestSchema.getSchema());
-
+    public void setRenamedFile(MultipartFile renamedFile) {
+        this.renamedFile = renamedFile;
     }
 
+    public String getOldJsonText() {
+        return oldJsonText;
+    }
+
+    public void setOldJsonText(String oldJsonText) {
+        this.oldJsonText = oldJsonText;
+    }
+
+    public String getOldSchemaText() {
+        return oldSchemaText;
+    }
+
+    public void setOldSchemaText(String oldSchemaText) {
+        this.oldSchemaText = oldSchemaText;
+    }
+
+    public String getNewSchemaText() {
+        return newSchemaText;
+    }
+
+    public void setNewSchemaText(String newSchemaText) {
+        this.newSchemaText = newSchemaText;
+    }
+
+    public String getRenamedText() {
+        return renamedText;
+    }
+
+    public void setRenamedText(String renamedText) {
+        this.renamedText = renamedText;
+    }
+
+    public String getFileFormat() {
+        return fileFormat;
+    }
+
+    public void setFileFormat(String fileFormat) {
+        this.fileFormat = fileFormat;
+    }
 }

@@ -1,9 +1,6 @@
 package com.bassboy.schemaconversion;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
+import java.io.*;
 import java.util.*;
 
 import com.bassboy.utils.ConfigProp;
@@ -13,7 +10,6 @@ import org.apache.avro.Schema.Parser;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.bassboy.utils.GeneralUtils;
 import org.apache.avro.generic.GenericData;
 
 // objects of this type can read in schemas and store it in its own internal attribute
@@ -59,18 +55,22 @@ public class SchemaObject {
 	}
 
 	public SchemaObject(String fileStr) throws IOException {
+		new SchemaObject(new File(fileStr));
+	}
+
+	public SchemaObject(File file) throws IOException {
 		init();
-		parseSchemaFromAvsc(fileStr);
+		parseSchemaFromAvsc(file);
 	}
 
 	// basic POJO ends here
 
 
 
-	public void parseSchemaFromAvsc(String fileStr) throws IOException {
+	public void parseSchemaFromAvsc(File file) throws IOException {
 
 		String text = "";
-		Reader istream = new StringReader(GeneralUtils.convertFileContentToString(fileStr));
+		Reader istream = new StringReader(RwUtils.convertFileContentToString(file));
 
 		if (istream != null) {
 			BufferedReader reader = new BufferedReader(istream);
