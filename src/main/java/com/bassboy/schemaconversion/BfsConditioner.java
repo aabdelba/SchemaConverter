@@ -86,6 +86,11 @@ public class BfsConditioner {
 
 
 	public void startConversion() throws IOException, SchemaConverterException {
+
+		for (String key:getRenamedFields().keySet()) {
+			System.out.println(key);
+			System.out.println(getRenamedFields().get(key));
+		}
 		goInsideNode(oldSchema, latestSchema,"/");
 	}
 

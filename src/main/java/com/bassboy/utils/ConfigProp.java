@@ -7,7 +7,7 @@ import java.util.Properties;
 
 public class ConfigProp extends Properties{
 
-    final static private String configPropFile = "/src/main/resources/config.properties";
+    final static private String configPropFile = "src/main/resources/config.properties";
     private static ConfigProp configProp = null;
 
     private ConfigProp() throws IOException {}
@@ -17,7 +17,7 @@ public class ConfigProp extends Properties{
         if (configProp == null)
             configProp = new ConfigProp();
 
-        InputStream inStream = new FileInputStream(System.getProperty("user.dir") + configPropFile);
+        InputStream inStream = new FileInputStream(System.getProperty("user.dir") + "/" + configPropFile);
         configProp.load(inStream);
 
         return configProp;
