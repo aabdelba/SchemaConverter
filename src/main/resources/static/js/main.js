@@ -1,11 +1,3 @@
-$(function(){
-
-    $('#form1').submit(function(){
-        $('#formToggle').toggleClass("hidden");
-        $('#loadingToggle').toggleClass("hidden");
-    });
-
-});
 
 function goBack() {
     window.history.back();

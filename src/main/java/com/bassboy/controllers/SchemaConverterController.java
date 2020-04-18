@@ -41,7 +41,7 @@ public class SchemaConverterController implements ErrorController {
         return "form";
     }
 
-    @RequestMapping(value="run_conversion",method = {RequestMethod.POST})
+    @RequestMapping(value="conversion",method = {RequestMethod.POST})
     public String schemaConversionLoading(@ModelAttribute("scm") SchemaConverterModel scm, ModelMap model) throws IOException, SchemaConverterException {
 
         // Added wait time for UX

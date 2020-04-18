@@ -69,7 +69,7 @@ function refresh() {
 
 
     </div>
-    <form action="#" th:action="@{/run_conversion}" method="post" th:object="${scm}" id="form1" enctype="multipart/form-data">
+    <form action="#" th:action="@{/conversion}"  onsubmit="return validateForm()" method="post" th:object="${scm}" id="form1" enctype="multipart/form-data">
 
     <div id="formToggle">
 
@@ -198,9 +198,8 @@ function refresh() {
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
 
-
-<script src="/js/main.js"></script>
 <script src="/js/validation.js"></script>
+<script src="/js/main.js"></script>
 
 </body>
 </html>
