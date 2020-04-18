@@ -1,19 +1,14 @@
 package com.bassboy.controllers;
 
-import com.bassboy.models.SchemaConverterModel;
-import com.bassboy.schemaconversion.SchemaConverterException;
+import com.bassboy.models.SchemaEvolverModel;
+import com.bassboy.schemaevolver.SchemaConverterException;
 import com.bassboy.services.SchemaResourceManager;
-import com.bassboy.utils.ConfigProp;
 import org.springframework.boot.web.servlet.error.ErrorController;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
@@ -22,11 +17,10 @@ import java.io.*;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.concurrent.TimeUnit;
-import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 @Controller
-public class SchemaConverterController implements ErrorController {
+public class SchemaEvolverController implements ErrorController {
 
     private SchemaResourceManager srm;
 
@@ -37,12 +31,12 @@ public class SchemaConverterController implements ErrorController {
 
     @RequestMapping(value="form",method = {RequestMethod.POST})
     public String schemaConversionForm(Model model) throws IOException {
-        model.addAttribute("scm", new SchemaConverterModel());
+        model.addAttribute("scm", new SchemaEvolverModel());
         return "form";
     }
 
     @RequestMapping(value="conversion",method = {RequestMethod.POST})
-    public String schemaConversionLoading(@ModelAttribute("scm") SchemaConverterModel scm, ModelMap model) throws IOException, SchemaConverterException {
+    public String schemaConversionLoading(@ModelAttribute("scm") SchemaEvolverModel scm, ModelMap model) throws IOException, SchemaConverterException {
 
         // Added wait time for UX
         try {
@@ -130,7 +124,7 @@ public class SchemaConverterController implements ErrorController {
 
         String downloadFormat = "json";
 
-        SchemaConverterModel scv = new SchemaConverterModel(oldJsonFiles,oldSchemaFile,newSchemaFile,renamedFile,
+        SchemaEvolverModel scv = new SchemaEvolverModel(oldJsonFiles,oldSchemaFile,newSchemaFile,renamedFile,
                 oldJsonText,oldSchemaText,newSchemaText,renamedText,downloadFormat);
 
         SchemaResourceManager srm = new SchemaResourceManager(scv);

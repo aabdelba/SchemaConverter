@@ -2,10 +2,10 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.bassboy.schemaconverter</groupId>
-	<artifactId>schemaconverter</artifactId>
+	<groupId>com.bassboy.schemaevolver</groupId>
+	<artifactId>schemaevolver</artifactId>
 	<version>0.0.1</version>
-	<name>SchemaConverter</name>
+	<name>SchemaEvolver</name>
 	<description>schema conversion tool to help reduce work required to format data</description>
 
 

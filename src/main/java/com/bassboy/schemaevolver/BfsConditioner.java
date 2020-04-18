@@ -1,5 +1,5 @@
 
-package com.bassboy.schemaconversion;
+package com.bassboy.schemaevolver;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;

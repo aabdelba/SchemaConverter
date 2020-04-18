@@ -1,15 +1,14 @@
 package com.bassboy.services;
 
-import com.bassboy.models.SchemaConverterModel;
-import com.bassboy.schemaconversion.SchemaConverterMain;
-import com.bassboy.schemaconversion.SchemaConverterException;
+import com.bassboy.models.SchemaEvolverModel;
+import com.bassboy.schemaevolver.SchemaConverterMain;
+import com.bassboy.schemaevolver.SchemaConverterException;
 import com.bassboy.utils.ConfigProp;
 import com.bassboy.utils.RwUtils;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.util.zip.ZipEntry;
@@ -19,13 +18,13 @@ import java.util.zip.ZipOutputStream;
 public class SchemaResourceManager {
 
     private ConfigProp configProp;
-    private SchemaConverterModel scm;
+    private SchemaEvolverModel scm;
 
-    public SchemaResourceManager(SchemaConverterModel scm) {
+    public SchemaResourceManager(SchemaEvolverModel scm) {
         this.scm = scm;
     }
 
-    public SchemaConverterModel getScm() {
+    public SchemaEvolverModel getScm() {
         return scm;
     }
 
