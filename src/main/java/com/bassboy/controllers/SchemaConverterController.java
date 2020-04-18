@@ -3,21 +3,32 @@ package com.bassboy.controllers;
 import com.bassboy.models.SchemaConverterModel;
 import com.bassboy.schemaconversion.SchemaConverterException;
 import com.bassboy.services.SchemaResourceManager;
+import com.bassboy.utils.ConfigProp;
 import org.springframework.boot.web.servlet.error.ErrorController;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.concurrent.TimeUnit;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @Controller
 public class SchemaConverterController implements ErrorController {
+
+    private SchemaResourceManager srm;
 
     @RequestMapping(value = "/", method = {RequestMethod.GET})
     public String welcome() {
@@ -25,66 +36,41 @@ public class SchemaConverterController implements ErrorController {
     }
 
     @RequestMapping(value="form",method = {RequestMethod.POST})
-    public String schemaConversionForm() {
+    public String schemaConversionForm(Model model) throws IOException {
+        model.addAttribute("scm", new SchemaConverterModel());
         return "form";
     }
 
-
-
-    @RequestMapping(value="debug",method = {RequestMethod.POST})
-    @ResponseBody
-    public String debugggg(@RequestParam("arg1") String arg1, @RequestParam("arg2") String arg2) {
-        return        "<html>"+
-                "<body>" +
-                "DEBUG"+
-                arg1+
-                " \n"+
-                arg2+
-                "</body>" +
-                "</html>";
-    }
-
-
-
-    public static File moveAndStoreFile(MultipartFile file, String name) throws IOException {
-        String path = System.getProperty("user.dir")+"/src/main/resources/input/";
-        String url = path+name;
-        File fileToSave = new File(url);
-        fileToSave.createNewFile();
-        FileOutputStream fos = new FileOutputStream(fileToSave);
-        fos.write(file.getBytes());
-        fos.close();
-        return fileToSave;
-    }
-
-
-
-
     @RequestMapping(value="run_conversion",method = {RequestMethod.POST})
-    public String schemaConversionLoading(
-            @RequestParam("oldJsonText") String oldJsonText, @RequestParam("oldJsonFiles") MultipartFile[] oldJsonFiles,
-            @RequestParam("oldSchemaText") String oldSchemaText, @RequestParam("oldSchemaFile") MultipartFile oldSchemaFile,
-            @RequestParam("newSchemaText") String newSchemaText, @RequestParam("newSchemaFile") MultipartFile newSchemaFile,
-            @RequestParam("renamedText") String renamedText, @RequestParam("renamedFile") MultipartFile renamedFile,
-            @RequestParam("renamedText") String fileFormat,
-                                        Model model
-                                        ) throws IOException, SchemaConverterException {
-
-        SchemaConverterModel scv = new SchemaConverterModel(oldJsonFiles,oldSchemaFile,newSchemaFile,renamedFile,
-                                                             oldJsonText,oldSchemaText,newSchemaText,renamedText,fileFormat);
-
-        SchemaResourceManager scm = new SchemaResourceManager(scv);
+    public String schemaConversionLoading(@ModelAttribute("scm") SchemaConverterModel scm, ModelMap model) throws IOException, SchemaConverterException {
 
         // Added wait time for UX
         try {
-            TimeUnit.SECONDS.sleep(5);
+            TimeUnit.SECONDS.sleep(3);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        scm.init();
-        scm.runConversion();
-        return "download";
+        srm = new SchemaResourceManager(scm);
+
+        srm.init();
+        srm.runConversion();
+        model.remove("scm");
+        model.addAttribute("srm", srm);
+//        ModelAndView modelAndView = new ModelAndView("download");
+//        modelAndView.addObject("downloadFormat", scv.getDownloadFormat());
+        return "complete";
+    }
+
+    @RequestMapping(path = "/download/{downloadFormat}", method = RequestMethod.GET)
+    public void download(@PathVariable String downloadFormat, HttpServletResponse response, ModelMap model) throws IOException {
+        response.setContentType("application/zip");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        response.setHeader("Content-Disposition", "attachment; filename=SchemaConverterResults_" + sdf.format(timestamp) + ".zip");
+        try (ZipOutputStream zippedOut = new ZipOutputStream(response.getOutputStream())) {
+            srm.download(zippedOut);
+        }//if try and fail, zippedOut is closed
     }
 
     @RequestMapping(value="error")
@@ -140,12 +126,12 @@ public class SchemaConverterController implements ErrorController {
         String oldJsonText = "asdfasfad ;;; asdfwefer ;;; awfasdfver ;;;";
         String oldSchemaText = "asdfasdfawefwerf";
         String newSchemaText = "asdfasdfawefwerf";
-        String renamedText = "asdfasdfawefwerf";
+        String renamedText = "asdfasdfawefwerf=adfwedcf";
 
-        String fileFormat = "json";
+        String downloadFormat = "json";
 
         SchemaConverterModel scv = new SchemaConverterModel(oldJsonFiles,oldSchemaFile,newSchemaFile,renamedFile,
-                oldJsonText,oldSchemaText,newSchemaText,renamedText,fileFormat);
+                oldJsonText,oldSchemaText,newSchemaText,renamedText,downloadFormat);
 
         SchemaResourceManager srm = new SchemaResourceManager(scv);
         srm.init();

@@ -23,69 +23,7 @@ function refresh() {
 </head>
 <body>
 
-
-
-
-
-
-
-
-
-
-<header>
-    <nav class="empty-200-row navBar">
-        <div class="container">
-        <div class="row empty-40-row"></div>
-        <div class="row">
-            <div class="col-xl-5 col-lg-5 col-md-6 col-sm-12 col-xs-12">
-                <p class="header-title">Schema Converter</p>
-            </div>
-
-            <div class="col-xl-7 col-lg-6 col-md-6"></div>
-
-        </div>
-
-        <div class="row">
-
-            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <p class="header-text">Welcome guest</p>
-            </div>
-
-        </div>
-
-        <div class="row empty-15-row"></div>
-
-        <div class="row">
-
-            <div class="col-xl-10 col-lg-9 col-md-8 col-sm-7 col-xs-6"></div>
-
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-5 col-xs-4">
-
-
-                <div class="header-btn-container-r">
-                    <form action="/" method="get" id="logoutForm">
-                        <button class="btn btn-info" type="submit" form="logoutForm" value="Submit">Logout</button>
-                    </form>
-                </div>
-
-
-
-                <div class="header-btn-container-l">
-                    <form action="/form" method="get" id="historyForm">
-                        <button class="btn btn-info" type="submit" form="historyForm" value="Submit">History</button>
-                    </form>
-                </div>
-
-
-            </div>
-
-
-            </div>
-        </div>
-
-
-    </nav>
-</header>
+<div th:replace="fragments/header :: header"></div>
 
 <div class="container">
 
@@ -131,7 +69,7 @@ function refresh() {
 
 
     </div>
-    <form action="/run_conversion" method="POST" id="form1" enctype="multipart/form-data">
+    <form action="#" th:action="@{/run_conversion}" method="post" th:object="${scm}" id="form1" enctype="multipart/form-data">
 
     <div id="formToggle">
 
@@ -156,8 +94,8 @@ function refresh() {
                 <div class="form-group">
                     <label for="oldJsonText">Old json records (separated by ';;;' or in separate files):</label>
                     <div class="container">
-                        <textarea name="oldJsonText" form="form1"  id="oldJsonText" placeholder="old json records"></textarea>
-                        <input name="oldJsonFiles" type="file" class="form-control-file file-col-width" id="oldJsonFiles" multiple placeholder="old json records">
+                        <textarea th:field="*{oldJsonText}"   form="form1"  id="oldJsonText" placeholder="old json records"></textarea>
+                        <input th:field="*{oldJsonFiles}" type="file" class="form-control-file file-col-width" id="oldJsonFiles" multiple placeholder="old json records">
                     </div>
 
                 </div>
@@ -168,8 +106,8 @@ function refresh() {
                 <div class="form-group">
                     <label for="oldSchemaText">Old avro schema:</label>
                     <div class="container">
-                        <textarea name="oldSchemaText" form="form1"  id="oldSchemaText" placeholder="old avro schema"></textarea>
-                        <input name="oldSchemaFile" type="file" class="form-control-file file-col-width" id="oldSchemaFiles" placeholder="old avro schema">
+                        <textarea th:field="*{oldSchemaText}"  form="form1"  id="oldSchemaText" placeholder="old avro schema"></textarea>
+                        <input th:field="*{oldSchemaFile}"  type="file" class="form-control-file file-col-width" id="oldSchemaFiles" placeholder="old avro schema">
                     </div>
 
                 </div>
@@ -180,8 +118,8 @@ function refresh() {
                 <div class="form-group">
                     <label for="newSchemaText">New avro schema:</label>
                     <div class="container">
-                        <textarea name="newSchemaText" form="form1"  id="newSchemaText" placeholder="new avro schema"></textarea>
-                        <input name="newSchemaFile" type="file" class="form-control-file file-col-width" id="newSchemaFiles" placeholder="new avro schema">
+                        <textarea th:field="*{newSchemaText}"  form="form1"  id="newSchemaText" placeholder="new avro schema"></textarea>
+                        <input th:field="*{newSchemaFile}"  type="file" class="form-control-file file-col-width" id="newSchemaFiles" placeholder="new avro schema">
                     </div>
 
                 </div>
@@ -191,10 +129,10 @@ function refresh() {
 
                 <div class="form-group">
                     <label for="renamedFieldsText">Renamed avro fields that may not have alias (optional):</label>
-                    <p>    list format: latestName=oldName, seperated with ';'/p>
+                    <p>    list format: latestName=oldName, seperated with ';'</p>
                     <div class="container">
-                        <textarea name="renamedText" form="form1"  id="renamedFieldsText" placeholder="renamed schema fields"></textarea>
-                        <input name="renamedFile" type="file" class="form-control-file file-col-width" id="renamedFieldsFile" placeholder="renamed schema fields">
+                        <textarea th:field="*{renamedText}"   form="form1"  id="renamedFieldsText" placeholder="renamed schema fields"></textarea>
+                        <input th:field="*{renamedFile}"  type="file" class="form-control-file file-col-width" id="renamedFieldsFile" placeholder="renamed schema fields">
                     </div>
 
                 </div>
@@ -202,10 +140,11 @@ function refresh() {
                 <div class="row empty-50-row"></div>
 
             <div class="form-group">
-                <label for="exampleFormControlSelect1">File download format:</label>
-                <select name="fileFormat" id="exampleFormControlSelect1">
-                    <option>json</option>
-                    <option>avro</option>
+                <label for="formatSelect">File download format:</label>
+                <select th:field="*{downloadFormat}" id="formatSelect">
+                    <option value="json">json</option>
+                    <option value="avro">avro</option>
+                    <option value="json-avro">json & avro</option>
                 </select>
             </div>
 
@@ -244,39 +183,8 @@ function refresh() {
 
 </div>
 
-<footer>
 
-
-
-    <div class="container" id="footerDiv">
-        <div class="row empty-50-row"></div>
-        <div class="row">
-            <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
-            <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 col-xs-1"><a href="https://www.linkedin.com/in/ali-abdelbadie/"><img class="footer-image" src="/images/Linkedin_Icon.gif"></a></div>
-            <div class="col-xl-10 col-lg-10 col-md-10 col-sm-10 col-xs-10"></div>
-        </div>
-        <div class="row empty-20-row"></div>
-        <div class="row">
-            <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
-            <div class="col-xl-5 col-lg-5 col-md-7 col-sm-7 col-xs-7">
-                <p class="footer-text">AliAbdelbadie@gmail.com</p>
-                <p class="footer-text">+1(613)700-2089</p>
-            </div>
-            <div class="col-xl-6 col-lg-6 col-md-4 col-sm-4 col-xs-4"></div>
-        </div>
-    </div>
-
-
-
-
-
-
-
-
-
-
-</footer>
-
+<div th:replace="fragments/footer :: footer"></div>
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
