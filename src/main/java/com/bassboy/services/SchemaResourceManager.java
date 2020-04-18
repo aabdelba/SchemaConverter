@@ -5,43 +5,21 @@ import com.bassboy.schemaconversion.SchemaConverterMain;
 import com.bassboy.schemaconversion.SchemaConverterException;
 import com.bassboy.utils.ConfigProp;
 import com.bassboy.utils.RwUtils;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 
 public class SchemaResourceManager {
 
     private ConfigProp configProp;
     private SchemaConverterModel scm;
-    private String oldSchemaName;
-    private String newSchemaName;
-    private String renamedFileName;
-
-    public String getOldSchemaName() {
-        return oldSchemaName;
-    }
-
-    public String getNewSchemaName() {
-        return newSchemaName;
-    }
-
-    public String getRenamedFileName() {
-        return renamedFileName;
-    }
-
-    public void setOldSchemaName(String oldSchemaName) {
-        this.oldSchemaName = oldSchemaName;
-    }
-
-    public void setNewSchemaName(String newSchemaName) {
-        this.newSchemaName = newSchemaName;
-    }
-
-    public void setRenamedFileName(String renamedFileName) {
-        this.renamedFileName = renamedFileName;
-    }
 
     public SchemaResourceManager(SchemaConverterModel scm) {
         this.scm = scm;
@@ -72,17 +50,9 @@ public class SchemaResourceManager {
         String recordDir = System.getProperty("user.dir")+configProp.getProperty("input.dir")+"record/";
         String schemaDir = System.getProperty("user.dir")+configProp.getProperty("input.dir")+"schema/";
 
-        MultipartFile oldSchemaMPF = scm.getOldSchemaFile();
-        MultipartFile newSchemaMPF = scm.getNewSchemaFile();
-        MultipartFile renamedMPF = scm.getRenamedFile();
-
-        if(!oldSchemaMPF.isEmpty()) setOldSchemaName(oldSchemaMPF.getOriginalFilename());
-        if(!newSchemaMPF.isEmpty()) setNewSchemaName(newSchemaMPF.getOriginalFilename());
-        if(!renamedMPF.isEmpty()) setRenamedFileName(renamedMPF.getOriginalFilename());
-
-        RwUtils.writeMultipartIntoFile(schemaDir,oldSchemaMPF);
-        RwUtils.writeMultipartIntoFile(schemaDir,newSchemaMPF);
-        RwUtils.writeMultipartIntoFile(schemaDir,renamedMPF);
+        RwUtils.writeMultipartIntoFile(schemaDir,scm.getOldSchemaFile());
+        RwUtils.writeMultipartIntoFile(schemaDir,scm.getNewSchemaFile());
+        RwUtils.writeMultipartIntoFile(schemaDir,scm.getRenamedFile());
 
         for (MultipartFile record: scm.getOldJsonFiles()) {
             RwUtils.writeMultipartIntoFile(recordDir,record);
@@ -94,18 +64,9 @@ public class SchemaResourceManager {
         String recordDir = System.getProperty("user.dir")+configProp.getProperty("input.dir")+"record/";
         String schemaDir = System.getProperty("user.dir")+configProp.getProperty("input.dir")+"schema/";
 
-        if(scm.getOldSchemaFile().isEmpty()){
-            RwUtils.writeStringToFile(schemaDir+"oldSchema.avsc",scm.getOldSchemaText());
-            oldSchemaName = "oldSchema.avsc";
-        }
-        if(scm.getNewSchemaFile().isEmpty()){
-            RwUtils.writeStringToFile(schemaDir+"newSchema.avsc",scm.getNewSchemaText());
-            newSchemaName = "newSchema.avsc";
-        }
-        if(scm.getRenamedFile().isEmpty()) {
-            RwUtils.writeStringToFile(schemaDir+"renamedFields.txt",scm.getRenamedText());
-            renamedFileName = "renamedFields.txt";
-        }
+        if(scm.getOldSchemaFile().isEmpty()) RwUtils.writeStringToFile(schemaDir+"oldSchema.avsc",scm.getOldSchemaText());
+        if(scm.getNewSchemaFile().isEmpty()) RwUtils.writeStringToFile(schemaDir+"newSchema.avsc",scm.getNewSchemaText());
+        if(scm.getRenamedFile().isEmpty()) RwUtils.writeStringToFile(schemaDir+"renamedFields.txt",scm.getRenamedText());
 
         int i = 1;
         String recordFileStr;
@@ -121,10 +82,17 @@ public class SchemaResourceManager {
         String inputDir = System.getProperty("user.dir")+configProp.getProperty("input.dir");
         String outputDir = System.getProperty("user.dir")+configProp.getProperty("output.dir");
 
+        String oldSchemaName;
+        String newSchemaName;
+        String renamedFileName;
+        if(scm.getOldSchemaFile().isEmpty()) oldSchemaName = "oldSchema.avsc"; else oldSchemaName = scm.getOldSchemaFile().getOriginalFilename();
+        if(scm.getNewSchemaFile().isEmpty()) newSchemaName = "newSchema.avsc"; else newSchemaName  = scm.getNewSchemaFile().getOriginalFilename();
+        if(scm.getRenamedFile().isEmpty()) renamedFileName = "renamedFields.txt"; else renamedFileName = scm.getRenamedFile().getOriginalFilename();
+
         File recordDir = new File(inputDir + "record/");
-        File oldSchemaFile = new File(inputDir + "schema/" + getOldSchemaName());
-        File newSchemaFile = new File(inputDir + "schema/" + getNewSchemaName());
-        File renamedFile = new File(inputDir + "schema/" + getRenamedFileName());
+        File oldSchemaFile = new File(inputDir + "schema/" + oldSchemaName);
+        File newSchemaFile = new File(inputDir + "schema/" + newSchemaName);
+        File renamedFile = new File(inputDir + "schema/" + renamedFileName);
 
         SchemaConverterMain sc = new SchemaConverterMain();
 
@@ -139,4 +107,30 @@ public class SchemaResourceManager {
         }
     }
 
+    public void download(ZipOutputStream zippedOut) throws IOException {
+        ConfigProp configProp = ConfigProp.getInstance();
+        String downloadFormat = getScm().getDownloadFormat();
+        FileSystemResource resource;
+        ZipEntry zipEntry;
+        File dir;
+
+        for (String dirStr:downloadFormat.split("-")) {
+            dir = new File(System.getProperty("user.dir")+configProp.getProperty("output.dir")+dirStr);
+            for (File file:dir.listFiles()) {
+                resource = new FileSystemResource(System.getProperty("user.dir")+configProp.getProperty("output.dir")+dirStr+"/"+file.getName());
+
+                zipEntry = new ZipEntry(file.getName());
+                // Configure the zip entry, the properties of the file
+                zipEntry.setSize(resource.contentLength());
+                zipEntry.setTime(System.currentTimeMillis());
+                // etc.
+                zippedOut.putNextEntry(zipEntry);
+                // And the content of the resource:
+                StreamUtils.copy(resource.getInputStream(), zippedOut);
+                zippedOut.closeEntry();
+            }
+        }
+
+        zippedOut.finish();
+    }
 }

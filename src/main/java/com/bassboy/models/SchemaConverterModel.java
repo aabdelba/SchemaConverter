@@ -1,15 +1,8 @@
 package com.bassboy.models;
 
-import com.bassboy.schemaconversion.BfsConditioner;
-import com.bassboy.schemaconversion.SchemaConverterException;
-import com.bassboy.schemaconversion.SchemaObject;
 import com.bassboy.utils.ConfigProp;
-import com.bassboy.utils.RwUtils;
-import org.apache.avro.Schema;
-import org.apache.avro.generic.GenericData;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
@@ -24,7 +17,23 @@ public class SchemaConverterModel {
     private String oldSchemaText;
     private String newSchemaText;
     private String renamedText;
-    private String fileFormat;
+    private String downloadFormat;
+
+    @Override
+    public String toString() {
+        return "SchemaConverterModel{" +
+                "configProp=" + configProp +
+                ", oldJsonFiles=" + Arrays.toString(oldJsonFiles) +
+                ", oldSchemaFile=" + oldSchemaFile +
+                ", newSchemaFile=" + newSchemaFile +
+                ", renamedFile=" + renamedFile +
+                ", oldJsonText='" + oldJsonText + '\'' +
+                ", oldSchemaText='" + oldSchemaText + '\'' +
+                ", newSchemaText='" + newSchemaText + '\'' +
+                ", renamedText='" + renamedText + '\'' +
+                ", fileFormat='" + downloadFormat + '\'' +
+                '}';
+    }
 
     public SchemaConverterModel() throws IOException {
     }
@@ -38,7 +47,7 @@ public class SchemaConverterModel {
         this.oldSchemaText = oldSchemaText;
         this.newSchemaText = newSchemaText;
         this.renamedText = renamedText;
-        this.fileFormat = fileFormat;
+        this.downloadFormat = fileFormat;
     }
 
     public MultipartFile[] getOldJsonFiles() {
@@ -105,11 +114,11 @@ public class SchemaConverterModel {
         this.renamedText = renamedText;
     }
 
-    public String getFileFormat() {
-        return fileFormat;
+    public String getDownloadFormat() {
+        return downloadFormat;
     }
 
-    public void setFileFormat(String fileFormat) {
-        this.fileFormat = fileFormat;
+    public void setDownloadFormat(String downloadFormat) {
+        this.downloadFormat = downloadFormat;
     }
 }
