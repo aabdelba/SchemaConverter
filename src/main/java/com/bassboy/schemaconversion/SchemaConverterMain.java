@@ -34,15 +34,18 @@ public class SchemaConverterMain {
 
     public void matchToSchema(File oldSchemaFile, File newSchemaFile, File oldJsonFile, File renamedFile) throws IOException, SchemaConverterException {
         configProp = ConfigProp.getInstance();
-        String inputDir = System.getProperty("user.dir")+configProp.getProperty("input.dir");
         String outputDir = System.getProperty("user.dir") + configProp.getProperty("output.dir");
 
         //create schema objects
         SchemaObject oldSchema = new SchemaObject(oldSchemaFile);
+        oldSchema.setJson(RwUtils.getJsonStringFromFile(oldJsonFile));
         SchemaObject newSchema = new SchemaObject(newSchemaFile);
+        HashMap<String,String> renamedFields;
+        if(renamedFile.exists()) renamedFields = RwUtils.getMapFromEqualSignNewlineSeparatedFile(renamedFile);
+        else renamedFields = new HashMap<>();
 
         //run BFS
-        conditionSchemaUsingBFS(oldSchema,newSchema,oldJsonFile,renamedFile);
+        conditionSchemaUsingBFS(oldSchema,newSchema,renamedFields);
 
         //read old json into a record object
         GenericData.Record record = RwUtils.readDetailedJson(newSchema.getSchema(), oldSchema.getSchema(), oldSchema.getJson());// read in the input to record object
@@ -56,10 +59,7 @@ public class SchemaConverterMain {
                                 record);// write record object into .avro file
     }
 
-    private void conditionSchemaUsingBFS(SchemaObject oldSchema, SchemaObject newSchema, File oldJsonFile, File renamedFile) throws IOException, SchemaConverterException {
-        oldSchema.setJson(RwUtils.getJsonStringFromFile(oldJsonFile));
-
-        HashMap<String,String> renamedFields = RwUtils.getMapFromEqualSignNewlineSeparatedFile(renamedFile);
+    private void conditionSchemaUsingBFS(SchemaObject oldSchema, SchemaObject newSchema, HashMap<String, String> renamedFields) throws IOException, SchemaConverterException {
 
         //use singleton instance of SchemaConditioner
         BfsConditioner schemaConditioner = BfsConditioner.getInstance(oldSchema, newSchema, oldSchema.getJson(), renamedFields);
