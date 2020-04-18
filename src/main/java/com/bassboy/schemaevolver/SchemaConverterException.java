@@ -1,5 +1,5 @@
 
-package com.bassboy.schemaconversion;
+package com.bassboy.schemaevolver;
 
 public class SchemaConverterException extends Exception{
 

@@ -1,4 +1,4 @@
-package com.bassboy.schemaconversion;
+package com.bassboy.schemaevolver;
 
 import com.bassboy.utils.ConfigProp;
 import com.bassboy.utils.RwUtils;

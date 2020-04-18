@@ -1,7 +1,6 @@
-package com.bassboy.schemaconversion;
+package com.bassboy.schemaevolver;
 
 import java.io.*;
-import java.util.*;
 
 import com.bassboy.utils.ConfigProp;
 import com.bassboy.utils.RwUtils;
@@ -10,7 +9,6 @@ import org.apache.avro.Schema.Parser;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.avro.generic.GenericData;
 
 // objects of this type can read in schemas and store it in its own internal attribute
 // the attribute in this class that the schema is stored in is of type Schema
