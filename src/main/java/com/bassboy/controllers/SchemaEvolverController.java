@@ -1,7 +1,8 @@
 package com.bassboy.controllers;
 
 import com.bassboy.models.SchemaEvolverModel;
-import com.bassboy.schemaevolver.SchemaConverterException;
+import com.bassboy.schemaevolver.InvalidEntryException;
+import com.bassboy.schemaevolver.SchemaEvolverException;
 import com.bassboy.services.SchemaResourceManager;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.stereotype.Controller;
@@ -36,7 +37,7 @@ public class SchemaEvolverController implements ErrorController {
     }
 
     @RequestMapping(value="conversion",method = {RequestMethod.POST})
-    public String schemaConversionLoading(@ModelAttribute("scm") SchemaEvolverModel scm, ModelMap model) throws IOException, SchemaConverterException {
+    public String schemaConversionLoading(@ModelAttribute("scm") SchemaEvolverModel scm, ModelMap model) throws IOException, SchemaEvolverException, InvalidEntryException {
 
         // Added wait time for UX
         try {

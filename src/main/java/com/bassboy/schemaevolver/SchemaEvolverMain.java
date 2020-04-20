@@ -9,12 +9,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
-public class SchemaConverterMain {
+public class SchemaEvolverMain {
 
     private ConfigProp configProp;
 
     // DEBUG
-    public static void main(String[] args) throws IOException, SchemaConverterException {
+    public static void main(String[] args) throws IOException, SchemaEvolverException, InvalidEntryException {
 
         ConfigProp configProp = ConfigProp.getInstance();
         String inputDir = System.getProperty("user.dir")+configProp.getProperty("input.dir");
@@ -24,21 +24,21 @@ public class SchemaConverterMain {
         String oldJsonFile = inputDir+"debug/record/record.json";
         String renamedFile = inputDir+"debug/schema/renamedFields.txt";
 
-        SchemaConverterMain sc = new SchemaConverterMain();
+        SchemaEvolverMain sc = new SchemaEvolverMain();
         sc.matchToSchema(oldSchemaFile,newSchemaFile,oldJsonFile,renamedFile);
     }
 
-    public void matchToSchema(String oldSchemaFile, String newSchemaFile, String oldJsonFile, String renamedFile) throws IOException, SchemaConverterException {
+    public void matchToSchema(String oldSchemaFile, String newSchemaFile, String oldJsonFile, String renamedFile) throws IOException, SchemaEvolverException, InvalidEntryException {
         matchToSchema(new File(oldSchemaFile),new File(newSchemaFile),new File(oldJsonFile),new File(renamedFile));
     }
 
-    public void matchToSchema(File oldSchemaFile, File newSchemaFile, File oldJsonFile, File renamedFile) throws IOException, SchemaConverterException {
+    public void matchToSchema(File oldSchemaFile, File newSchemaFile, File oldJsonFile, File renamedFile) throws IOException, SchemaEvolverException, InvalidEntryException {
         configProp = ConfigProp.getInstance();
         String outputDir = System.getProperty("user.dir") + configProp.getProperty("output.dir");
 
         //create schema objects
         SchemaObject oldSchema = new SchemaObject(oldSchemaFile);
-        oldSchema.setJson(RwUtils.getJsonStringFromFile(oldJsonFile));
+        oldSchema.setJson(oldJsonFile);
         SchemaObject newSchema = new SchemaObject(newSchemaFile);
         HashMap<String,String> renamedFields;
         if(renamedFile.exists()) renamedFields = RwUtils.getMapFromEqualSignNewlineSeparatedFile(renamedFile);
@@ -59,7 +59,7 @@ public class SchemaConverterMain {
                                 record);// write record object into .avro file
     }
 
-    private void conditionSchemaUsingBFS(SchemaObject oldSchema, SchemaObject newSchema, HashMap<String, String> renamedFields) throws IOException, SchemaConverterException {
+    private void conditionSchemaUsingBFS(SchemaObject oldSchema, SchemaObject newSchema, HashMap<String, String> renamedFields) throws IOException, SchemaEvolverException {
 
         //use singleton instance of SchemaConditioner
         BfsConditioner schemaConditioner = BfsConditioner.getInstance(oldSchema, newSchema, oldSchema.getJson(), renamedFields);

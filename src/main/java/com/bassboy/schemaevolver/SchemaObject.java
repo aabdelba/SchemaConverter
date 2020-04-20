@@ -9,6 +9,7 @@ import org.apache.avro.Schema.Parser;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.avro.generic.GenericData;
 
 // objects of this type can read in schemas and store it in its own internal attribute
 // the attribute in this class that the schema is stored in is of type Schema
@@ -23,6 +24,10 @@ public class SchemaObject {
 	public String getJson() {
 		return json;
 	}
+
+//	public void setJson(File oldJsonFile) throws IOException {
+//		setJson(RwUtils.parseJsonOrAvro(oldJsonFile,schema));
+//	}
 
 	public void setJson(String json) {
 		this.json = json;
@@ -52,13 +57,17 @@ public class SchemaObject {
 		//prop.load(inStream);
 	}
 
-	public SchemaObject(String fileStr) throws IOException {
-		new SchemaObject(new File(fileStr));
+	public SchemaObject(String fileStr) throws InvalidEntryException {
+		this(new File(fileStr));
 	}
 
-	public SchemaObject(File file) throws IOException {
-		init();
-		parseSchemaFromAvsc(file);
+	public SchemaObject(File file) throws InvalidEntryException {
+		try {
+			init();
+			parseSchemaFromAvsc(file);
+		} catch(Exception e){
+			throw new InvalidEntryException("Invalid schema: "+file.getName()+"\n"+e.getMessage());
+		}
 	}
 
 	// basic POJO ends here
@@ -92,7 +101,5 @@ public class SchemaObject {
 		Parser parser = new Parser();
 		setSchema(parser.parse(text));
 	}
-
-
 
 }

@@ -1,8 +1,9 @@
 package com.bassboy.services;
 
 import com.bassboy.models.SchemaEvolverModel;
-import com.bassboy.schemaevolver.SchemaConverterMain;
-import com.bassboy.schemaevolver.SchemaConverterException;
+import com.bassboy.schemaevolver.InvalidEntryException;
+import com.bassboy.schemaevolver.SchemaEvolverMain;
+import com.bassboy.schemaevolver.SchemaEvolverException;
 import com.bassboy.utils.ConfigProp;
 import com.bassboy.utils.RwUtils;
 import org.springframework.core.io.FileSystemResource;
@@ -76,7 +77,7 @@ public class SchemaResourceManager {
         }
     }
 
-    public void runConversion() throws IOException, SchemaConverterException {
+    public void runConversion() throws IOException, SchemaEvolverException, InvalidEntryException {
         configProp = ConfigProp.getInstance();
         String inputDir = System.getProperty("user.dir")+configProp.getProperty("input.dir");
         String outputDir = System.getProperty("user.dir")+configProp.getProperty("output.dir");
@@ -90,14 +91,17 @@ public class SchemaResourceManager {
 
         File recordDir = new File(inputDir + "record/");
         File oldSchemaFile = new File(inputDir + "schema/" + oldSchemaName);
-        File newSchemaFile = new File(inputDir + "schema/" + newSchemaName);
+        File newSchemaFile = new File(inputDir + "schema/   " + newSchemaName);
         File renamedFile = new File(inputDir + "schema/" + renamedFileName);
 
-        SchemaConverterMain sc = new SchemaConverterMain();
+        SchemaEvolverMain sc = new SchemaEvolverMain();
 
         for (File oldJsonFile:recordDir.listFiles()) {
             try {
                 sc.matchToSchema(oldSchemaFile, newSchemaFile, oldJsonFile, renamedFile);
+            } catch (InvalidEntryException ise){//this will stop the for loop if any of the schemas are incorrect
+                ise.printStackTrace();
+                throw ise;
             } catch (Exception e){
                 e.printStackTrace();
                 RwUtils.writeStringToFile(outputDir+"json/ERROR_"+oldJsonFile.getName(),e.getMessage());

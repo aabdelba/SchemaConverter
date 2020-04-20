@@ -10,14 +10,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 // class intended to be called by SchemaConditioner in a static fashion
 // used to handle the scenarios that are not covered by avro libraries
-public class ConversionScenarios {
+public class EvolutionScenarios {
 
 	public static void oldSchema_unwrapRecordFromArray(BfsConditioner sc, Entry<String, JsonNode> oldEntry, Entry<String, JsonNode> latestEntry) {
 		// TODO
 		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!! SCENARIO: record no longer wrapped in an array !!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 	}
 
-	public static void oldSchema_wrapRecordInArray(BfsConditioner sc, Entry<String, JsonNode> oldEntry, Entry<String, JsonNode> latestEntry, JsonNode oldParent, JsonNode latestParent) throws IOException, SchemaConverterException {
+	public static void oldSchema_wrapRecordInArray(BfsConditioner sc, Entry<String, JsonNode> oldEntry, Entry<String, JsonNode> latestEntry, JsonNode oldParent, JsonNode latestParent) throws IOException, SchemaEvolverException {
 		System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!! SCENARIO: record is now wrapped in an array !!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
 		//modify old schema
@@ -31,7 +31,7 @@ public class ConversionScenarios {
 
 	}
 
-	private static void oldJson_modifyJsonRecord(BfsConditioner sc, String segmentName) throws IOException, SchemaConverterException {
+	private static void oldJson_modifyJsonRecord(BfsConditioner sc, String segmentName) throws IOException, SchemaEvolverException {
 		JsonNode json = sc.getOldJson();
 
 		Map<String,JsonNode> map = new TreeMap<String, JsonNode>();
@@ -45,7 +45,7 @@ public class ConversionScenarios {
 			recordEntry.setValue(mapper.readTree("[" + recordEntry.getValue() + "]"));
 		}catch (java.lang.NullPointerException e){
 			e.printStackTrace();
-			throw new SchemaConverterException("old JSON does not match OLD schema\nNode not found in old JSON\n");
+			throw new SchemaEvolverException("old JSON does not match OLD schema\nNode not found in old JSON\n");
 		}
 
 		System.out.println("   oldJson node modified: " + recordEntry);
