@@ -38,7 +38,8 @@ public class SchemaEvolverMain {
 
         //create schema objects
         SchemaObject oldSchema = new SchemaObject(oldSchemaFile);
-        oldSchema.setJson(oldJsonFile);
+//        oldSchema.setJson(oldJsonFile);
+        oldSchema.setJson(RwUtils.convertFileContentToString(oldJsonFile));
         SchemaObject newSchema = new SchemaObject(newSchemaFile);
         HashMap<String,String> renamedFields;
         if(renamedFile.exists()) renamedFields = RwUtils.getMapFromEqualSignNewlineSeparatedFile(renamedFile);

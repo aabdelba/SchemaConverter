@@ -91,7 +91,7 @@ public final class RwUtils {
 		ConfigProp configProp = ConfigProp.getInstance();
 		String inputPath=System.getProperty("user.dir")+configProp.getProperty("debug.dir");
 		SchemaObject oldSchema = new SchemaObject(inputPath+"schema/schema1.avsc");
-		oldSchema.setJson(new File(inputPath+"record/record.avro"));
+//		oldSchema.setJson(new File(inputPath+"record/record.avro"));
 
 	}
 
