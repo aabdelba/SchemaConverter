@@ -85,7 +85,7 @@ public class BfsConditioner {
 
 
 
-	public void startConversion() throws IOException, SchemaConverterException {
+	public void startConversion() throws IOException, SchemaEvolverException {
 
 		for (String key:getRenamedFields().keySet()) {
 			System.out.println(key);
@@ -95,7 +95,7 @@ public class BfsConditioner {
 	}
 
 	// recursive method to traverse through old and latest schemas using breadth-first
-	private void goInsideNode(JsonNode oldParent, JsonNode latestParent, String latestPath) throws IOException, SchemaConverterException {
+	private void goInsideNode(JsonNode oldParent, JsonNode latestParent, String latestPath) throws IOException, SchemaEvolverException {
 
 		Entry<String, JsonNode> oldEntry = null;
 		Entry<String, JsonNode> latestEntry = null;
@@ -114,7 +114,7 @@ public class BfsConditioner {
 					try {
 						JSONAssert.assertEquals(latestParent.toString(), oldParent.toString(),JSONCompareMode.NON_EXTENSIBLE);
 					} catch (AssertionError | Exception e1) {
-						ConversionScenarios.latestSchema_missingSensitiveKey(this,e1);
+						EvolutionScenarios.latestSchema_missingSensitiveKey(this,e1);
 					}
 					break;
 				} finally {
@@ -126,7 +126,7 @@ public class BfsConditioner {
 	}
 
 	private void compareNodes(Entry<String, JsonNode> oldEntry, Entry<String, JsonNode> latestEntry, JsonNode oldParent, JsonNode latestParent, String latestPath)
-			throws IOException, SchemaConverterException {
+			throws IOException, SchemaEvolverException {
 
 		latestPath = latestPath+latestEntry.getKey()+"/";
 
@@ -177,7 +177,7 @@ public class BfsConditioner {
 					if (!oldName.equals(latestName) && !foundInAliases(oldName, latestItems)) {
 
 						if(areTheSameRenamedObject(oldItems,latestItems)) {
-							ConversionScenarios.latestSchema_addAliasToFieldInSchemaArray(this,latestEntry,oldEntry,latestPath);
+							EvolutionScenarios.latestSchema_addAliasToFieldInSchemaArray(this,latestEntry,oldEntry,latestPath);
 							startConversion();
 							return;
 						}
@@ -186,16 +186,16 @@ public class BfsConditioner {
 					goInsideNode(oldItems, latestItems, latestPath);
 				} else if (!latestType.equals(oldType)) {
 					if (latestType.toString().equals("\"record\"") && oldType.toString().equals("\"array\""))
-						ConversionScenarios.oldSchema_unwrapRecordFromArray(this, oldEntry, latestEntry);
+						EvolutionScenarios.oldSchema_unwrapRecordFromArray(this, oldEntry, latestEntry);
 					else if (latestType.toString().equals("\"array\"") && oldType.toString().equals("\"record\"")) {
-						ConversionScenarios.oldSchema_wrapRecordInArray(this,oldEntry,latestEntry,oldParent,latestParent);
+						EvolutionScenarios.oldSchema_wrapRecordInArray(this,oldEntry,latestEntry,oldParent,latestParent);
 						startConversion();
 						return;
 					}
 					else
-						throw (new SchemaConverterException("Unhandled case\nold: " + oldNode + "\nnew: " + latestNode));
+						throw (new SchemaEvolverException("Unhandled case\nold: " + oldNode + "\nnew: " + latestNode));
 				} else {
-					throw (new SchemaConverterException("Unhandled case\nold: " + oldNode + "\nnew: " + latestNode));
+					throw (new SchemaEvolverException("Unhandled case\nold: " + oldNode + "\nnew: " + latestNode));
 				}
 
 					break;// case
@@ -211,14 +211,14 @@ public class BfsConditioner {
 
 				default:
 					if(!(oldEntry.getKey().equals("name") && latestEntry.getKey().equals("name")))
-						throw (new SchemaConverterException("Unhandled case\nold: " + oldEntry + "\nnew: " + latestEntry));
+						throw (new SchemaEvolverException("Unhandled case\nold: " + oldEntry + "\nnew: " + latestEntry));
 					break;
 			}
 		}
 	}
 
 	// process a JSON array that contains one or more JSON objects
-	private void processArray(Entry<String, JsonNode> oldEntry, Entry<String, JsonNode> latestEntry, JsonNode oldParent, JsonNode latestParent, String latestPath) throws IOException, SchemaConverterException {
+	private void processArray(Entry<String, JsonNode> oldEntry, Entry<String, JsonNode> latestEntry, JsonNode oldParent, JsonNode latestParent, String latestPath) throws IOException, SchemaEvolverException {
 		int i = 0;
 
 		for (JsonNode latestArrayEntry : latestEntry.getValue()) {
@@ -231,7 +231,7 @@ public class BfsConditioner {
 						break;
 					} else {
 						if(areTheSameRenamedObject(oldArrayEntry,latestArrayEntry)) {
-							ConversionScenarios.latestSchema_addAliasToFieldInArray(this,latestEntry,oldArrayEntry, latestPath);
+							EvolutionScenarios.latestSchema_addAliasToFieldInArray(this,latestEntry,oldArrayEntry, latestPath);
 							startConversion();
 							return;
 						}
@@ -252,7 +252,7 @@ public class BfsConditioner {
 					arrayEntryWasFoundInLatest = true;
 			}
 			if (!arrayEntryWasFoundInLatest)
-				ConversionScenarios.latestSchema_addType(this,oldEntry,latestEntry,oldArrayEntry);
+				EvolutionScenarios.latestSchema_addType(this,oldEntry,latestEntry,oldArrayEntry);
 			arrayEntryWasFoundInLatest = false;
 		}
 	}
@@ -318,18 +318,18 @@ public class BfsConditioner {
 	}
 
 	private Boolean checkType(Entry<String, JsonNode> oldEntry, Entry<String, JsonNode> latestEntry)
-			throws SchemaConverterException {
+			throws SchemaEvolverException {
 		JsonNodeType latestNodeType = latestEntry.getValue().getNodeType();
 		JsonNodeType oldNodeType = oldEntry.getValue().getNodeType();
 		if (!(oldNodeType == latestNodeType))
-			throw new SchemaConverterException("type mismatch\noldNode: " + oldEntry + "\nlatestNode: " + latestEntry);
+			throw new SchemaEvolverException("type mismatch\noldNode: " + oldEntry + "\nlatestNode: " + latestEntry);
 		else
 			return true;
 	}
 
-	private void searchForElement(JsonNode oldParent, JsonNode latestNode, JsonNode latestParent, String latestPath) throws IOException, SchemaConverterException {
+	private void searchForElement(JsonNode oldParent, JsonNode latestNode, JsonNode latestParent, String latestPath) throws IOException, SchemaEvolverException {
 
-		throw new SchemaConverterException("Unhandled case: latest schema has extra record - do nothing since it is handled by avro\noldParent" + oldParent + "\nlatestParent: " + latestParent);
+		throw new SchemaEvolverException("Unhandled case: latest schema has extra record - do nothing since it is handled by avro\noldParent" + oldParent + "\nlatestParent: " + latestParent);
 		// NOTE: this method has never been used during run-time
 		// however, if it does get used, it may need debugging
 		// For now, if this is ever encountered, throw exception. If this code is needed, uncomment the following lines

@@ -4,19 +4,20 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Properties;
 
+import com.bassboy.schemaevolver.InvalidEntryException;
+import com.bassboy.schemaevolver.SchemaEvolverException;
+import com.bassboy.schemaevolver.SchemaObject;
 import org.apache.avro.AvroTypeException;
 import org.apache.avro.Schema;
+import org.apache.avro.file.DataFileReader;
 import org.apache.avro.file.DataFileWriter;
-import org.apache.avro.generic.GenericDatumReader;
-import org.apache.avro.generic.GenericDatumWriter;
+import org.apache.avro.generic.*;
 import org.apache.avro.generic.GenericData.Record;
-import org.apache.avro.io.BinaryEncoder;
-import org.apache.avro.io.Decoder;
-import org.apache.avro.io.DecoderFactory;
-import org.apache.avro.io.Encoder;
-import org.apache.avro.io.EncoderFactory;
+import org.apache.avro.io.*;
 
+import org.json.JSONObject;
 import org.springframework.web.multipart.MultipartFile;
+import tech.allegro.schema.json2avro.converter.JsonAvroConverter;
 import tech.allegro.schema.json2avro.converter.JsonGenericRecordReader;
 
 public final class RwUtils {
@@ -66,17 +67,11 @@ public final class RwUtils {
 		return sb.toString();
 	}
 
-
-	public static String getJsonStringFromFile(File jsonFile) throws IOException {
-		return RwUtils.convertFileContentToString(jsonFile)
-				.replace("\n", "")
-				.replace("\t", "")
-				.replace("\r", "")
-				.replace(" ", "");
+	public static boolean isValidJson(String oldJsonString) {
+		try{new JSONObject(oldJsonString);return true;}catch (Exception e){return false;}
 	}
 
 	public static byte[] writeAvroToFile(String fullFilePath, Schema writerSchema, Object datum) throws IOException {
-
 		GenericDatumWriter<Object> writer = new GenericDatumWriter<Object>(writerSchema);
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		Encoder e = EncoderFactory.get().binaryEncoder(outputStream, null);
@@ -87,16 +82,24 @@ public final class RwUtils {
 		DataFileWriter<Object> dataFileWriter = new DataFileWriter<>(writer);
 		dataFileWriter.create(writerSchema, new File(fullFilePath));
 		dataFileWriter.append(datum);
+		System.out.println("Created " + fullFilePath);
 		dataFileWriter.close();
-
 		return outputStream.toByteArray();
 	}
+
+	public static void main(String[] args) throws InvalidEntryException, IOException, SchemaEvolverException {
+		ConfigProp configProp = ConfigProp.getInstance();
+		String inputPath=System.getProperty("user.dir")+configProp.getProperty("debug.dir");
+		SchemaObject oldSchema = new SchemaObject(inputPath+"schema/schema1.avsc");
+		oldSchema.setJson(new File(inputPath+"record/record.avro"));
+
+	}
+
 
 	public static Record readUndetailedJson(Schema newSchema, Schema oldSchema, String json) throws IOException {
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		BinaryEncoder encoder = EncoderFactory.get().binaryEncoder(outputStream, null);
 		GenericDatumWriter<Object> writer = new GenericDatumWriter<>(oldSchema);
-		
 		
 		writer.write(convertToGenericDataRecord(json.getBytes(), oldSchema), encoder);
 		encoder.flush();
@@ -121,8 +124,24 @@ public final class RwUtils {
 		}
 	}
 
+	public static Record readDetailedJson(Schema schema, String json) throws IOException {
+		if (json == null) {
+			return null;
+		}
+		GenericDatumReader<Record> reader = new GenericDatumReader<>();
+		reader.setSchema(schema);
+
+		Decoder decoder = DecoderFactory.get().jsonDecoder(schema, json);
+
+		try {
+			return reader.read(null, decoder);
+		} catch (AvroTypeException e) {
+			throw e;
+		}
+	}
+
 	public static Object convertToGenericDataRecord(byte[] data, Schema schema) {
-	    JsonGenericRecordReader recordReader = new JsonGenericRecordReader();
+		JsonGenericRecordReader recordReader = new JsonGenericRecordReader();
 		return recordReader.read(data, schema);
 	}
 
@@ -179,8 +198,8 @@ public final class RwUtils {
 		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 		BinaryEncoder encoder = EncoderFactory.get().binaryEncoder(outputStream, null);
 		GenericDatumWriter<Object> writer = new GenericDatumWriter<>(schema);
-		
-		
+
+
 		writer.write(convertToGenericDataRecord(json.getBytes(), schema), encoder);
 		encoder.flush();
 		return readRecord(schema,outputStream.toByteArray());
@@ -212,4 +231,5 @@ public final class RwUtils {
 			System.out.println("Deleted " + file.getAbsolutePath());
 		};
 	}
+
 }
