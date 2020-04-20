@@ -91,7 +91,7 @@ public class SchemaResourceManager {
 
         File recordDir = new File(inputDir + "record/");
         File oldSchemaFile = new File(inputDir + "schema/" + oldSchemaName);
-        File newSchemaFile = new File(inputDir + "schema/   " + newSchemaName);
+        File newSchemaFile = new File(inputDir + "schema/" + newSchemaName);
         File renamedFile = new File(inputDir + "schema/" + renamedFileName);
 
         SchemaEvolverMain sc = new SchemaEvolverMain();
