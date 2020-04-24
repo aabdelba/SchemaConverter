@@ -16,8 +16,6 @@ import com.fasterxml.jackson.databind.node.JsonNodeType;
 // objects of this type are used to iterate through the old and new schemas by treating each schema as a tree node and by using breadth-first
 public class BfsConditioner {
 
-	// basic POJO starts here
-
 	private static BfsConditioner bfsUtilsInstance = null;//singleton class
 	private JsonNode oldSchema;
 	private JsonNode latestSchema;
@@ -25,27 +23,13 @@ public class BfsConditioner {
 	private JsonNode oldJson;
 	private HashMap<String,String> renamedFields;
 
-	public HashMap<String, String> getRenamedFields() {
-		return renamedFields;
-	}
-
-	public void setRenamedFields(HashMap<String, String> renamedFields) {
-		this.renamedFields = renamedFields;
-	}
-
 	private BfsConditioner(RecordObject oldSchemaObject, RecordObject latestSchemaObject, JsonNode oldJson, HashMap<String,String> renamedFields) throws IOException {
-		setOldSchema(oldSchemaObject.getSchemaAsJsonNode());
-		setLatestSchema(latestSchemaObject.getSchemaAsJsonNode());
+		ObjectMapper mapper = new ObjectMapper();
+
+		setOldSchema(mapper.readTree(oldSchemaObject.getSchema().toString()));
+		setLatestSchema(mapper.readTree(latestSchemaObject.getSchema().toString()));
 		setOldJson(oldJson);
 		setRenamedFields(renamedFields);
-	}
-
-	public JsonNode getOldJson() {
-		return oldJson;
-	}
-
-	public void setOldJson(JsonNode oldJson) {
-		this.oldJson = oldJson;
 	}
 
 	public static BfsConditioner getInstance(RecordObject oldSchemaObject, RecordObject latestSchemaObject, HashMap<String,String> renamedFields) throws IOException {
@@ -54,8 +38,8 @@ public class BfsConditioner {
 		if(bfsUtilsInstance == null) {
 			bfsUtilsInstance = new BfsConditioner(oldSchemaObject, latestSchemaObject, oldJsonNode, renamedFields);
 		} else {
-			bfsUtilsInstance.setLatestSchema(latestSchemaObject.getSchemaAsJsonNode());
-			bfsUtilsInstance.setOldSchema(oldSchemaObject.getSchemaAsJsonNode());
+			bfsUtilsInstance.setLatestSchema(mapper.readTree(latestSchemaObject.getSchema().toString()));
+			bfsUtilsInstance.setOldSchema(mapper.readTree(oldSchemaObject.getSchema().toString()));
 			bfsUtilsInstance.setOldJson(oldJsonNode);
 			bfsUtilsInstance.setRenamedFields(renamedFields);
 		}
@@ -78,7 +62,23 @@ public class BfsConditioner {
 		this.latestSchema = latestSchema;
 	}
 
-	// basic POJO ends here
+	public JsonNode getOldJson() {
+		return oldJson;
+	}
+
+	public void setOldJson(JsonNode oldJson) {
+		this.oldJson = oldJson;
+	}
+
+	public HashMap<String, String> getRenamedFields() {
+		return renamedFields;
+	}
+
+	public void setRenamedFields(HashMap<String, String> renamedFields) {
+		this.renamedFields = renamedFields;
+	}
+
+
 
 
 
