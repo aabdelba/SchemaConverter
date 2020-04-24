@@ -1,4 +1,4 @@
-package com.bassboy.utils;
+package com.bassboy.common;
 
 import java.io.FileInputStream;
 import java.io.IOException;

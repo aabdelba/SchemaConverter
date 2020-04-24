@@ -33,7 +33,7 @@ public class BfsConditioner {
 		this.renamedFields = renamedFields;
 	}
 
-	private BfsConditioner(SchemaObject oldSchemaObject, SchemaObject latestSchemaObject, JsonNode oldJson, HashMap<String,String> renamedFields) throws IOException {
+	private BfsConditioner(RecordObject oldSchemaObject, RecordObject latestSchemaObject, JsonNode oldJson, HashMap<String,String> renamedFields) throws IOException {
 		setOldSchema(oldSchemaObject.getSchemaAsJsonNode());
 		setLatestSchema(latestSchemaObject.getSchemaAsJsonNode());
 		setOldJson(oldJson);
@@ -48,20 +48,17 @@ public class BfsConditioner {
 		this.oldJson = oldJson;
 	}
 
-	public static BfsConditioner getInstance(SchemaObject oldSchemaObject, SchemaObject latestSchemaObject, String oldJson, HashMap<String,String> renamedFields) throws IOException {
+	public static BfsConditioner getInstance(RecordObject oldSchemaObject, RecordObject latestSchemaObject, HashMap<String,String> renamedFields) throws IOException {
 		ObjectMapper mapper = new ObjectMapper();
+		JsonNode oldJsonNode = mapper.readTree(oldSchemaObject.getRecord().toString());
 		if(bfsUtilsInstance == null) {
-			bfsUtilsInstance = new BfsConditioner(oldSchemaObject, latestSchemaObject, mapper.readTree(oldJson), renamedFields);
+			bfsUtilsInstance = new BfsConditioner(oldSchemaObject, latestSchemaObject, oldJsonNode, renamedFields);
 		} else {
 			bfsUtilsInstance.setLatestSchema(latestSchemaObject.getSchemaAsJsonNode());
 			bfsUtilsInstance.setOldSchema(oldSchemaObject.getSchemaAsJsonNode());
-			bfsUtilsInstance.setOldJson(mapper.readTree(oldJson));
+			bfsUtilsInstance.setOldJson(oldJsonNode);
 			bfsUtilsInstance.setRenamedFields(renamedFields);
 		}
-		return bfsUtilsInstance;
-	}
-
-	public BfsConditioner getInstance() {
 		return bfsUtilsInstance;
 	}
 

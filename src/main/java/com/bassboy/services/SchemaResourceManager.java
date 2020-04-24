@@ -4,8 +4,8 @@ import com.bassboy.models.SchemaEvolverModel;
 import com.bassboy.schemaevolver.InvalidEntryException;
 import com.bassboy.schemaevolver.SchemaEvolverMain;
 import com.bassboy.schemaevolver.SchemaEvolverException;
-import com.bassboy.utils.ConfigProp;
-import com.bassboy.utils.RwUtils;
+import com.bassboy.common.ConfigProp;
+import com.bassboy.common.RwUtils;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -98,7 +98,7 @@ public class SchemaResourceManager {
 
         for (File oldJsonFile:recordDir.listFiles()) {
             try {
-                sc.matchToSchema(oldSchemaFile, newSchemaFile, oldJsonFile, renamedFile);
+                sc.convertDataAndPlaceInOutputDir(oldSchemaFile, newSchemaFile, oldJsonFile, renamedFile);
             } catch (InvalidEntryException ise){//this will stop the for loop if any of the schemas are incorrect
                 ise.printStackTrace();
                 throw ise;
