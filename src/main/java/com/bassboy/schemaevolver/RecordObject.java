@@ -23,8 +23,6 @@ import org.apache.avro.io.EncoderFactory;
 // the attribute in this class that the schema is stored in is of type Schema
 public class RecordObject {
 
-	// basic POJO starts here
-
 	private ConfigProp prop;
 	private Schema schema;
 	private GenericData.Record record;
@@ -37,21 +35,16 @@ public class RecordObject {
 		this.record = record;
 	}
 
-	public void setJson(String json) throws IOException {
+	public void setRecord(String json) throws IOException {
 		this.record = parseJson(schema,json);
 	}
 
-	public void setJson(Schema previousSchema, GenericData.Record json) throws IOException {
+	public void setRecord(Schema previousSchema, GenericData.Record json) throws IOException {
 		this.record = parseJson(schema,previousSchema,json.toString());
 	}
 
 	public Schema getSchema() {
 		return schema;
-	}
-
-	public JsonNode getSchemaAsJsonNode() throws IOException {
-		ObjectMapper mapper = new ObjectMapper();
-		return mapper.readTree(schema.toString());
 	}
 
 	public void setSchema(Schema schema) {
@@ -82,7 +75,7 @@ public class RecordObject {
 		}
 	}
 
-	// basic POJO ends here
+
 
 
 

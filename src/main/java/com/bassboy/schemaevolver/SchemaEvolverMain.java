@@ -37,7 +37,7 @@ public class SchemaEvolverMain {
 
         //create schema objects
         RecordObject oldRecord = new RecordObject(oldSchemaFile);
-        oldRecord.setJson(RwUtils.convertFileContentToString(oldJsonFile));
+        oldRecord.setRecord(RwUtils.convertFileContentToString(oldJsonFile));
         RecordObject newRecord = new RecordObject(newSchemaFile);
         HashMap<String,String> renamedFields;
         if(renamedFile.exists()) renamedFields = RwUtils.getMapFromEqualSignNewlineSeparatedFile(renamedFile);
@@ -47,9 +47,9 @@ public class SchemaEvolverMain {
         conditionSchemaUsingBFS(oldRecord,newRecord,renamedFields);
 
         //read old json into a record object
-        newRecord.setJson(oldRecord.getSchema(), oldRecord.getRecord());// read in the input to record object
+        newRecord.setRecord(oldRecord.getSchema(), oldRecord.getRecord());// read in the input to record object
         System.out.println("\nJSON record in old schema:\n"+ oldRecord.getRecord());
-        System.out.println("\nJSON record in new schema:\n"+newRecord.getRecord());
+        System.out.println("\nJSON record in new schema:\n"+newRecord.getRecord()+"\n");
 
         //write new json into avro file
         RwUtils.writeStringToFile(outputDir+"json/"+oldJsonFile.getName(),newRecord.getRecord().toString());
@@ -64,7 +64,7 @@ public class SchemaEvolverMain {
 
         Schema.Parser parser = new Schema.Parser();//create new parser
         oldRecord.setSchema(parser.parse(schemaConditioner.getOldSchema().toString()));//set updated old schema
-        oldRecord.setJson(schemaConditioner.getOldJson().toString());//set updated old json that has a modified structure if there were array wrappings/unwrappings in the schemas
+        oldRecord.setRecord(schemaConditioner.getOldJson().toString());//set updated old json that has a modified structure if there were array wrappings/unwrappings in the schemas
         parser = new Schema.Parser();//reset the parser
         newRecord.setSchema(parser.parse(schemaConditioner.getLatestSchema().toString()));//set updated latest schema
 
