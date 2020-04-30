@@ -1,9 +1,10 @@
 package com.bassboy.controllers;
 
-import com.bassboy.models.SchemaEvolverModel;
+import com.bassboy.models.FormModel;
 import com.bassboy.schemaevolver.InvalidEntryException;
 import com.bassboy.schemaevolver.SchemaEvolverException;
 import com.bassboy.services.SchemaResourceManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,6 +24,7 @@ import java.util.zip.ZipOutputStream;
 @Controller
 public class SchemaEvolverController implements ErrorController {
 
+    @Autowired
     private SchemaResourceManager srm;
 
     @RequestMapping(value = "/", method = {RequestMethod.GET})
@@ -32,12 +34,12 @@ public class SchemaEvolverController implements ErrorController {
 
     @RequestMapping(value="form",method = {RequestMethod.POST})
     public String schemaConversionForm(Model model) throws IOException {
-        model.addAttribute("scm", new SchemaEvolverModel());
+        model.addAttribute("scm", new FormModel());
         return "form";
     }
 
     @RequestMapping(value="conversion",method = {RequestMethod.POST})
-    public String schemaConversionLoading(@ModelAttribute("scm") SchemaEvolverModel scm, ModelMap model) throws IOException, SchemaEvolverException, InvalidEntryException {
+    public String schemaConversionLoading(@ModelAttribute("scm") FormModel scm, ModelMap model) throws IOException, SchemaEvolverException, InvalidEntryException {
 
         // Added wait time for UX
         try {
@@ -125,7 +127,7 @@ public class SchemaEvolverController implements ErrorController {
 
         String downloadFormat = "json";
 
-        SchemaEvolverModel scv = new SchemaEvolverModel(oldJsonFiles,oldSchemaFile,newSchemaFile,renamedFile,
+        FormModel scv = new FormModel(oldJsonFiles,oldSchemaFile,newSchemaFile,renamedFile,
                 oldJsonText,oldSchemaText,newSchemaText,renamedText,downloadFormat);
 
         SchemaResourceManager srm = new SchemaResourceManager(scv);

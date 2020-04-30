@@ -16,12 +16,12 @@ public class SchemaEvolverMain {
     public static void main(String[] args) throws IOException, SchemaEvolverException, InvalidEntryException {
 
         ConfigProp configProp = ConfigProp.getInstance();
-        String inputDir = System.getProperty("user.dir")+configProp.getProperty("input.dir");
+        String inputDir = System.getProperty("user.dir")+configProp.getProperty("debug.dir");
 
-        String oldSchemaFile = inputDir + "debug/schema/schema1.avsc";
-        String newSchemaFile = inputDir + "debug/schema/schema2.avsc";
-        String oldJsonFile = inputDir+"debug/record/record.json";
-        String renamedFile = inputDir+"debug/schema/renamedFields.txt";
+        String oldSchemaFile = inputDir + "schema/schema1.avsc";
+        String newSchemaFile = inputDir + "schema/schema2.avsc";
+        String oldJsonFile = inputDir+"record/record.json";
+        String renamedFile = inputDir+"schema/renamedFields.txt";
 
         SchemaEvolverMain sc = new SchemaEvolverMain();
         sc.convertDataAndPlaceInOutputDir(oldSchemaFile,newSchemaFile,oldJsonFile,renamedFile);
@@ -37,7 +37,7 @@ public class SchemaEvolverMain {
 
         //create schema objects
         RecordObject oldRecord = new RecordObject(oldSchemaFile);
-        oldRecord.setRecord(RwUtils.convertFileContentToString(oldJsonFile));
+        oldRecord.setRecord(oldJsonFile);
         RecordObject newRecord = new RecordObject(newSchemaFile);
         HashMap<String,String> renamedFields;
         if(renamedFile.exists()) renamedFields = RwUtils.getMapFromEqualSignNewlineSeparatedFile(renamedFile);
@@ -46,13 +46,21 @@ public class SchemaEvolverMain {
         //run BFS - schemas need conditioning before parsing the JSON into newRecord
         conditionSchemaUsingBFS(oldRecord,newRecord,renamedFields);
 
+//        System.out.println("\nDEBUG OLD:\n"+ oldRecord.getSchema());
+//        System.out.println("DEBUG NEW:\n"+ newRecord.getSchema());
+
         //read old json into a record object
-        newRecord.setRecord(oldRecord.getSchema(), oldRecord.getRecord());// read in the input to record object
-        System.out.println("\nJSON record in old schema:\n"+ oldRecord.getRecord());
-        System.out.println("\nJSON record in new schema:\n"+newRecord.getRecord()+"\n");
+        try {
+            newRecord.setRecord(oldRecord.getSchema(), oldRecord.getRecord());// read in the input to record object
+            System.out.println("\nJSON record in old schema:\n" + oldRecord.getRecord());
+            System.out.println("\nJSON record in new schema:\n" + newRecord.getRecord() + "\n");
+        }catch(Exception unhandledScenario){
+            unhandledScenario.printStackTrace();
+            throw new SchemaEvolverException("Error due to unimplemented feature.\n"+unhandledScenario.getMessage());
+        }
 
         //write new json into avro file
-        RwUtils.writeStringToFile(outputDir+"json/"+oldJsonFile.getName(),newRecord.getRecord().toString());
+        RwUtils.writeStringToFile(outputDir+"json/"+oldJsonFile.getName().substring(0,oldJsonFile.getName().indexOf('.'))+".json",newRecord.getRecord().toString());
         newRecord.writeAvroToFile(outputDir+"avro/"+oldJsonFile.getName().substring(0,oldJsonFile.getName().indexOf('.'))+".avro");// write record object into .avro file
     }
 
@@ -67,10 +75,6 @@ public class SchemaEvolverMain {
         oldRecord.setRecord(schemaConditioner.getOldJson().toString());//set updated old json that has a modified structure if there were array wrappings/unwrappings in the schemas
         parser = new Schema.Parser();//reset the parser
         newRecord.setSchema(parser.parse(schemaConditioner.getLatestSchema().toString()));//set updated latest schema
-
-//        System.out.println("\nDEBUG OLD:\n"+ oldSchema.getSchema());
-//        System.out.println("DEBUG NEW:\n"+ newSchema.getSchema());
-
     }
 
 }
