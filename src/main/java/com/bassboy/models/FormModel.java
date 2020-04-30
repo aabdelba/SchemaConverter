@@ -1,12 +1,14 @@
 package com.bassboy.models;
 
 import com.bassboy.common.ConfigProp;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.*;
 
-public class SchemaEvolverModel {
+@Service
+public class FormModel {
 
     private ConfigProp configProp = ConfigProp.getInstance();
     private MultipartFile[] oldJsonFiles;
@@ -35,10 +37,10 @@ public class SchemaEvolverModel {
                 '}';
     }
 
-    public SchemaEvolverModel() throws IOException {
+    public FormModel() throws IOException {
     }
 
-    public SchemaEvolverModel(MultipartFile[] oldJsonFiles, MultipartFile oldSchemaFile, MultipartFile newSchemaFile, MultipartFile renamedFile, String oldJsonText, String oldSchemaText, String newSchemaText, String renamedText, String fileFormat) throws IOException {
+    public FormModel(MultipartFile[] oldJsonFiles, MultipartFile oldSchemaFile, MultipartFile newSchemaFile, MultipartFile renamedFile, String oldJsonText, String oldSchemaText, String newSchemaText, String renamedText, String fileFormat) throws IOException {
         this.oldJsonFiles = oldJsonFiles;
         this.oldSchemaFile = oldSchemaFile;
         this.newSchemaFile = newSchemaFile;

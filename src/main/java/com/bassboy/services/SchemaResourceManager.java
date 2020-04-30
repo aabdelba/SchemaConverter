@@ -1,12 +1,14 @@
 package com.bassboy.services;
 
-import com.bassboy.models.SchemaEvolverModel;
+import com.bassboy.models.FormModel;
 import com.bassboy.schemaevolver.InvalidEntryException;
 import com.bassboy.schemaevolver.SchemaEvolverMain;
 import com.bassboy.schemaevolver.SchemaEvolverException;
 import com.bassboy.common.ConfigProp;
 import com.bassboy.common.RwUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,17 +17,19 @@ import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-
+@Service
 public class SchemaResourceManager {
 
     private ConfigProp configProp;
-    private SchemaEvolverModel scm;
 
-    public SchemaResourceManager(SchemaEvolverModel scm) {
+    @Autowired
+    private FormModel scm;
+
+    public SchemaResourceManager(FormModel scm) {
         this.scm = scm;
     }
 
-    public SchemaEvolverModel getScm() {
+    public FormModel getScm() {
         return scm;
     }
 
@@ -99,9 +103,6 @@ public class SchemaResourceManager {
         for (File oldJsonFile:recordDir.listFiles()) {
             try {
                 sc.convertDataAndPlaceInOutputDir(oldSchemaFile, newSchemaFile, oldJsonFile, renamedFile);
-            } catch (InvalidEntryException ise){//this will stop the for loop if any of the schemas are incorrect
-                ise.printStackTrace();
-                throw ise;
             } catch (Exception e){
                 e.printStackTrace();
                 RwUtils.writeStringToFile(outputDir+"json/ERROR_"+oldJsonFile.getName(),e.getMessage());

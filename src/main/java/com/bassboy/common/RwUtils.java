@@ -1,6 +1,7 @@
 package com.bassboy.common;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Properties;
 import org.json.JSONObject;
@@ -36,6 +37,15 @@ public final class RwUtils {
 		return mapOfRenames;
 	}
 
+	public static byte[] convertFileContentToBytes(String fullFilePath) throws IOException {
+		File file = new File(fullFilePath);
+		return convertFileContentToBytes(file);
+	}
+
+	public static byte[] convertFileContentToBytes(File file) throws IOException {
+		return Files.readAllBytes(file.toPath());
+	}
+
 	public static String convertFileContentToString(String fullFilePath) throws IOException {
 		File file = new File(fullFilePath);
 		return convertFileContentToString(file);
@@ -51,10 +61,6 @@ public final class RwUtils {
 			sb.append(line);
 		}
 		return sb.toString();
-	}
-
-	public static boolean isValidJson(String oldJsonString) {
-		try{new JSONObject(oldJsonString);return true;}catch (Exception e){return false;}
 	}
 
 	public static void writeStringToFile(String fileStr, String string) throws IOException {
