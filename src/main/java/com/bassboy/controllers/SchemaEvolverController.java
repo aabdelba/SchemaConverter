@@ -27,12 +27,22 @@ public class SchemaEvolverController implements ErrorController {
     @Autowired
     private SchemaResourceManager srm;
 
-    @RequestMapping(value = "/", method = {RequestMethod.GET})
+    @RequestMapping("/")
     public String welcome() {
         return "index";
     }
 
-    @RequestMapping(value="form",method = {RequestMethod.POST})
+    @RequestMapping("/login")
+    public String login() {
+        return "login";
+    }
+
+    @RequestMapping("/logout")
+    public String logout() {
+        return "index";
+    }
+
+    @RequestMapping(value="form")
     public String schemaConversionForm(Model model) throws IOException {
         model.addAttribute("scm", new FormModel());
         return "form";
