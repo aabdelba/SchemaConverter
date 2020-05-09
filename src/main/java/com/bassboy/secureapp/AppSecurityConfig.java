@@ -82,7 +82,8 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
             .and()//used to specify more properties
             .formLogin()
                 .loginPage("/login").permitAll()
-            .and()
+                .failureUrl("/login-error")
+                .and()
             .logout().invalidateHttpSession(true)
             .clearAuthentication(true)//once you log out, you want to clear everything
             .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))

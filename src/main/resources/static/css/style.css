@@ -2,6 +2,7 @@
 
 h1 { color: #0f1e3e; font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace; font-size: 54px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 54px; }
 .subtitle-text { color: #2a58bb; font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace; font-size: 25px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 25px; }
+h2 { font-family: Arial, monospace; font-size: 25px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 25px; }
 blockquote { font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace; font-size: 21px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 30px; }
 pre { font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace; font-size: 13px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 18.5714px; }
 .btn-text { color: #007bff; font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace; font-size: 25px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 20px; }
