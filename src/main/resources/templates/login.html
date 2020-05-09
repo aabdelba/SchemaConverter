@@ -1,20 +1,143 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Login page</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <link type="text/css" rel="stylesheet" href="/css/style.css"/>
+
+
+    <title>Schema Evolver | Login</title>
 </head>
 <body>
-<h1>Login page</h1>
 
-<!--<p th:if="${loginError}" class="error">Wrong user or password</p>-->
-${SPRING_SECURITY_LAST_EXCEPTION.message}
+<header>
+    <nav class="empty-100-row navBar">
+        <div class="container">
+            <div class="row empty-40-row"></div>
+            <div class="row">
+                <div class="col-xl-5 col-lg-5 col-md-6 col-sm-12 col-xs-12">
+                    <p class="header-title">Schema Evolver</p>
+                </div>
 
-<form th:action="@{/login}" method="post">
-    <label for="username">Username</label>:
-    <input type="text" id="username" name="username" autofocus="autofocus" /> <br />
-    <label for="password">Password</label>:
-    <input type="password" id="password" name="password" /> <br />
-    <input type="submit" value="Log in" />
-</form>
+                <div class="col-xl-7 col-lg-6 col-md-6"></div>
+
+            </div>
+
+            <div class="row empty-15-row"></div>
+
+        </div>
+
+
+    </nav></header>
+
+<div class="container">
+
+    <div class="empty-75-row"></div>
+
+
+
+
+
+    <div class="text-center">
+
+        <h2>Log In to Schema Evolver</h2>
+        <div class="row empty-50-row"></div>
+
+        <div class="container">
+        <div class="row">
+
+
+<!--            sign in partners here-->
+<!--            <div class="col-xl-5 col-lg-4 col-md-4 col-sm-3 col-xs-1"></div>-->
+            <div class="container col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
+            </div>
+
+
+            <div class="container col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
+
+                <form th:action="@{/login}" method="post">
+
+                <p th:text="${errorMessage}" style="color:#FF0000";>Error logging in</p>
+                    <label for="username">Username: </label>
+                    <input type="text" id="username" name="username" autofocus="autofocus" /> <br/>
+                    <label for="password">Password: </label>
+                    <input type="password" id="password" name="password" /> <br/>
+                    <div class="row empty-20-row"></div>
+                <div class="row">
+                    <div class="col-xl-3 col-lg-3 col-md-2 col-sm-2 col-xs-1"></div>
+                    <input class="header-btn-container-l col-xl-3 col-lg-3 col-md-4 col-sm-4 col-xs-5  btn btn-primary" type="submit" value="Log In" />
+                    <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1"></div>
+                    <form action="/signup" method="get" id="signupForm">
+                        <button type="submit" form="signupForm" value="Submit" class="header-btn-container-r col-xl-3 col-lg-3 col-md-4 col-sm-4 col-xs-5 btn btn-primary">Sign Up</button>
+                    </form>
+                    <div class="col-xl-2 col-lg-2 col-md-1 col-sm-1 col-xs-1"></div>
+                </div>
+                </form>
+
+
+            </div>
+
+
+
+
+
+
+
+
+
+        </div>
+
+
+
+            <div class="row empty-50-row"></div>
+            <form id="my_form" method="get" action="/form">
+                <!-- Your Form -->
+                <a href="javascript:{}" onclick="document.getElementById('my_form').submit(); return false;">Continue as guest</a>
+            </form>
+
+
+
+        <div class="row empty-20-row"></div>
+        <a class="btn btn-warning" href="/">Cancel</a>
+
+
+        </div>
+    </div>
+
+
+
+
+
+    </div>
+
+
+
+
+
+    <div class="row empty-75-row"></div>
+
+</div>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
 </body>
 </html>
