@@ -1,7 +1,6 @@
 package com.bassboy.services;
 
 import com.bassboy.models.User;
-import com.bassboy.secureapp.UserPrincipal;
 import com.bassboy.secureapp.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,6 +21,6 @@ public class MyUserDetailsService implements UserDetailsService {
         if(user==null)
             throw new UsernameNotFoundException("Username not found");
 
-        return new UserPrincipal(user);
+        return user;
     }
 }
