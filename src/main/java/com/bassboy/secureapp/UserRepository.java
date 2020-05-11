@@ -5,5 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 // we do not need to worry about implementing this, JpaRepository will implement it for us
 public interface UserRepository extends JpaRepository<User,Long> {
-    User findByUsername(String username);//we will pick Jpa's implementation of findByUsername
+    User findByUsername(String username);//specifying this tells Spring to implement this method
+                                         //along with unimplemented JpaRepository methods
 }
