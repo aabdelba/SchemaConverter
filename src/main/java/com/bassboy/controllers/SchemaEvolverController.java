@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
+import java.security.Principal;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Enumeration;
@@ -66,13 +67,15 @@ public class SchemaEvolverController implements ErrorController {
     }
 
     @RequestMapping(value="form")
-    public String schemaConversionForm(Model model) throws IOException {
-        model.addAttribute("scm", new FormModel());
+    public String schemaConversionForm(Model model, Principal principal) throws IOException {
+
+        model.addAttribute("username", principal.getName());
+        model.addAttribute("formModel", new FormModel());
         return "form";
     }
 
     @RequestMapping(value="conversion",method = {RequestMethod.POST})
-    public String schemaConversionLoading(@ModelAttribute("scm") FormModel scm, ModelMap model) throws IOException, SchemaEvolverException, InvalidEntryException {
+    public String schemaConversionLoading(@ModelAttribute("formModel") FormModel formModel, ModelMap model) throws IOException, SchemaEvolverException, InvalidEntryException {
 
         // Added wait time for UX
         try {
@@ -81,11 +84,11 @@ public class SchemaEvolverController implements ErrorController {
             e.printStackTrace();
         }
 
-        srm = new SchemaResourceManager(scm);
+        srm = new SchemaResourceManager(formModel);
 
         srm.init();
         srm.runConversion();
-        model.remove("scm");
+        model.remove("formModel");
         model.addAttribute("srm", srm);
 //        ModelAndView modelAndView = new ModelAndView("download");
 //        modelAndView.addObject("downloadFormat", scv.getDownloadFormat());
