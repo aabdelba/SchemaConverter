@@ -15,14 +15,6 @@ pre { font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typ
 
 .paragraph-text {font-family: Arial; font-size: 18px }
 
-.header-btn-container-l{
-    float:left
-}
-
-.header-btn-container-r{
-    float:right
-}
-
 .center-button{
   display: flex;
   justify-content: center;
