@@ -34,18 +34,7 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
 
-    @Autowired
-    private FacebookConnectionSignup facebookConnectionSignup;
-
-    @Value("${spring.social.facebook.appSecret}")
-    String appSecret;
-
-    @Value("${spring.social.facebook.appId}")
-    String appId;
-
-
     // use @Bean to indicate that this is a bean to be used in the web container
-
     @Bean
     public AuthenticationProvider authProvider(){
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
@@ -80,7 +69,7 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
             .csrf().disable()//cross-site reference to the default login page is disabled
-            .authorizeRequests().antMatchers("/login*","/signin/**","/signup/**").permitAll()
+            .authorizeRequests().antMatchers("/","/login*","/signin/**","/signup/**").permitAll()
             .anyRequest().authenticated()
             .and()//used to specify more properties
             .formLogin()
@@ -90,37 +79,7 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
             .logout().invalidateHttpSession(true)
             .clearAuthentication(true)//once you log out, you want to clear everything
             .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-            .logoutSuccessUrl("/").permitAll();
+            .logoutSuccessUrl("/logout-success").permitAll();
     }
-
-
-
-
-    @Bean
-    public ProviderSignInController providerSignInController() {
-        ConnectionFactoryLocator connectionFactoryLocator =
-                connectionFactoryLocator();
-        UsersConnectionRepository usersConnectionRepository =
-                getUsersConnectionRepository(connectionFactoryLocator);
-        ((InMemoryUsersConnectionRepository) usersConnectionRepository)
-                .setConnectionSignUp(facebookConnectionSignup);
-        return new ProviderSignInController(connectionFactoryLocator,
-                usersConnectionRepository, new FacebookSignInAdapter());
-    }
-
-
-    private ConnectionFactoryLocator connectionFactoryLocator() {
-        ConnectionFactoryRegistry registry = new ConnectionFactoryRegistry();
-        registry.addConnectionFactory(new FacebookConnectionFactory(appId, appSecret));
-        return registry;
-    }
-
-    private UsersConnectionRepository getUsersConnectionRepository(ConnectionFactoryLocator
-                                                                           connectionFactoryLocator) {
-        return new InMemoryUsersConnectionRepository(connectionFactoryLocator);
-    }
-
-
-
 
 }

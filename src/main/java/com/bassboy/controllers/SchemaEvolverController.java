@@ -68,9 +68,9 @@ public class SchemaEvolverController implements ErrorController {
         return "login";
     }
 
-    @RequestMapping("/logout")
+    @RequestMapping("/logout-success")
     public String logout() {
-        return "index";
+        return "logout";
     }
 
     @RequestMapping(value="form")

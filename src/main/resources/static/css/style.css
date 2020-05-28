@@ -171,7 +171,18 @@ select{
   font-size: 20px;
 }
 
+html{
+    height: 100%;
+}
+
+body{
+    min-height:100%;
+    display: flex;
+    flex-direction: column;
+}
+
 footer{
     background-color: #BEBEBE;
     height: 220px;
+    margin-top: auto;
 }
