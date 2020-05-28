@@ -57,6 +57,11 @@
 <!--            sign in partners here-->
 <!--            <div class="col-xl-5 col-lg-4 col-md-4 col-sm-3 col-xs-1"></div>-->
             <div class="container col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
+
+                <form action="/signin/facebook" method="POST">
+                    <input type="hidden" name="scope" value="public_profile" />
+                    <input type="submit" value="Login using Facebook"/>
+                </form>
             </div>
 
 

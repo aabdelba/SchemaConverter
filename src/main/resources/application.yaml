@@ -1,0 +1,46 @@
+server:
+  port: 9090
+  error:
+    whitelabel:
+      enabled: false
+
+spring:
+  h2:
+    console.enabled: true
+  session:
+    timeout:
+      seconds: 900
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  datasource:
+    url: jdbc:mysql://localhost:3306/schemaevolver
+    username: root
+    password: root-password
+    driver-class-name: com.mysql.jdbc.Driver
+  social:
+    facebook:
+      appId: 617561748869733
+      appSecret: 31380cf8946d20d481a72f8cfdf0c850
+
+file:
+#  upload-dir: /Users/callicoder/uploads
+#
+security:
+  oauth2:
+    client:
+      registration:
+        google:
+      clientId: 335730775851-3m7naio5s8075fsbnd97n14v4famufjr.apps.googleusercontent.com
+      clientSecret: 1RBSb771wxwOZjyorukOOL5e
+      accessTokenUri: https://www.googleapis.com/oauth2/v3/token
+      userAuthorizationUri: https://accounts.google.com/o/oauth2/auth
+      tokenName: oauth_token
+      authenticationScheme: query
+      clientAuthenticationScheme: form
+      #scope:email
+      scope: profile email # This will specify access to email
+    resource:
+      userInfoUri: https://www.googleapis.com/userinfo/v2/me
+      preferTokenInfo: false

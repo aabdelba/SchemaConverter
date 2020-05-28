@@ -7,4 +7,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface UserRepository extends JpaRepository<User,Long> {
     User findByUsername(String username);//specifying this tells Spring to implement this method
                                          //along with unimplemented JpaRepository methods
+
+    boolean existsUserBySocialId(String socialId);
+
+    User findBySocialId(String socialId);
+
+    boolean existsUserByUsername(String username);
 }
