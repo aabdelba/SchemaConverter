@@ -68,10 +68,12 @@
 
 
 
-
-
-
-
+		<!-- https://mvnrepository.com/artifact/org.springframework.social/spring-social-google -->
+		<dependency>
+			<groupId>org.springframework.social</groupId>
+			<artifactId>spring-social-google</artifactId>
+			<version>1.0.0.RELEASE</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.springframework.social/spring-social-facebook -->
 		<dependency>
 			<groupId>org.springframework.social</groupId>
