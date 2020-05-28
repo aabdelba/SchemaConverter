@@ -1,8 +1,10 @@
 package com.bassboy.controllers;
 
 import com.bassboy.models.FormModel;
+import com.bassboy.models.User;
 import com.bassboy.schemaevolver.InvalidEntryException;
 import com.bassboy.schemaevolver.SchemaEvolverException;
+import com.bassboy.secureapp.UserRepository;
 import com.bassboy.services.SchemaResourceManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.error.ErrorController;
@@ -29,11 +31,16 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipOutputStream;
 
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
+
 @Controller
 public class SchemaEvolverController implements ErrorController {
 
     @Autowired
     private SchemaResourceManager srm;
+
+    @Autowired
+    UserRepository repo;
 
     @RequestMapping("/")
     public String welcome() {
@@ -74,6 +81,12 @@ public class SchemaEvolverController implements ErrorController {
         return "form";
     }
 
+    @RequestMapping("/user")
+    @ResponseBody
+    public Principal user (Principal principal){
+        return principal;
+    }
+
     @RequestMapping(value="conversion",method = {RequestMethod.POST})
     public String schemaConversionLoading(@ModelAttribute("formModel") FormModel formModel, ModelMap model) throws IOException, SchemaEvolverException, InvalidEntryException {
 
@@ -85,7 +98,6 @@ public class SchemaEvolverController implements ErrorController {
         }
 
         srm = new SchemaResourceManager(formModel);
-
         srm.init();
         srm.runConversion();
         model.remove("formModel");
