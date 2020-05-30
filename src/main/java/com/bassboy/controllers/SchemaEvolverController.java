@@ -88,7 +88,7 @@ public class SchemaEvolverController implements ErrorController {
     }
 
     @RequestMapping(value="conversion",method = {RequestMethod.POST})
-    public String schemaConversionLoading(@ModelAttribute("formModel") FormModel formModel, ModelMap model) throws IOException, SchemaEvolverException, InvalidEntryException {
+    public String schemaConversionLoading(@ModelAttribute("formModel") FormModel formModel, ModelMap model, Principal principal) throws IOException, SchemaEvolverException, InvalidEntryException {
 
         // Added wait time for UX
         try {
@@ -102,6 +102,7 @@ public class SchemaEvolverController implements ErrorController {
         srm.runConversion();
         model.remove("formModel");
         model.addAttribute("srm", srm);
+        model.addAttribute("username",principal.getName());
 //        ModelAndView modelAndView = new ModelAndView("download");
 //        modelAndView.addObject("downloadFormat", scv.getDownloadFormat());
         return "complete";
