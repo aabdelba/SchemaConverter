@@ -9,7 +9,8 @@ import java.util.Collection;
 import java.util.Collections;
 
 @Entity
-public class User implements UserDetails {
+@Table(name = "user")
+public class SchemaEvolverUser implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,6 +19,7 @@ public class User implements UserDetails {
     private String username;
     private String password;
     private String socialId;
+    private String email;
 
     public long getId() {
         return id;
@@ -37,6 +39,8 @@ public class User implements UserDetails {
 
     public void setSocialId(String socialId) { this.socialId = socialId; }
 
+    public void setEmail(String email) { this.email = email; }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singleton(new SimpleGrantedAuthority("USER"));
@@ -53,7 +57,9 @@ public class User implements UserDetails {
         return username;
     }
 
-    public String getSocialId(String s) { return socialId; }
+    public String getSocialId() { return socialId; }
+
+    public String getEmail() { return email; }
 
     @Override
     public boolean isAccountNonExpired() {

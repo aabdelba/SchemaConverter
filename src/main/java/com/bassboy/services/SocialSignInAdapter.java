@@ -11,7 +11,7 @@ import org.springframework.web.context.request.NativeWebRequest;
 import java.util.Arrays;
 
 @Service
-public class FacebookSignInAdapter implements SignInAdapter {
+public class SocialSignInAdapter implements SignInAdapter {
     @Override
     public String signIn(
             String localUserId,
@@ -21,7 +21,7 @@ public class FacebookSignInAdapter implements SignInAdapter {
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken(
                         connection.getDisplayName(), null,
-                        Arrays.asList(new SimpleGrantedAuthority("FACEBOOK_USER"))));
+                        Arrays.asList(new SimpleGrantedAuthority("SOCIAL_USER"))));
 
         return "/form";
     }
