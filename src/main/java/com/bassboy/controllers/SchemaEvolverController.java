@@ -1,10 +1,9 @@
 package com.bassboy.controllers;
 
 import com.bassboy.models.FormModel;
-import com.bassboy.models.User;
 import com.bassboy.schemaevolver.InvalidEntryException;
 import com.bassboy.schemaevolver.SchemaEvolverException;
-import com.bassboy.secureapp.UserRepository;
+import com.bassboy.services.SchemaEvolverUserRepository;
 import com.bassboy.services.SchemaResourceManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.error.ErrorController;
@@ -16,7 +15,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.naming.AuthenticationException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,13 +23,8 @@ import java.io.*;
 import java.security.Principal;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.Enumeration;
-import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipOutputStream;
-
-import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 
 @Controller
 public class SchemaEvolverController implements ErrorController {
@@ -40,7 +33,7 @@ public class SchemaEvolverController implements ErrorController {
     private SchemaResourceManager srm;
 
     @Autowired
-    UserRepository repo;
+    SchemaEvolverUserRepository repo;
 
     @RequestMapping("/")
     public String welcome() {

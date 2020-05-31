@@ -23,6 +23,11 @@ spring:
     facebook:
       appId: 617561748869733
       appSecret: 31380cf8946d20d481a72f8cfdf0c850
+      scope: profile email
+    google:
+      appId: 335730775851-3m7naio5s8075fsbnd97n14v4famufjr.apps.googleusercontent.com
+      appSecret: 1RBSb771wxwOZjyorukOOL5e
+      scope: profile email
 
 file:
 #  upload-dir: /Users/callicoder/uploads

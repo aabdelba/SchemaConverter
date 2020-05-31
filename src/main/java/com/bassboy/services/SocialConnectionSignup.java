@@ -1,24 +1,21 @@
 package com.bassboy.services;
 
-import com.bassboy.models.User;
-import com.bassboy.secureapp.UserRepository;
+import com.bassboy.models.SchemaEvolverUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.social.connect.Connection;
 import org.springframework.social.connect.ConnectionSignUp;
-import org.springframework.social.connect.UserProfile;
-import org.springframework.social.facebook.api.Facebook;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
+import java.io.IOException;
 
 
 @Service
-public class FacebookConnectionSignup implements ConnectionSignUp {
+public class SocialConnectionSignup implements ConnectionSignUp {
 
     @Autowired
-    private UserRepository repo;
+    private SchemaEvolverUserRepository repo;
 
     private RestTemplate restTemplate;
 
@@ -27,18 +24,21 @@ public class FacebookConnectionSignup implements ConnectionSignUp {
         this.restTemplate = builder.build();
     }
 
-
     @Override
     public String execute(Connection<?> connection) {
 
         String socialId = connection.getKey().toString();
-        User user;
+        SchemaEvolverUser user = null;
 
         if(!repo.existsUserBySocialId(socialId)) {
-            user = new User();
-            user.setSocialId(socialId);
-            user.setUsername(connection.getDisplayName());
-            user.setPassword(randomAlphabetic(8));
+            if(socialId.contains("facebook")) {
+                FbGraphApiService fbApi = new FbGraphApiService(new RestTemplateBuilder());
+                try {
+                    user = fbApi.getProfile("me", connection.createData().getAccessToken());//fb api allows use of "me" instead of the userID
+                } catch (IOException e) {
+                    e.printStackTrace();//problem getting uri property from config.properties
+                }
+            }
             this.repo.save(user);
         } else {
             user = repo.findBySocialId(socialId);
