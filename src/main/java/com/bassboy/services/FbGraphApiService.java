@@ -4,6 +4,7 @@ import com.bassboy.common.ConfigProp;
 import com.bassboy.models.SchemaEvolverUser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,9 @@ import java.util.Collections;
 @Service
 public class FbGraphApiService {
 
+    @Value("api.facebook.graphUri")
+    private String graphUri;
+
     private final RestTemplate restTemplate;
 
     public FbGraphApiService(RestTemplateBuilder restTemplateBuilder) {
@@ -22,13 +26,12 @@ public class FbGraphApiService {
     }
 
     public SchemaEvolverUser getProfile(String id, String accessToken) throws IOException {
-        ConfigProp configProp = ConfigProp.getInstance();
         try {
             //params
             String params = "fields=id,name,email,first_name,last_name&access_token=" + accessToken;
 
             //build url
-            String url = configProp.getProperty("facebook.graph.uri") + id + "?" + params;
+            String url = graphUri + id + "?" + params;
 
             //create headers
             HttpHeaders headers = new HttpHeaders();

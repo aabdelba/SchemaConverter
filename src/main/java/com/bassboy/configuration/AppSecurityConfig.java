@@ -1,18 +1,23 @@
-package com.bassboy.secureapp;
+package com.bassboy.configuration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
 
 @Configuration
 @EnableWebSecurity
@@ -27,18 +32,14 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
 
     // use @Bean to indicate that this is a bean to be used in the web container
+    // previously, bcrypt password encoder (or any other type) was used
+    // in spring 2.0, we can delegate
     @Bean
-    public AuthenticationProvider authProvider(){
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-
-        provider.setUserDetailsService(userDetailsService);
-//        provider.setPasswordEncoder(NoOpPasswordEncoder.getInstance());//dont encode password, keep it in plain text
-        provider.setPasswordEncoder(new BCryptPasswordEncoder());
-
-
-        return provider;
+    public PasswordEncoder passwordEncoder(){
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
+    // This is to use in-memory userDetails without using a database
 //    @Bean
 //    @Override
 //    protected UserDetailsService userDetailsService() {
@@ -58,9 +59,9 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    public void configure(HttpSecurity http) throws Exception {
         http
-            .csrf().disable()//cross-site reference to the default login page is disabled
+            .csrf().disable()//security that stops cross-site reference to the app is disabled
             .authorizeRequests().antMatchers("/","/login*","/signin/**","/signup/**").permitAll()
             .anyRequest().authenticated()
             .and()//used to specify more properties
@@ -73,5 +74,32 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
             .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
             .logoutSuccessUrl("/logout-success").permitAll();
     }
+
+    // AuthenticationManager has one-to-many AuthenticationProviders inside it
+    // AuthenticationManager CAN have an optional parent AuthenticationProvider too
+    // Configuring something in AuthenticationManager will make all its providers have these settings
+    // If ProviderManager is used, this helps bypass using an AuthenticationManager
+    // https://stackoverflow.com/questions/53404327/what-is-the-difference-between-registering-an-authenticationprovider-with-httpse
+    @Override
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+    }
+
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
+    //    @Bean
+//    public AuthenticationProvider authProvider(){
+//        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+//
+//        provider.setUserDetailsService(userDetailsService);
+////        provider.setPasswordEncoder(NoOpPasswordEncoder.getInstance());//dont encode password, keep it in plain text
+//        provider.setPasswordEncoder(new BCryptPasswordEncoder());
+//
+//
+//        return provider;
+//    }
 
 }
