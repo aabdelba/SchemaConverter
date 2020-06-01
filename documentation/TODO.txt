@@ -1,0 +1,42 @@
+TODO - PRIORITY
+more scenarios												(TOOL SUPPORT)
+log4j														(TOOL SUPPORT)
+paypall or credit card										(PAYMENT)
+sign up														(SECURITY)
+forgot password												(SECURITY)
+authorization security (will access user session)			(SECURITY)
+use email as username										(SECURITY)
+use otp in verification link in email						(SECURITY)
+continue as guest											(SECURITY)
+use ssl and make web service secure							(SECURITY)
+
+
+
+TODO - SECURITY
+oauth2 security google, github
+encrypt oauth2 app secrets
+JWT security
+set up seperate oauth2 authentication provider for database
+
+
+
+TODO - TOOL TECHNICAL SUPPORT
+api
+javadoc
+test - unit and behavioural
+
+
+
+TODO - SCALABILITY
+copyright for 35-55 usd
+deploy to aws
+kafka streaming
+elk logging
+
+
+
+TODO - NICE TO HAVE
+choose file or text
+drag and drop
+email zip result
+multiple records in one file
