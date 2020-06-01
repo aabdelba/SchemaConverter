@@ -4,6 +4,10 @@ server:
     whitelabel:
       enabled: false
 
+api:
+  facebook:
+    graphUri: https://graph.facebook.com/v3.2/
+
 spring:
   h2:
     console.enabled: true
@@ -19,33 +23,47 @@ spring:
     username: root
     password: root-password
     driver-class-name: com.mysql.jdbc.Driver
-  social:
-    facebook:
-      appId: 617561748869733
-      appSecret: 31380cf8946d20d481a72f8cfdf0c850
-      scope: profile email
-    google:
-      appId: 335730775851-3m7naio5s8075fsbnd97n14v4famufjr.apps.googleusercontent.com
-      appSecret: 1RBSb771wxwOZjyorukOOL5e
-      scope: profile email
 
 file:
 #  upload-dir: /Users/callicoder/uploads
-#
+
+check-user-scopes: true
+
 security:
   oauth2:
     client:
       registration:
+        facebook:
+          clientId: 617561748869733
+          clientSecret: 31380cf8946d20d481a72f8cfdf0c850
+          scope: profile email
+        github:
+          clientId: dc72c807f44a0e42e579
+          clientSecret: abcdb14421313d4b52d90774d9f550b786d91279
         google:
-      clientId: 335730775851-3m7naio5s8075fsbnd97n14v4famufjr.apps.googleusercontent.com
-      clientSecret: 1RBSb771wxwOZjyorukOOL5e
-      accessTokenUri: https://www.googleapis.com/oauth2/v3/token
-      userAuthorizationUri: https://accounts.google.com/o/oauth2/auth
-      tokenName: oauth_token
-      authenticationScheme: query
-      clientAuthenticationScheme: form
-      #scope:email
-      scope: profile email # This will specify access to email
-    resource:
-      userInfoUri: https://www.googleapis.com/userinfo/v2/me
-      preferTokenInfo: false
+          clientId: 335730775851-3m7naio5s8075fsbnd97n14v4famufjr.apps.googleusercontent.com
+          clientSecret: 1RBSb771wxwOZjyorukOOL5e
+          accessTokenUri: https://www.googleapis.com/oauth2/v3/token
+          userAuthorizationUri: https://accounts.google.com/o/oauth2/auth
+          tokenName: oauth_token
+          authenticationScheme: query
+          clientAuthenticationScheme: form
+          #scope:email
+          scope: profile email # This will specify access to email
+
+
+#security:
+#  oauth2:
+#    client:
+#      clientId: 335730775851-3m7naio5s8075fsbnd97n14v4famufjr.apps.googleusercontent.com
+#      clientSecret: 1RBSb771wxwOZjyorukOOL5e
+#      accessTokenUri: https://www.googleapis.com/oauth2/v3/token
+#      userAuthorizationUri: https://accounts.google.com/o/oauth2/auth
+#      tokenName: oauth_token
+#      authenticationScheme: query
+#      clientAuthenticationScheme: form
+#      #scope:email
+#      scope: profile email # This will specify access to email
+#    resource:
+#      userInfoUri: https://www.googleapis.com/userinfo/v2/me
+#      preferTokenInfo: false
