@@ -8,12 +8,11 @@ authorization security (will access user session)			(SECURITY)
 use email as username										(SECURITY)
 use otp in verification link in email						(SECURITY)
 continue as guest											(SECURITY)
-use ssl and make web service secure							(SECURITY)
+use ssl and make web service secure							(SECURITY)	
 
 
 
 TODO - SECURITY
-oauth2 security google, github
 encrypt oauth2 app secrets
 JWT security
 set up seperate oauth2 authentication provider for database
