@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -15,13 +16,19 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 @Configuration
 @EnableWebSecurity
 public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private static List<String> clients = Arrays.asList("google","facebook");
 
     //this is the service that interacts with User DAO class
     // just like we have:
@@ -65,14 +72,22 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests().antMatchers("/","/login*","/signin/**","/signup/**").permitAll()
             .anyRequest().authenticated()
             .and()//used to specify more properties
-            .formLogin()
-                .loginPage("/login").permitAll()
-                .failureUrl("/login-error")
-                .and()
+            .oauth2Login().loginPage("/login")
+            .and()
+            .formLogin().loginPage("/login").permitAll().failureUrl("/login-error")
+            .and()
             .logout().invalidateHttpSession(true)
-            .clearAuthentication(true)//once you log out, you want to clear everything
+            .clearAuthentication(true)
             .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
             .logoutSuccessUrl("/logout-success").permitAll();
+//            .formLogin()
+//            .loginPage("/login").permitAll()
+//            .failureUrl("/login-error")
+//            .and()
+//            .logout().invalidateHttpSession(true)
+//            .clearAuthentication(true)//once you log out, you want to clear everything
+//            .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+//            .logoutSuccessUrl("/logout-success").permitAll();
     }
 
     // AuthenticationManager has one-to-many AuthenticationProviders inside it
