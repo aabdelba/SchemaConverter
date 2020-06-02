@@ -1,13 +1,24 @@
 package com.bassboy.controllers;
 
+import com.bassboy.common.ConfigProp;
 import com.bassboy.models.FormModel;
+import com.bassboy.models.SchemaEvolverUser;
 import com.bassboy.schemaevolver.InvalidEntryException;
 import com.bassboy.schemaevolver.SchemaEvolverException;
 import com.bassboy.services.SchemaEvolverUserRepository;
 import com.bassboy.services.SchemaResourceManager;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
+import org.apache.avro.data.Json;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.error.ErrorController;
+import org.springframework.core.ResolvableType;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,11 +34,18 @@ import java.io.*;
 import java.security.Principal;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipOutputStream;
 
 @Controller
 public class SchemaEvolverController implements ErrorController {
+
+    private Map<String, String> oauth2AuthenticationUrls = new HashMap<>();
+
+    @Autowired
+    private ClientRegistrationRepository clientRegistrationRepository;
 
     @Autowired
     private SchemaResourceManager srm;
@@ -41,7 +59,21 @@ public class SchemaEvolverController implements ErrorController {
     }
 
     @RequestMapping("/login")
-    public String login() {
+    public String getLogin(Model model) throws IOException {
+        Iterable<ClientRegistration> clientRegistrations = null;
+        ResolvableType type = ResolvableType.forInstance(clientRegistrationRepository)
+                .as(Iterable.class);
+        if (type != ResolvableType.NONE &&
+                ClientRegistration.class.isAssignableFrom(type.resolveGenerics()[0])) {
+            clientRegistrations = (Iterable<ClientRegistration>) clientRegistrationRepository;
+        }
+
+        String authorizationRequestBaseUri = ConfigProp.getInstance().getProperty("authorization.baseUri");
+
+        clientRegistrations.forEach(registration ->
+                oauth2AuthenticationUrls.put(registration.getClientName(),
+                        authorizationRequestBaseUri + "/" + registration.getRegistrationId()));
+        model.addAttribute("urls", oauth2AuthenticationUrls);
         return "login";
     }
 
@@ -68,8 +100,17 @@ public class SchemaEvolverController implements ErrorController {
 
     @RequestMapping(value="form")
     public String schemaConversionForm(Model model, Principal principal) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode root =  mapper.readTree(mapper.writeValueAsString(principal));
+        DocumentContext documentContext = JsonPath.parse(root.toString());
+        String username;
 
-        model.addAttribute("username", principal.getName());
+        if(root.has("authorizedClientRegistrationId"))
+            username = documentContext.read("$.authorities[0].attributes.name");
+        else
+            username = documentContext.read("$.name");
+
+        model.addAttribute("username", username);
         model.addAttribute("formModel", new FormModel());
         return "form";
     }

@@ -59,16 +59,11 @@
             <div class="container col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
 
 
-                <form action="/signin/google" method="POST">
-                    <input type="hidden" name="scope" value="profile" />
-                    <input type="submit" value="Login using Google"/>
-                </form>
 
-                <form action="/signin/facebook" method="POST">
-                    <input type="hidden" name="scope" value="public_profile" />
-                    <input type="submit" value="Login using Facebook"/>
-                </form>
-
+            <p>Log in with:</p>
+            <p th:each="url : ${urls}">
+                <a class="btn" th:text="${url.key}" th:href="${url.value}">Client</a>
+            </p>
 
 
             </div>
@@ -110,15 +105,10 @@
 
 
             <div class="row empty-50-row"></div>
-            <form id="my_form" method="get" action="/form">
-                <!-- Your Form -->
-                <a href="javascript:{}" onclick="document.getElementById('my_form').submit(); return false;">Continue as guest</a>
-            </form>
+            <a href="/">Cancel</a>
 
 
 
-        <div class="row empty-20-row"></div>
-        <a class="btn btn-warning" href="/">Cancel</a>
 
 
         </div>
