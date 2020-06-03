@@ -27,16 +27,27 @@ spring:
     oauth2:
       client:
         registration:
-          facebook:
-            clientId: 241969880427134
-            clientSecret: 8b3a89ec0d35df33f5d5b8991ad76b50
-#            scope: profile email
+          linkedin:
+            clientId: 86d6cthyvlisi3
+            clientSecret: KJMNYg4cqRY91cTH
+            scope:  r_liteprofile, r_emailaddress
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            client-name: LinkedIn
+            client-authentication-method: post
+            token-type: bearer
           github:
             clientId: dc72c807f44a0e42e579
             clientSecret: abcdb14421313d4b52d90774d9f550b786d91279
           google:
             clientId: 335730775851-3m7naio5s8075fsbnd97n14v4famufjr.apps.googleusercontent.com
             clientSecret: 1RBSb771wxwOZjyorukOOL5e
-
+        provider:
+          linkedin:
+            authorization-uri: https://www.linkedin.com/oauth/v2/authorization
+            token-uri: https://www.linkedin.com/oauth/v2/accessToken
+            user-info-uri: https://api.linkedin.com/v2/me
+            jwk-set-uri:
+            user-name-attribute: id
 file:
 #  upload-dir: /Users/callicoder/uploads
