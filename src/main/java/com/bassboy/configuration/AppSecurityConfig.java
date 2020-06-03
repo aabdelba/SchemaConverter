@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -16,9 +17,15 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
+import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
+import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
+import org.springframework.security.oauth2.client.http.OAuth2ErrorResponseErrorHandler;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.core.http.converter.OAuth2AccessTokenResponseHttpMessageConverter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,8 +34,6 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
-
-    private static List<String> clients = Arrays.asList("google","facebook");
 
     //this is the service that interacts with User DAO class
     // just like we have:
@@ -71,15 +76,15 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
             .csrf().disable()//security that stops cross-site reference to the app is disabled
             .authorizeRequests().antMatchers("/","/login*","/signin/**","/signup/**").permitAll()
             .anyRequest().authenticated()
-            .and()//used to specify more properties
-            .oauth2Login().loginPage("/login")
             .and()
             .formLogin().loginPage("/login").permitAll().failureUrl("/login-error")
             .and()
             .logout().invalidateHttpSession(true)
             .clearAuthentication(true)
             .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-            .logoutSuccessUrl("/logout-success").permitAll();
+            .logoutSuccessUrl("/logout-success").permitAll()
+            .and()//used to specify more properties
+            .oauth2Login().loginPage("/login").failureUrl("/login-error").tokenEndpoint().accessTokenResponseClient(accessTokenResponseClient());
 //            .formLogin()
 //            .loginPage("/login").permitAll()
 //            .failureUrl("/login-error")
@@ -116,5 +121,22 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 //
 //        return provider;
 //    }
+
+    @Bean
+    public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> accessTokenResponseClient(){
+        DefaultAuthorizationCodeTokenResponseClient accessTokenResponseClient =
+                new DefaultAuthorizationCodeTokenResponseClient();
+//        accessTokenResponseClient.setRequestEntityConverter(new CustomRequestEntityConverter());
+
+        OAuth2AccessTokenResponseHttpMessageConverter tokenResponseHttpMessageConverter =
+                new OAuth2AccessTokenResponseHttpMessageConverter();
+        tokenResponseHttpMessageConverter.setTokenResponseConverter(new LinkedinTokenResponseConverter());
+        RestTemplate restTemplate = new RestTemplate(Arrays.asList(
+                new FormHttpMessageConverter(), tokenResponseHttpMessageConverter));
+        restTemplate.setErrorHandler(new OAuth2ErrorResponseErrorHandler());
+
+        accessTokenResponseClient.setRestOperations(restTemplate);
+        return accessTokenResponseClient;
+    }
 
 }

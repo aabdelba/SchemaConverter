@@ -1,8 +1,8 @@
 package com.bassboy.controllers;
 
 import com.bassboy.common.ConfigProp;
+import com.bassboy.configuration.LinkedinTokenResponseConverter;
 import com.bassboy.models.FormModel;
-import com.bassboy.models.SchemaEvolverUser;
 import com.bassboy.schemaevolver.InvalidEntryException;
 import com.bassboy.schemaevolver.SchemaEvolverException;
 import com.bassboy.services.SchemaEvolverUserRepository;
@@ -11,12 +11,11 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
-import org.apache.avro.data.Json;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.core.ResolvableType;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.web.WebAttributes;
@@ -45,6 +44,9 @@ public class SchemaEvolverController implements ErrorController {
     private Map<String, String> oauth2AuthenticationUrls = new HashMap<>();
 
     @Autowired
+    private OAuth2AccessTokenResponseClient accessTokenResponseClient;
+
+    @Autowired
     private ClientRegistrationRepository clientRegistrationRepository;
 
     @Autowired
@@ -71,25 +73,49 @@ public class SchemaEvolverController implements ErrorController {
         String authorizationRequestBaseUri = ConfigProp.getInstance().getProperty("authorization.baseUri");
 
         clientRegistrations.forEach(registration ->
+                model.addAttribute(registration.getClientName()+"Url", authorizationRequestBaseUri + "/" + registration.getRegistrationId()));
+
+
+
+        clientRegistrations.forEach(registration ->
                 oauth2AuthenticationUrls.put(registration.getClientName(),
                         authorizationRequestBaseUri + "/" + registration.getRegistrationId()));
+
         model.addAttribute("urls", oauth2AuthenticationUrls);
+
         return "login";
     }
 
     @RequestMapping("/login-error")
-    public String loginError(Model model, HttpServletRequest request) {
+    public String loginError(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
         HttpSession session = request.getSession(false);
         String errorMessage = null;
         if (session != null) {
+
             // get ${SPRING_SECURITY_LAST_EXCEPTION.message
-            BadCredentialsException ex = (BadCredentialsException) session
+            Exception ex = (Exception) session
                     .getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
             if (ex != null) {
                 errorMessage = ex.getMessage();
             }
+
+            if(ex.getClass().equals(BadCredentialsException.class)) {
+                model.addAttribute("errorMessage", errorMessage);
+            } else {
+
+
+                ex.printStackTrace();
+
+
+                LinkedinTokenResponseConverter converter = new LinkedinTokenResponseConverter();
+                RequestDispatcher dispatcher = session.getServletContext()
+                        .getRequestDispatcher("/error");
+                request.setAttribute("javax.servlet.error.message",ex.getMessage());
+                request.setAttribute("javax.servlet.error.message",ex.getMessage());
+                request.setAttribute("javax.servlet.error.status_code","500");
+                dispatcher.forward(request, response);
+            }
         }
-        model.addAttribute("errorMessage", errorMessage);
         return "login";
     }
 
@@ -105,8 +131,14 @@ public class SchemaEvolverController implements ErrorController {
         DocumentContext documentContext = JsonPath.parse(root.toString());
         String username;
 
-        if(root.has("authorizedClientRegistrationId"))
-            username = documentContext.read("$.authorities[0].attributes.name");
+        if(root.has("authorizedClientRegistrationId")) {
+            if(documentContext.read("$.authorizedClientRegistrationId").toString().toLowerCase()
+                    .equals("linkedin"))
+                username = documentContext.read("$.authorities[0].attributes.localizedFirstName")
+                        + " " + documentContext.read("$.authorities[0].attributes.localizedLastName");
+            else
+                username = documentContext.read("$.authorities[0].attributes.name");
+        }
         else
             username = documentContext.read("$.name");
 
