@@ -39,15 +39,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipOutputStream;
 
 @Controller
-public class SchemaEvolverController implements ErrorController {
-
-    private Map<String, String> oauth2AuthenticationUrls = new HashMap<>();
+public class SchemaEvolverController {
 
     @Autowired
     private OAuth2AccessTokenResponseClient accessTokenResponseClient;
-
-    @Autowired
-    private ClientRegistrationRepository clientRegistrationRepository;
 
     @Autowired
     private SchemaResourceManager srm;
@@ -58,70 +53,6 @@ public class SchemaEvolverController implements ErrorController {
     @RequestMapping("/")
     public String welcome() {
         return "index";
-    }
-
-    @RequestMapping("/login")
-    public String getLogin(Model model) throws IOException {
-        Iterable<ClientRegistration> clientRegistrations = null;
-        ResolvableType type = ResolvableType.forInstance(clientRegistrationRepository)
-                .as(Iterable.class);
-        if (type != ResolvableType.NONE &&
-                ClientRegistration.class.isAssignableFrom(type.resolveGenerics()[0])) {
-            clientRegistrations = (Iterable<ClientRegistration>) clientRegistrationRepository;
-        }
-
-        String authorizationRequestBaseUri = ConfigProp.getInstance().getProperty("authorization.baseUri");
-
-        clientRegistrations.forEach(registration ->
-                model.addAttribute(registration.getClientName()+"Url", authorizationRequestBaseUri + "/" + registration.getRegistrationId()));
-
-
-
-        clientRegistrations.forEach(registration ->
-                oauth2AuthenticationUrls.put(registration.getClientName(),
-                        authorizationRequestBaseUri + "/" + registration.getRegistrationId()));
-
-        model.addAttribute("urls", oauth2AuthenticationUrls);
-
-        return "login";
-    }
-
-    @RequestMapping("/login-error")
-    public String loginError(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        HttpSession session = request.getSession(false);
-        String errorMessage = null;
-        if (session != null) {
-
-            // get ${SPRING_SECURITY_LAST_EXCEPTION.message
-            Exception ex = (Exception) session
-                    .getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
-            if (ex != null) {
-                errorMessage = ex.getMessage();
-            }
-
-            if(ex.getClass().equals(BadCredentialsException.class)) {
-                model.addAttribute("errorMessage", errorMessage);
-            } else {
-
-
-                ex.printStackTrace();
-
-
-                LinkedinTokenResponseConverter converter = new LinkedinTokenResponseConverter();
-                RequestDispatcher dispatcher = session.getServletContext()
-                        .getRequestDispatcher("/error");
-                request.setAttribute("javax.servlet.error.message",ex.getMessage());
-                request.setAttribute("javax.servlet.error.message",ex.getMessage());
-                request.setAttribute("javax.servlet.error.status_code","500");
-                dispatcher.forward(request, response);
-            }
-        }
-        return "login";
-    }
-
-    @RequestMapping("/logout-success")
-    public String logout() {
-        return "logout";
     }
 
     @RequestMapping(value="form")
@@ -145,12 +76,6 @@ public class SchemaEvolverController implements ErrorController {
         model.addAttribute("username", username);
         model.addAttribute("formModel", new FormModel());
         return "form";
-    }
-
-    @RequestMapping("/user")
-    @ResponseBody
-    public Principal user (Principal principal){
-        return principal;
     }
 
     @RequestMapping(value="conversion",method = {RequestMethod.POST})
@@ -184,70 +109,5 @@ public class SchemaEvolverController implements ErrorController {
             srm.download(zippedOut);
         }//if try and fail, zippedOut is closed
     }
-
-    @RequestMapping(value="error")
-    public String handleError(HttpServletRequest request, Model model) {
-        Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
-        Object message = request.getAttribute(RequestDispatcher.ERROR_MESSAGE);
-        String errorTitle;
-
-        if (status != null) {
-
-            switch(status.toString()){
-                case("500"):
-                    errorTitle = " - Internal server error, our engineers are working on it";
-                    break;
-                case("400"):
-                    errorTitle = " - Bad request";
-                    break;
-                case("404"):
-                    errorTitle = " - Not found";
-                    break;
-                case("405"):
-                    errorTitle = " - Method not allowed";
-                    break;
-                case("422"):
-                    errorTitle = " - Unprocessable entity";
-                    break;
-                default:
-                    errorTitle = "";
-                    break;
-            }
-            model.addAttribute("status",status);
-            model.addAttribute("errorTitle",errorTitle);
-            model.addAttribute("message",message);
-
-        }
-        return "error";
-    }
-
-
-    @Override
-    public String getErrorPath() {
-        return "/error";
-    }
-
-    // DEBUG
-    public static void main(String[] args) throws IOException {
-
-        MultipartFile[] oldJsonFiles = new MultipartFile[0];
-        MultipartFile oldSchemaFile = null;
-        MultipartFile newSchemaFile = null;
-        MultipartFile renamedFile = null;
-
-        String oldJsonText = "asdfasfad ;;; asdfwefer ;;; awfasdfver ;;;";
-        String oldSchemaText = "asdfasdfawefwerf";
-        String newSchemaText = "asdfasdfawefwerf";
-        String renamedText = "asdfasdfawefwerf=adfwedcf";
-
-        String downloadFormat = "json";
-
-        FormModel scv = new FormModel(oldJsonFiles,oldSchemaFile,newSchemaFile,renamedFile,
-                oldJsonText,oldSchemaText,newSchemaText,renamedText,downloadFormat);
-
-        SchemaResourceManager srm = new SchemaResourceManager(scv);
-        srm.init();
-    }
-
 
 }

@@ -21,8 +21,6 @@ import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationC
 import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
 import org.springframework.security.oauth2.client.http.OAuth2ErrorResponseErrorHandler;
-import org.springframework.security.oauth2.client.registration.ClientRegistration;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.core.http.converter.OAuth2AccessTokenResponseHttpMessageConverter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.client.RestTemplate;
@@ -85,14 +83,6 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
             .logoutSuccessUrl("/logout-success").permitAll()
             .and()//used to specify more properties
             .oauth2Login().loginPage("/login").failureUrl("/login-error").tokenEndpoint().accessTokenResponseClient(accessTokenResponseClient());
-//            .formLogin()
-//            .loginPage("/login").permitAll()
-//            .failureUrl("/login-error")
-//            .and()
-//            .logout().invalidateHttpSession(true)
-//            .clearAuthentication(true)//once you log out, you want to clear everything
-//            .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-//            .logoutSuccessUrl("/logout-success").permitAll();
     }
 
     // AuthenticationManager has one-to-many AuthenticationProviders inside it

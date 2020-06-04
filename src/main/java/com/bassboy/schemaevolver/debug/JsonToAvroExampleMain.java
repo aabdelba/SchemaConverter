@@ -1,4 +1,4 @@
-package com.bassboy.debug;
+package com.bassboy.schemaevolver.debug;
 
 import org.apache.avro.Schema;
 import org.apache.avro.generic.GenericDatumReader;

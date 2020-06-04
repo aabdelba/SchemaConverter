@@ -1,11 +1,14 @@
 package com.bassboy.services;
 
 import com.bassboy.models.SchemaEvolverUser;
+import com.bassboy.models.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class SchemaEvolverUserDetailsService implements UserDetailsService {
@@ -20,6 +23,9 @@ public class SchemaEvolverUserDetailsService implements UserDetailsService {
         if(user==null)
             throw new UsernameNotFoundException("Username not found");
 
-        return user;
+        return new UserPrincipal(user);
     }
+//
+//    public List<SchemaEvolverUser> loadAllUsers() {
+//    }
 }
