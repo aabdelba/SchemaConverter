@@ -134,7 +134,29 @@ public class SchemaResourceManager {
                 zippedOut.closeEntry();
             }
         }
-
         zippedOut.finish();
     }
+
+
+    public static void main(String[] args) throws IOException {
+
+        MultipartFile[] oldJsonFiles = new MultipartFile[0];
+        MultipartFile oldSchemaFile = null;
+        MultipartFile newSchemaFile = null;
+        MultipartFile renamedFile = null;
+
+        String oldJsonText = "asdfasfad ;;; asdfwefer ;;; awfasdfver ;;;";
+        String oldSchemaText = "asdfasdfawefwerf";
+        String newSchemaText = "asdfasdfawefwerf";
+        String renamedText = "asdfasdfawefwerf=adfwedcf";
+
+        String downloadFormat = "json";
+
+        FormModel scv = new FormModel(oldJsonFiles,oldSchemaFile,newSchemaFile,renamedFile,
+                oldJsonText,oldSchemaText,newSchemaText,renamedText,downloadFormat);
+
+        SchemaResourceManager srm = new SchemaResourceManager(scv);
+        srm.init();
+    }
+
 }

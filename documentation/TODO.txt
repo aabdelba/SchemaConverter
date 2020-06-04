@@ -1,15 +1,23 @@
 TODO - PRIORITY
-more scenarios												(TOOL SUPPORT)
+sign up with rest controllers								(SECURITY)
+unique and mandatory email logic for sign up				(SECURITY)
+username or email login form								(SECURITY)
+invalid characters in username during sign up				(SECURITY)
+------------------------ BREAK ----------------------
+test - unit and behavioural									(TOOL SUPPORT)
 log4j														(TOOL SUPPORT)
-paypall or credit card										(PAYMENT)
-sign up														(SECURITY)
-forgot password												(SECURITY)
-authorization security (will access user session)			(SECURITY)
-use email as username										(SECURITY)
-use otp in verification link in email						(SECURITY)
-continue as guest											(SECURITY)
-use ssl and make web service secure							(SECURITY)	
+-------------------- BACK TO WORK -------------------
+API															(TOOL SUPPORT)
+more scenarios												(TOOL SUPPORT)
+make landing page carousels more readable					(DESIGN)
 
+authorization security (will access user session)			(SECURITY)
+session expiry												(SECURITY)
+use otp in verification link in email						(SECURITY)
+forgot password												(SECURITY)
+subscription user vs paid vs unpaid vs admin				(SECURITY)
+use ssl and make web service secure							(SECURITY)
+paypall or credit card										(PAYMENT)	
 
 
 TODO - SECURITY
@@ -19,10 +27,8 @@ set up seperate oauth2 authentication provider for database
 
 
 
-TODO - TOOL TECHNICAL SUPPORT
-api
+TODO - TOOL SUPPORT
 javadoc
-test - unit and behavioural
 
 
 

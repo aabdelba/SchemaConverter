@@ -1,4 +1,4 @@
-package com.bassboy.debug;
+package com.bassboy.schemaevolver.debug;
 
 import java.io.IOException;
 

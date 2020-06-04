@@ -1,4 +1,4 @@
-package com.bassboy.debug;
+package com.bassboy.schemaevolver.debug;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
