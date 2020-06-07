@@ -1,29 +1,35 @@
 TODO - PRIORITY
-sign up with rest controllers								(SECURITY)
-unique and mandatory email logic for sign up				(SECURITY)
-username or email login form								(SECURITY)
-invalid characters in username during sign up				(SECURITY)
+design login page											(DESIGN)
+redo carousel images										(DESIGN)
+coming soon page											(DESIGN)
+swagger link												(UX FEATURE)
+deploy on aws												(DEPLOY)
 ------------------------ BREAK ----------------------
 test - unit and behavioural									(TOOL SUPPORT)
 log4j														(TOOL SUPPORT)
 -------------------- BACK TO WORK -------------------
+implement signup page										(SECURITY)
+design signup page											(DESIGN)
+form signup mandatory email logic for form sign up			(SECURITY)
+invalid characters in username during sign up				(SECURITY)
 API															(TOOL SUPPORT)
 more scenarios												(TOOL SUPPORT)
 make landing page carousels more readable					(DESIGN)
-
+profile page - edit profile									(UX FEATURE)
 authorization security (will access user session)			(SECURITY)
 session expiry												(SECURITY)
-use otp in verification link in email						(SECURITY)
-forgot password												(SECURITY)
+forgot password	- use otp in verification link in email		(SECURITY)
 subscription user vs paid vs unpaid vs admin				(SECURITY)
 use ssl and make web service secure							(SECURITY)
 paypall or credit card										(PAYMENT)	
 
 
+
 TODO - SECURITY
-encrypt oauth2 app secrets
+secure oauth2 app secrets with spring vault
 JWT security
 set up seperate oauth2 authentication provider for database
+set up password expiry policy
 
 
 
@@ -34,7 +40,6 @@ javadoc
 
 TODO - SCALABILITY
 copyright for 35-55 usd
-deploy to aws
 kafka streaming
 elk logging
 
@@ -43,5 +48,4 @@ elk logging
 TODO - NICE TO HAVE
 choose file or text
 drag and drop
-email zip result
 multiple records in one file

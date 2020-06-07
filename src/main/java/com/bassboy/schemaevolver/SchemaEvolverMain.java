@@ -13,7 +13,7 @@ public class SchemaEvolverMain {
     private ConfigProp configProp;
 
     // DEBUG
-    public static void main(String[] args) throws IOException, SchemaEvolverException, InvalidEntryException {
+    public static void main(String[] args) throws IOException, SchemaEvolverException, InvalidSchemaEntryException {
 
         ConfigProp configProp = ConfigProp.getInstance();
         String inputDir = System.getProperty("user.dir")+configProp.getProperty("debug.dir");
@@ -23,15 +23,15 @@ public class SchemaEvolverMain {
         String oldJsonFile = inputDir+"record/record.json";
         String renamedFile = inputDir+"schema/renamedFields.txt";
 
-        SchemaEvolverMain sc = new SchemaEvolverMain();
-        sc.convertDataAndPlaceInOutputDir(oldSchemaFile,newSchemaFile,oldJsonFile,renamedFile);
+        SchemaEvolverMain schemaEvolver = new SchemaEvolverMain();
+        schemaEvolver.convertDataAndPlaceInOutputDir(oldSchemaFile,newSchemaFile,oldJsonFile,renamedFile);
     }
 
-    public void convertDataAndPlaceInOutputDir(String oldSchemaFile, String newSchemaFile, String oldJsonFile, String renamedFile) throws IOException, SchemaEvolverException, InvalidEntryException {
+    public void convertDataAndPlaceInOutputDir(String oldSchemaFile, String newSchemaFile, String oldJsonFile, String renamedFile) throws IOException, SchemaEvolverException, InvalidSchemaEntryException {
         convertDataAndPlaceInOutputDir(new File(oldSchemaFile),new File(newSchemaFile),new File(oldJsonFile),new File(renamedFile));
     }
 
-    public void convertDataAndPlaceInOutputDir(File oldSchemaFile, File newSchemaFile, File oldJsonFile, File renamedFile) throws IOException, SchemaEvolverException, InvalidEntryException {
+    public void convertDataAndPlaceInOutputDir(File oldSchemaFile, File newSchemaFile, File oldJsonFile, File renamedFile) throws IOException, SchemaEvolverException, InvalidSchemaEntryException {
         configProp = ConfigProp.getInstance();
         String outputDir = System.getProperty("user.dir") + configProp.getProperty("output.dir");
 

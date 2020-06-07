@@ -9,7 +9,7 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
-public class SchemaEvolverErrorController implements ErrorController {
+public class UiErrorController implements ErrorController {
 
     @RequestMapping(value="error")
     public String handleError(HttpServletRequest request, Model model) {
@@ -24,7 +24,7 @@ public class SchemaEvolverErrorController implements ErrorController {
             switch(status.toString()){
                 case("500"):
                     errorTitle = " - Internal server error, our engineers are working on it";
-                    new Exception(message.toString()).printStackTrace();
+//                    new Exception(message.toString()).printStackTrace();
                     model.addAttribute("message","");
                     break;
                 case("400"):

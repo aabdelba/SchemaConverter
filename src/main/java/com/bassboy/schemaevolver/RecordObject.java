@@ -2,7 +2,6 @@ package com.bassboy.schemaevolver;
 
 import java.io.*;
 
-import com.bassboy.common.ConfigProp;
 import com.bassboy.common.RwUtils;
 import org.apache.avro.AvroTypeException;
 import org.apache.avro.Schema;
@@ -55,15 +54,15 @@ public class RecordObject {
 		this.schema = schema;
 	}
 
-	public RecordObject(String fileStr) throws InvalidEntryException {
+	public RecordObject(String fileStr) throws InvalidSchemaEntryException {
 		this(new File(fileStr));
 	}
 
-	public RecordObject(File file) throws InvalidEntryException {
+	public RecordObject(File file) throws InvalidSchemaEntryException {
 		try {
 			parseSchemaFromAvsc(file);
 		} catch(Exception e){
-			throw new InvalidEntryException("Schema parsing error: "+file.getName()+"\n"+e.getMessage());
+			throw new InvalidSchemaEntryException("Schema parsing error: "+file.getName()+"\n"+e.getMessage());
 		}
 	}
 
