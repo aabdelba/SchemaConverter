@@ -4,11 +4,16 @@ server:
     whitelabel:
       enabled: false
 
-api:
-  facebook:
-    graphUri: https://graph.facebook.com/v3.2/
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        web: DEBUG
 
 spring:
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
   h2:
     console.enabled: true
   session:

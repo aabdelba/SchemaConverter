@@ -3,7 +3,6 @@ package com.bassboy.controllers;
 import com.bassboy.common.ConfigProp;
 import com.bassboy.configuration.LinkedinTokenResponseConverter;
 import com.bassboy.models.SchemaEvolverUser;
-import com.bassboy.services.FbGraphApiService;
 import com.bassboy.services.SchemaEvolverUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -18,6 +17,8 @@ import org.springframework.security.web.WebAttributes;
 import org.springframework.social.connect.Connection;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
@@ -51,11 +52,11 @@ public class LoginController {
     }
 
 
-    @RequestMapping("/user")
-    @ResponseBody
-    public Principal user (Principal principal){
-        return principal;
-    }
+//    @RequestMapping("/user")
+//    @ResponseBody
+//    public Principal user (Principal principal){
+//        return principal;
+//    }
 
     @RequestMapping("/login")
     public String getLogin(Model model) throws IOException {
@@ -104,7 +105,6 @@ public class LoginController {
                 RequestDispatcher dispatcher = session.getServletContext()
                         .getRequestDispatcher("/error");
                 request.setAttribute("javax.servlet.error.message",ex.getMessage());
-                request.setAttribute("javax.servlet.error.message",ex.getMessage());
                 request.setAttribute("javax.servlet.error.status_code","500");
                 dispatcher.forward(request, response);
             }
@@ -112,47 +112,9 @@ public class LoginController {
         return "login";
     }
 
-    @RequestMapping("/logout-success")
+    @GetMapping("/logout-success")
     public String logout() {
         return "logout";
     }
 
-
-
-
-
-
-    public String execute(Connection<?> connection) {
-
-        String socialId = connection.getKey().toString();
-        SchemaEvolverUser user = null;
-
-        if(!repo.existsUserBySocialId(socialId)) {
-            if(socialId.contains("facebook")) {
-                FbGraphApiService fbApi = new FbGraphApiService(new RestTemplateBuilder());
-                try {
-                    user = fbApi.getProfile("me", connection.createData().getAccessToken());//fb api allows use of "me" instead of the userID
-                } catch (IOException e) {
-                    e.printStackTrace();//problem getting uri property from config.properties
-                }
-            }
-            this.repo.save(user);
-        } else {
-            user = repo.findBySocialId(socialId);
-        }
-        return user.getUsername();
-    }
-
-    public String signIn(
-            String localUserId,
-            Connection<?> connection,
-            NativeWebRequest request) {
-
-        SecurityContextHolder.getContext().setAuthentication(
-                new UsernamePasswordAuthenticationToken(
-                        connection.getDisplayName(), null,
-                        Arrays.asList(new SimpleGrantedAuthority("SOCIAL_USER"))));
-
-        return "/form";
-    }
 }

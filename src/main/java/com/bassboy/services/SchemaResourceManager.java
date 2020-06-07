@@ -1,7 +1,7 @@
 package com.bassboy.services;
 
 import com.bassboy.models.FormModel;
-import com.bassboy.schemaevolver.InvalidEntryException;
+import com.bassboy.schemaevolver.InvalidSchemaEntryException;
 import com.bassboy.schemaevolver.SchemaEvolverMain;
 import com.bassboy.schemaevolver.SchemaEvolverException;
 import com.bassboy.common.ConfigProp;
@@ -23,14 +23,21 @@ public class SchemaResourceManager {
     private ConfigProp configProp;
 
     @Autowired
-    private FormModel scm;
+    private FormModel formModel;
 
-    public SchemaResourceManager(FormModel scm) {
-        this.scm = scm;
+    public SchemaResourceManager(FormModel formModel) {
+        this.formModel = formModel;
     }
 
-    public FormModel getScm() {
-        return scm;
+    public SchemaResourceManager() {
+    }
+
+    public FormModel getFormModel() {
+        return formModel;
+    }
+
+    public void setFormModel(FormModel formModel) {
+        this.formModel = formModel;
     }
 
     public void init() throws IOException {
@@ -40,7 +47,7 @@ public class SchemaResourceManager {
         writeMultifileToInputDirectories();
     }
 
-    private void clearDirectories() throws IOException {
+    public void clearDirectories() throws IOException {
         configProp = configProp.getInstance();
         RwUtils.clearDirectory(System.getProperty("user.dir")+configProp.getProperty("input.dir")+"record/");
         RwUtils.clearDirectory(System.getProperty("user.dir")+configProp.getProperty("input.dir")+"schema/");
@@ -54,11 +61,11 @@ public class SchemaResourceManager {
         String recordDir = System.getProperty("user.dir")+configProp.getProperty("input.dir")+"record/";
         String schemaDir = System.getProperty("user.dir")+configProp.getProperty("input.dir")+"schema/";
 
-        RwUtils.writeMultipartIntoFile(schemaDir,scm.getOldSchemaFile());
-        RwUtils.writeMultipartIntoFile(schemaDir,scm.getNewSchemaFile());
-        RwUtils.writeMultipartIntoFile(schemaDir,scm.getRenamedFile());
+        RwUtils.writeMultipartIntoFile(schemaDir, formModel.getOldSchemaFile());
+        RwUtils.writeMultipartIntoFile(schemaDir, formModel.getNewSchemaFile());
+        RwUtils.writeMultipartIntoFile(schemaDir, formModel.getRenamedFile());
 
-        for (MultipartFile record: scm.getOldJsonFiles()) {
+        for (MultipartFile record: formModel.getOldJsonFiles()) {
             RwUtils.writeMultipartIntoFile(recordDir,record);
         }
     }
@@ -68,20 +75,20 @@ public class SchemaResourceManager {
         String recordDir = System.getProperty("user.dir")+configProp.getProperty("input.dir")+"record/";
         String schemaDir = System.getProperty("user.dir")+configProp.getProperty("input.dir")+"schema/";
 
-        if(scm.getOldSchemaFile().isEmpty()) RwUtils.writeStringToFile(schemaDir+"oldSchema.avsc",scm.getOldSchemaText());
-        if(scm.getNewSchemaFile().isEmpty()) RwUtils.writeStringToFile(schemaDir+"newSchema.avsc",scm.getNewSchemaText());
-        if(scm.getRenamedFile().isEmpty()) RwUtils.writeStringToFile(schemaDir+"renamedFields.txt",scm.getRenamedText());
+        if(formModel.getOldSchemaFile().isEmpty()) RwUtils.writeStringToFile(schemaDir+"oldSchema.avsc", formModel.getOldSchemaText());
+        if(formModel.getNewSchemaFile().isEmpty()) RwUtils.writeStringToFile(schemaDir+"newSchema.avsc", formModel.getNewSchemaText());
+        if(formModel.getRenamedFile().isEmpty()) RwUtils.writeStringToFile(schemaDir+"renamedFields.txt", formModel.getRenamedText());
 
         int i = 1;
         String recordFileStr;
-        for (String record:scm.getOldJsonText().split(";;;")) {
+        for (String record: formModel.getOldJsonText().split(";;;")) {
             recordFileStr = recordDir+"textboxRecord"+i+".json";
             RwUtils.writeStringToFile(recordFileStr,record);
             i++;
         }
     }
 
-    public void runConversion() throws IOException, SchemaEvolverException, InvalidEntryException {
+    public void runConversion() throws IOException, SchemaEvolverException, InvalidSchemaEntryException {
         configProp = ConfigProp.getInstance();
         String inputDir = System.getProperty("user.dir")+configProp.getProperty("input.dir");
         String outputDir = System.getProperty("user.dir")+configProp.getProperty("output.dir");
@@ -89,9 +96,9 @@ public class SchemaResourceManager {
         String oldSchemaName;
         String newSchemaName;
         String renamedFileName;
-        if(scm.getOldSchemaFile().isEmpty()) oldSchemaName = "oldSchema.avsc"; else oldSchemaName = scm.getOldSchemaFile().getOriginalFilename();
-        if(scm.getNewSchemaFile().isEmpty()) newSchemaName = "newSchema.avsc"; else newSchemaName  = scm.getNewSchemaFile().getOriginalFilename();
-        if(scm.getRenamedFile().isEmpty()) renamedFileName = "renamedFields.txt"; else renamedFileName = scm.getRenamedFile().getOriginalFilename();
+        if(formModel.getOldSchemaFile().isEmpty()) oldSchemaName = "oldSchema.avsc"; else oldSchemaName = formModel.getOldSchemaFile().getOriginalFilename();
+        if(formModel.getNewSchemaFile().isEmpty()) newSchemaName = "newSchema.avsc"; else newSchemaName  = formModel.getNewSchemaFile().getOriginalFilename();
+        if(formModel.getRenamedFile().isEmpty()) renamedFileName = "renamedFields.txt"; else renamedFileName = formModel.getRenamedFile().getOriginalFilename();
 
         File recordDir = new File(inputDir + "record/");
         File oldSchemaFile = new File(inputDir + "schema/" + oldSchemaName);
@@ -113,7 +120,7 @@ public class SchemaResourceManager {
 
     public void download(ZipOutputStream zippedOut) throws IOException {
         ConfigProp configProp = ConfigProp.getInstance();
-        String downloadFormat = getScm().getDownloadFormat();
+        String downloadFormat = getFormModel().getDownloadFormat();
         FileSystemResource resource;
         ZipEntry zipEntry;
         File dir;
@@ -152,10 +159,10 @@ public class SchemaResourceManager {
 
         String downloadFormat = "json";
 
-        FormModel scv = new FormModel(oldJsonFiles,oldSchemaFile,newSchemaFile,renamedFile,
+        FormModel formModel = new FormModel(oldJsonFiles,oldSchemaFile,newSchemaFile,renamedFile,
                 oldJsonText,oldSchemaText,newSchemaText,renamedText,downloadFormat);
 
-        SchemaResourceManager srm = new SchemaResourceManager(scv);
+        SchemaResourceManager srm = new SchemaResourceManager(formModel);
         srm.init();
     }
 

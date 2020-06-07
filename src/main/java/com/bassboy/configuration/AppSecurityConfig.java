@@ -50,6 +50,7 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     // This is to use in-memory userDetails without using a database
+    // already created a class that UserDetails to access database instead
 //    @Bean
 //    @Override
 //    protected UserDetailsService userDetailsService() {
@@ -72,10 +73,12 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http
             .csrf().disable()//security that stops cross-site reference to the app is disabled
-            .authorizeRequests().antMatchers("/","/login*","/signin/**","/signup/**").permitAll()
+            .authorizeRequests().antMatchers("/","/login*").permitAll()
             .anyRequest().authenticated()
             .and()
             .formLogin().loginPage("/login").permitAll().failureUrl("/login-error")
+            .and()
+            .httpBasic()
             .and()
             .logout().invalidateHttpSession(true)
             .clearAuthentication(true)
