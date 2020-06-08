@@ -31,31 +31,29 @@ function refresh() {
     <div class="hidden" id="loadingToggle">
 
 
-
-
-
-
             <div class="row empty-100-row"></div>
 
 
 
-            <h2 class="text-center">Running the conversion...</h2>
-
-            <div class="row empty-10-row"></div>
-
-            <div class="center-button">
-                <div class="spinner-border text-primary" role="status">
-                        <span class="sr-only">Loading...</span>
-                    </div>
-            </div>
+            <h3 class="text-center">Running the conversion...</h3>
 
             <div class="row empty-25-row"></div>
 
             <div class="center-button">
-
-                    <button onclick="refresh()" id="cancelButton" class="btn btn-danger">Cancel</button>
-
+                <div class="single-spinner spinner-border text-primary" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
             </div>
+
+            <div class="row empty-50-row"></div>
+
+            <div class="row">
+
+                <div class="col-xl-5 col-lg-5 col-md-1 col-sm-1 col-xs-1"></div>
+                <button onclick="refresh()" id="cancelButton" class="single-button col-xl-2 col-lg-2 col-md-10 col-sm-10 col-xs-10 text-center btn btn-danger">Cancel</button>
+                <div class="col-xl-5 col-lg-5 col-md-1 col-sm-1 col-xs-1"></div>
+            </div>
+
 
             <div class="row empty-100-row"></div>
 
@@ -73,6 +71,7 @@ function refresh() {
         <div class="container">
 
             <div class="row empty-50-row"></div>
+            
 
         <h2>Please provide fields for data conversion</h2>
 
@@ -107,13 +106,13 @@ function refresh() {
                     <label class="paragraph-text" for="oldJsonText">Old json records (separated by ';;;' or in separate files):</label>
                     <div class="container">
                         <div class="row">
-                            <textarea th:field="*{oldJsonText}"   form="form1"  id="oldJsonText" class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12 paragraph-text" placeholder="old json records"></textarea>
+                            <textarea th:field="*{oldJsonText}"   form="form1"  id="oldJsonText" class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12 input-text" placeholder="old json records"></textarea>
                             <div class="col-xl-2 col-lg-2 col-md-2"></div>
                         </div>
                         <div class="row empty-5-row"></div>
                         <div class="row">
                             
-                            <input th:field="*{oldJsonFiles}" type="file" class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12 form-control-file paragraph-text" id="oldJsonFiles" multiple placeholder="old json records">
+                            <input th:field="*{oldJsonFiles}" type="file" class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12 form-control-file input-text" id="oldJsonFiles" multiple placeholder="old json records">
                             <div class="col-xl-2 col-lg-2 col-md-2"></div>
                         </div>
                     </div>
@@ -128,13 +127,13 @@ function refresh() {
                     <div class="container">
                         <div class="row">
                             
-                            <textarea th:field="*{oldSchemaText}"   form="form1"  id="oldSchemaText" class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12 paragraph-text" placeholder="old avsc schema"></textarea>
+                            <textarea th:field="*{oldSchemaText}"   form="form1"  id="oldSchemaText" class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12 input-text" placeholder="old avsc schema"></textarea>
                             <div class="col-xl-2 col-lg-2 col-md-2"></div>
                         </div>
                         <div class="row empty-5-row"></div>
                         <div class="row">
                             
-                            <input th:field="*{oldSchemaFile}" type="file" class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12 form-control-file paragraph-text" id="oldSchemaFile" placeholder="old avsc schema">
+                            <input th:field="*{oldSchemaFile}" type="file" class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12 form-control-file input-text" id="oldSchemaFile" placeholder="old avsc schema">
                             <div class="col-xl-2 col-lg-2 col-md-2"></div>
                         </div>
                     </div>
@@ -145,17 +144,17 @@ function refresh() {
                 <div class="row empty-25-row"></div>
 
                 <div class="form-group">
-                    <label class="paragraph-text" for="newSchemaText">Old avsc schema:</label>
+                    <label class="paragraph-text" for="newSchemaText">New avsc schema:</label>
                     <div class="container">
                         <div class="row">
                             
-                            <textarea th:field="*{newSchemaText}"   form="form1"  id="newSchemaText" class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12 paragraph-text" placeholder="new avsc schema"></textarea>
+                            <textarea th:field="*{newSchemaText}"   form="form1"  id="newSchemaText" class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12 input-text" placeholder="new avsc schema"></textarea>
                             <div class="col-xl-2 col-lg-2 col-md-2"></div>
                         </div>
                         <div class="row empty-5-row"></div>
                         <div class="row">
                             
-                            <input th:field="*{newSchemaFile}" type="file" class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12 form-control-file paragraph-text" id="newSchemaFile" placeholder="new avsc schema">
+                            <input th:field="*{newSchemaFile}" type="file" class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12 form-control-file input-text" id="newSchemaFile" placeholder="new avsc schema">
                             <div class="col-xl-2 col-lg-2 col-md-2"></div>
                         </div>
                     </div>
@@ -167,17 +166,18 @@ function refresh() {
                 <div class="row empty-25-row"></div>
 
                 <div class="form-group">
-                    <label class="paragraph-text" for="renamedText">Old avsc schema:</label>
+                    <label class="paragraph-text" for="renamedText">Renamed avro fields that may not have alias (optional):</label>
+                    <p>list format: latestName=oldName, seperated with ';'</p>
                     <div class="container">
                         <div class="row">
                             
-                            <textarea th:field="*{renamedText}"   form="form1"  id="renamedText" class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12 paragraph-text" placeholder="renamed fields"></textarea>
+                            <textarea th:field="*{renamedText}"   form="form1"  id="renamedText" class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12 input-text" placeholder="renamed fields"></textarea>
                             <div class="col-xl-2 col-lg-2 col-md-2"></div>
                         </div>
                         <div class="row empty-5-row"></div>
                         <div class="row">
                             
-                            <input th:field="*{renamedFile}" type="file" class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12 form-control-file paragraph-text" id="renamedFile" placeholder="renamed fields">
+                            <input th:field="*{renamedFile}" type="file" class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12 form-control-file input-text" id="renamedFile" placeholder="renamed fields">
                             <div class="col-xl-2 col-lg-2 col-md-2"></div>
                         </div>
                     </div>
@@ -211,7 +211,7 @@ function refresh() {
 
     <div class="row">
         <div class="col-xl-5 col-lg-5 col-md-5 col-sm-1 col-xs-1"></div>
-        <button onclick="window.scrollTo(0,0)" type="submit" form="form1" class="button-height col-xl-2 col-lg-2 col-md-2 col-sm-10 col-xs-10 text-center btn btn-primary">Start conversion</button>
+        <button onclick="window.scrollTo(0,0)" type="submit" form="form1" class="single-button col-xl-2 col-lg-2 col-md-2 col-sm-10 col-xs-10 text-center btn btn-primary">Start conversion</button>
 
         <div class="col-xl-5 col-lg-5 col-md-5 col-sm-1 col-xs-1"></div>
     </div>

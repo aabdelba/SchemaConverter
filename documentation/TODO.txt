@@ -1,5 +1,4 @@
 TODO - PRIORITY
-design login page											(DESIGN)
 redo carousel images										(DESIGN)
 coming soon page											(DESIGN)
 swagger link												(UX FEATURE)
