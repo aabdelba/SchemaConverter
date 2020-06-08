@@ -1,7 +1,6 @@
 package com.bassboy.controllers;
 
 import com.bassboy.common.ConfigProp;
-import com.bassboy.configuration.LinkedinTokenResponseConverter;
 import com.bassboy.models.SchemaEvolverUser;
 import com.bassboy.services.SchemaEvolverUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,6 +76,7 @@ public class LoginController {
         clientRegistrations.forEach(registration ->
                 oauth2AuthenticationUrls.put(registration.getClientName(),
                         authorizationRequestBaseUri + "/" + registration.getRegistrationId()));
+
 
         model.addAttribute("urls", oauth2AuthenticationUrls);
 

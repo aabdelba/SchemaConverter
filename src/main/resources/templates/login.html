@@ -11,6 +11,7 @@
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
     <link type="text/css" rel="stylesheet" href="/css/style.css"/>
+    <!-- <link type="text/css" rel="stylesheet" href="/css/style.css"/> -->
 
 
     <title>Schema Evolver | Login</title>
@@ -38,58 +39,96 @@
     </nav></header>
 
 <div class="container">
-
     <div class="row empty-75-row"></div>
 
+    <h3  class="text-center">Log In to Schema Evolver</h3>
+    <div class="row empty-50-row"></div>
 
-
-
-
-    <div class="text-center">
-
-        <h2>Log In to Schema Evolver</h2>
-        <div class="row empty-50-row"></div>
-
-        <div class="container">
+    <div class="container">
         <div class="row">
 
+            
 
-<!--            sign in partners here-->
-<!--            <div class="col-xl-5 col-lg-4 col-md-4 col-sm-3 col-xs-1"></div>-->
+            
             <div class="container col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
 
+                <div class="row">
+                    <div class="col-xl-3 col-lg-3 col-md-2 col-sm-2 col-xs-2"></div>
+                    <div class="form-background col-xl-8 col-lg-8 col-md-8 col-sm-8 col-xs-8 container text-center">
 
 
-            <p>Log in with:</p>
-            <p th:each="url : ${urls}">
-                <a class="btn" th:text="${url.key}" th:href="${url.value}">Client</a>
-            </p>
+                        <div class="row empty-20-row"></div>
 
+                        <h2>Sign-In Partners</h2>
+                        <div class="row empty-20-row"></div>
+                        <div class="row center-button">
+                            <a href="oauth2/authorization/google"><img class="google-image" src="/images/google.png"></a>
+                        </div>
+                        <div class="row empty-40-row"></div>
+                        <div class="row center-button">
+                            <a href="oauth2/authorization/github"><img class="github-image" src="/images/GitHub-Mark-120px-plus.png"></a>
+                        </div>
+                        <div class="row empty-40-row"></div>
+                        <div class="row center-button">
+                            <a href="oauth2/authorization/linkedin"><img class="linkedin-image" src="/images/LI-In-Bug.png"></a>
+                        </div>
+                        <div class="row empty-20-row"></div>
 
+                    </div>
+                    <div class="col-xl-1 col-lg-1 col-md-2 col-sm-2 col-xs-2"></div>
+                </div>
             </div>
 
 
-            <div class="container col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
 
+
+
+
+
+
+
+
+            
+            <div class="container col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
                 <form th:action="@{/login}" method="post">
 
-                <p th:text="${errorMessage}" style="color:#FF0000";>Error logging in</p>
-                    <label for="username">Username: </label>
-                    <input type="text" id="username" name="username" autofocus="autofocus" /> <br/>
-                    <label for="password">Password: </label>
-                    <input type="password" id="password" name="password" /> <br/>
-                    <div class="row empty-20-row"></div>
-                <div class="row">
-                    <div class="col-xl-3 col-lg-3 col-md-2 col-sm-2 col-xs-1"></div>
-                    <input class="col-xl-3 col-lg-3 col-md-4 col-sm-4 col-xs-5  btn btn-primary" type="submit" value="Log In" />
-                    <div class="col-xl-1 col-lg-1 col-md-1 col-sm-1"></div>
-                    <div class="row empty-5-row"></div>
-                    <a class="col-xl-3 col-lg-3 col-md-4 col-sm-4 col-xs-5 btn btn-primary" href="">Sign Up</a>
-                    <div class="col-xl-2 col-lg-2 col-md-1 col-sm-1 col-xs-1"></div>
-                </div>
+                    <div class="row">
+                        <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-xs-2"></div>
+
+                        <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-xs-8 container">
+                            <div class="row empty-75-row"></div>
+                            <p th:text="${errorMessage}" style="color:#FF0000";>Error logging in</p>
+                            <p class="paragraph-text">username or email</p>
+                            <input type="text" id="username" name="username" autofocus="autofocus" /> <br/>
+                            <div class="row empty-25-row"></div>
+                            <p class="paragraph-text">password</p>
+                            <input type="password" id="password" name="password"/> <br/>
+                            <div class="row empty-40-row"></div>
+                        </div>
+
+                        <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-xs-2"></div>
+
+                    </div>
+
+
+
+                    <div class="row">
+                        <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-xs-2"></div>
+                        <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-xs-8 container">
+                            <div class="container">
+                                <div class="row">
+                                    <input class="col-xl-4 col-lg-4 col-md-5 col-sm-5 col-xs-5 btn-block btn btn-primary" type="submit" value="Log In" />
+                                    <div class="col-xl-1 col-lg-1 col-md-2 col-sm-2 col-xs-2">                                <div class="row empty-10-row"></div>
+                                </div>
+                                    <a class="col-xl-4 col-lg-4 col-md-5 col-sm-5 col-xs-5 btn-block btn btn-primary" href="">Sign Up</a>
+                                    <div class="col-xl-3 col-lg-3"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-xs-2"></div>
+                    </div>
+
                 </form>
-
-
             </div>
 
 
@@ -100,32 +139,40 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+
+        </div>
+        <div class="row empty-50-row"></div>
+
+        <div class="row">
+
+            <div class="col-xl-5 col-lg-5 col-md-1 col-sm-1 col-xs-1"></div>
+            <button class="single-button col-xl-2 col-lg-2 col-md-10 col-sm-10 col-xs-10 text-center btn btn-info" href="/">Cancel</button>
+            <div class="col-xl-5 col-lg-5 col-md-1 col-sm-1 col-xs-1"></div>
         </div>
 
-
-
-            <div class="row empty-50-row"></div>
-            <a class="btn btn-warning" href="/">Cancel</a>
-
-
-
-
-
-        </div>
-    </div>
-
-
-    <div class="row empty-75-row"></div>
-
-
-
-    </div>
-
-
-
-
-
-
+        <div class="row empty-75-row"></div>
+    </div>    
 </div>
 
 <div th:replace="fragments/footer :: footer"></div>
