@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.bassboy.schemaevolver</groupId>
 	<artifactId>schemaevolver</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2</version>
 	<name>SchemaEvolver</name>
 	<description>schema conversion tool to help reduce work required to format data</description>
 
@@ -231,12 +231,15 @@
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<plugins>
 			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.7.0</version>
-				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
-				</configuration>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<configuration>
+							<mainClass>com.bassboy.LaunchSchemaEvolverServiceMain</mainClass>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
