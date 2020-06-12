@@ -18,25 +18,8 @@
 </head>
 <body>
 
-<header>
-    <nav class="empty-100-row navBar">
-        <div class="container">
-            <div class="row empty-40-row"></div>
-            <div class="row">
-                <div class="col-xl-5 col-lg-5 col-md-6 col-sm-12 col-xs-12">
-                    <p class="header-title">Schema Evolver</p>
-                </div>
+    <div th:replace="fragments/headerBeforeLogin :: header"></div>
 
-                <div class="col-xl-7 col-lg-6 col-md-6"></div>
-
-            </div>
-
-            <div class="row empty-15-row"></div>
-
-        </div>
-
-
-    </nav></header>
 
 <div class="container">
     <div class="row empty-75-row"></div>
@@ -91,18 +74,20 @@
             
             <div class="container col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
                 <form th:action="@{/login}" method="post">
-
-                    <div class="row">
+                    <div claoss="rw">
                         <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-xs-2"></div>
 
                         <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-xs-8 container">
                             <div class="row empty-75-row"></div>
                             <p th:text="${errorMessage}" style="color:#FF0000";>Error logging in</p>
-                            <p class="paragraph-text">username or email</p>
+                            <p class="login-text">username or email</p>
                             <input type="text" id="username" name="username" autofocus="autofocus" /> <br/>
                             <div class="row empty-25-row"></div>
-                            <p class="paragraph-text">password</p>
+                            <p class="login-text">password</p>
                             <input type="password" id="password" name="password"/> <br/>
+                            <div class="row empty-25-row"></div>
+                            <label for="remember-me">remember me:</label>
+                            <input id="remember-me" type="checkbox" name="remember-me">
                             <div class="row empty-40-row"></div>
                         </div>
 
@@ -118,7 +103,8 @@
                             <div class="container">
                                 <div class="row">
                                     <input class="col-xl-4 col-lg-4 col-md-5 col-sm-5 col-xs-5 btn-block btn btn-primary" type="submit" value="Log In" />
-                                    <div class="col-xl-1 col-lg-1 col-md-2 col-sm-2 col-xs-2">                                <div class="row empty-10-row"></div>
+                                    <div class="col-xl-1 col-lg-1 col-md-2 col-sm-2 col-xs-2">
+                                        <div class="row empty-10-row"></div>
                                 </div>
                                     <a class="col-xl-4 col-lg-4 col-md-5 col-sm-5 col-xs-5 btn-block btn btn-primary" href="">Sign Up</a>
                                     <div class="col-xl-3 col-lg-3"></div>
@@ -164,12 +150,19 @@
         </div>
         <div class="row empty-50-row"></div>
 
-        <div class="row">
 
-            <div class="col-xl-5 col-lg-5 col-md-1 col-sm-1 col-xs-1"></div>
-            <button class="single-button col-xl-2 col-lg-2 col-md-10 col-sm-10 col-xs-10 text-center btn btn-info" href="/">Cancel</button>
-            <div class="col-xl-5 col-lg-5 col-md-1 col-sm-1 col-xs-1"></div>
-        </div>
+        <form action="/" method="get">
+
+            <div class="row">
+
+                <div class="col-xl-5 col-lg-5 col-md-1 col-sm-1 col-xs-1"></div>
+                <button  type="submit"  class="single-button col-xl-2 col-lg-2 col-md-10 col-sm-10 col-xs-10 text-center btn btn-info btn-block">Cancel</button>
+                <div class="col-xl-5 col-lg-5 col-md-1 col-sm-1 col-xs-1"></div>
+            </div>
+
+        </form>
+
+
 
         <div class="row empty-75-row"></div>
     </div>    

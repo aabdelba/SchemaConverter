@@ -7,9 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ResolvableType;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.web.WebAttributes;
@@ -94,20 +91,19 @@ public class LoginController {
                     .getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
             if (ex != null) {
                 errorMessage = ex.getMessage();
+                if(ex.getClass().equals(BadCredentialsException.class)) {
+                    model.addAttribute("errorMessage", errorMessage);
+                } else {
+                    ex.printStackTrace();
+
+                    RequestDispatcher dispatcher = session.getServletContext()
+                            .getRequestDispatcher("/error");
+                    request.setAttribute("javax.servlet.error.message",ex.getMessage());
+                    request.setAttribute("javax.servlet.error.status_code","500");
+                    dispatcher.forward(request, response);
+                }
             }
-            if(ex.getClass().equals(BadCredentialsException.class)) {
-                model.addAttribute("errorMessage", errorMessage);
-            } else {
 
-
-                ex.printStackTrace();
-
-                RequestDispatcher dispatcher = session.getServletContext()
-                        .getRequestDispatcher("/error");
-                request.setAttribute("javax.servlet.error.message",ex.getMessage());
-                request.setAttribute("javax.servlet.error.status_code","500");
-                dispatcher.forward(request, response);
-            }
         }
         return "login";
     }

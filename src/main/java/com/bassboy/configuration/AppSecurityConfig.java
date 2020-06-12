@@ -1,14 +1,11 @@
 package com.bassboy.configuration;
 
+import com.bassboy.common.ConfigProp;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -24,9 +21,8 @@ import org.springframework.security.oauth2.client.http.OAuth2ErrorResponseErrorH
 import org.springframework.security.oauth2.core.http.converter.OAuth2AccessTokenResponseHttpMessageConverter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.client.RestTemplate;
-
+import javax.sql.DataSource;
 import java.util.Arrays;
-import java.util.List;
 
 
 @Configuration
@@ -40,6 +36,9 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
     // Configuration -> Service -> dao
     @Autowired
     private UserDetailsService userDetailsService;
+
+    @Autowired
+    private ConfigProp configProp;
 
     // use @Bean to indicate that this is a bean to be used in the web container
     // previously, bcrypt password encoder (or any other type) was used
@@ -66,7 +65,7 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) {
-        web.ignoring().antMatchers("/css/**","/js/**","/images/**");
+        web.ignoring().antMatchers("/css/**", "/js/**","/images/**");
     }
 
     @Override
@@ -76,7 +75,9 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests().antMatchers("/","/login*").permitAll()
             .anyRequest().authenticated()
             .and()
-            .formLogin().loginPage("/login").permitAll().failureUrl("/login-error")
+            .formLogin().loginPage("/login").defaultSuccessUrl("/form", true).permitAll().failureUrl("/login-error")
+            .and()
+            .rememberMe().key(configProp.getProperty("rememberMe.secret")).tokenValiditySeconds(172800)
             .and()
             .httpBasic()
             .and()
@@ -85,7 +86,7 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
             .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
             .logoutSuccessUrl("/logout-success").permitAll()
             .and()//used to specify more properties
-            .oauth2Login().loginPage("/login").failureUrl("/login-error").tokenEndpoint().accessTokenResponseClient(accessTokenResponseClient());
+            .oauth2Login().loginPage("/login").defaultSuccessUrl("/form", true).failureUrl("/login-error").tokenEndpoint().accessTokenResponseClient(accessTokenResponseClient());
     }
 
     // AuthenticationManager has one-to-many AuthenticationProviders inside it
@@ -97,6 +98,10 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
+
+
+    @Autowired
+    private DataSource dataSource;
 
     @Bean
     @Override

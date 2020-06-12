@@ -3,7 +3,11 @@ server:
   error:
     whitelabel:
       enabled: false
-
+  servlet:
+    session:
+      timeout: 1800s
+      cookie:
+        max-age: 604800s
 #logging:
 #  level:
 #    org:
