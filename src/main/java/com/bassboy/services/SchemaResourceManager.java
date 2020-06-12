@@ -21,9 +21,12 @@ import java.util.zip.ZipOutputStream;
 public class SchemaResourceManager {
 
     private ConfigProp configProp;
-
-    @Autowired
+    private boolean completeWithError = true;
     private FormModel formModel;
+
+    public boolean isCompleteWithError() {
+        return completeWithError;
+    }
 
     public SchemaResourceManager(FormModel formModel) {
         this.formModel = formModel;
@@ -105,11 +108,12 @@ public class SchemaResourceManager {
         File newSchemaFile = new File(inputDir + "schema/" + newSchemaName);
         File renamedFile = new File(inputDir + "schema/" + renamedFileName);
 
-        SchemaEvolverMain sc = new SchemaEvolverMain();
+        SchemaEvolverMain schemaEvolver = new SchemaEvolverMain();
 
         for (File oldJsonFile:recordDir.listFiles()) {
             try {
-                sc.convertDataAndPlaceInOutputDir(oldSchemaFile, newSchemaFile, oldJsonFile, renamedFile);
+                schemaEvolver.convertDataAndPlaceInOutputDir(oldSchemaFile, newSchemaFile, oldJsonFile, renamedFile);
+                completeWithError = false;
             } catch (Exception e){
                 e.printStackTrace();
                 RwUtils.writeStringToFile(outputDir+"json/ERROR_"+oldJsonFile.getName(),e.getMessage());
@@ -162,8 +166,8 @@ public class SchemaResourceManager {
         FormModel formModel = new FormModel(oldJsonFiles,oldSchemaFile,newSchemaFile,renamedFile,
                 oldJsonText,oldSchemaText,newSchemaText,renamedText,downloadFormat);
 
-        SchemaResourceManager srm = new SchemaResourceManager(formModel);
-        srm.init();
+        SchemaResourceManager resourceManager = new SchemaResourceManager(formModel);
+        resourceManager.init();
     }
 
 }

@@ -26,12 +26,12 @@ public class SchemaEvolverUserDetailsService implements UserDetailsService {
         return new UserPrincipal(user);
     }
 
-    public void createSocialUserIfNotFound(String socialId, String username) throws UsernameNotFoundException {
+    public void createSocialUserIfNotFound(String socialId, String displayName) throws UsernameNotFoundException {
         if (!repo.existsUserBySocialId(socialId)) {
             SchemaEvolverUser user;
             user = new SchemaEvolverUser();
             user.setSocialId(socialId);
-            user.setUsername(username);
+            user.setDisplayName(displayName);
             user.setCreatedTimestamp();
             user.setModifiedTimestamp();
             this.repo.save(user);

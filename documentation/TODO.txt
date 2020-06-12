@@ -1,6 +1,8 @@
+
 TODO - PRIORITY
-redo carousel images										(DESIGN)
-coming soon page											(DESIGN)
+--Page to describe deleted field, record, or array
+--page to describe complex data type conversion object to array
+--page to describe initialization of new fields with default
 swagger link												(UX FEATURE)
 deploy on aws												(DEPLOY)
 ------------------------ BREAK ----------------------
@@ -13,7 +15,6 @@ form signup mandatory email logic for form sign up			(SECURITY)
 invalid characters in username during sign up				(SECURITY)
 API															(TOOL SUPPORT)
 more scenarios												(TOOL SUPPORT)
-make landing page carousels more readable					(DESIGN)
 profile page - edit profile									(UX FEATURE)
 authorization security (will access user session)			(SECURITY)
 session expiry												(SECURITY)
@@ -34,6 +35,7 @@ set up password expiry policy
 
 TODO - TOOL SUPPORT
 javadoc
+SSH
 
 
 

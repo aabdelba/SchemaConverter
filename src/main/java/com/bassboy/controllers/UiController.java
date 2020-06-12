@@ -43,14 +43,14 @@ public class UiController {
     @Autowired
     ObjectMapper mapper;
 
-    private String username;
+    private String displayName;
 
     @RequestMapping("/")
     public String welcome() {
         return "index";
     }
 
-    @PostMapping(value="form")
+    @RequestMapping(value="form", method={RequestMethod.GET,RequestMethod.POST})
     public String schemaConversionForm(HttpServletRequest request, HttpServletResponse response, Model model, Principal principal) throws IOException, ServletException {
 
         JsonNode root =  mapper.readTree(mapper.writeValueAsString(principal));
@@ -62,21 +62,21 @@ public class UiController {
                                         .getRequestDispatcher("/social/user");
             dispatcher.forward(request, response);
         }
-        username = getUsernameFromPrincipalJson(root,documentContext);
-        model.addAttribute("username", username);
+        displayName = getNameFromPrincipalJson(root,documentContext);
+        model.addAttribute("username", displayName);
         model.addAttribute("formModel", new FormModel());
         return "form";
     }
 
-    @PostMapping("/social/user")
+    @RequestMapping(value="/social/user", method = {RequestMethod.GET,RequestMethod.POST})
     public String socialSignin(Model model, Principal principal) throws IOException {
         JsonNode root =  mapper.readTree(mapper.writeValueAsString(principal));
         DocumentContext documentContext = JsonPath.parse(root.toString());
 
         String socialId = getSocialIdFromPrincipalJson(root,documentContext);
-        username = getUsernameFromPrincipalJson(root,documentContext);
-        schemaEvolverUserDetailsService.createSocialUserIfNotFound(socialId,username);
-        model.addAttribute("username", username);
+        displayName = getNameFromPrincipalJson(root,documentContext);
+        schemaEvolverUserDetailsService.createSocialUserIfNotFound(socialId, displayName);
+        model.addAttribute("username", displayName);
         model.addAttribute("formModel", new FormModel());
         return "form";
     }
@@ -94,11 +94,9 @@ public class UiController {
         resourceManager.setFormModel(formModel);
         resourceManager.init();
         resourceManager.runConversion();
-        model.remove("formModel");
-        model.addAttribute("srm", resourceManager);
-        model.addAttribute("username",username);
-//        ModelAndView modelAndView = new ModelAndView("download");
-//        modelAndView.addObject("downloadFormat", scv.getDownloadFormat());
+        model.addAttribute("resourceManager", resourceManager);
+        model.addAttribute("username", displayName);
+
         return "complete";
     }
 
@@ -121,7 +119,7 @@ public class UiController {
             return "";
     }
 
-    private String getUsernameFromPrincipalJson(JsonNode root, DocumentContext documentContext) {
+    private String getNameFromPrincipalJson(JsonNode root, DocumentContext documentContext) {
         if(root.has("authorizedClientRegistrationId")) {
             if(documentContext.read("$.authorizedClientRegistrationId").toString().toLowerCase()
                     .equals("linkedin"))

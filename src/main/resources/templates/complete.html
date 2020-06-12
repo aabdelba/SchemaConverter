@@ -34,18 +34,26 @@
     <div class="row empty-100-row"></div>
 
 
-            <h3 class="text-center">Conversion complete!</h3>
-
+            <td>
+                <span th:if="${resourceManager.isCompleteWithError() == 'false'}">
+                    <h3 class="text-center">Conversion complete!</h3>
+                </span>
+                <span th:unless="${resourceManager.isCompleteWithError() == 'true'}">
+                    <h3 class="text-center">Complete with one or more errors</h3>
+                </span>
+            </td>
             <div class="row empty-25-row"></div>
-
             <div class="center-button">
-                <img class="complete-image" src="/images/complete.gif">
+                <td>
+                    <span th:if="${resourceManager.isCompleteWithError() == 'false'}">
+                        <img class="single-spinner" src="/images/complete.gif">
+                    </span>
+                    <span th:unless="${resourceManager.isCompleteWithError() == 'true'}">
+                        <img class="single-spinner" src="/images/complete-with-error.png">
+                    </span>
+                </td>
             </div>
-
             <div class="row empty-50-row"></div>
-
-
-
 
 
 
@@ -67,24 +75,24 @@
                 <div class="container">
                 <div class="row">
 
-                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-2 col-xs-2"></div>
+                    <div class="col-xl-4 col-lg-4 col-md-3 col-sm-2 col-xs-2"></div>
 
 
-                    <div class="container col-xl-4 col-lg-4 col-md-4 col-sm-8 col-xs-8">
+                    <div class="container col-xl-4 col-lg-4 col-md-6 col-sm-8 col-xs-8">
                         <div class="row">
 
-                            <form class="text-center col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12"    th:action="@{/download/} + ${srm.formModel.downloadFormat}" method="get" id="downloadForm">
+                            <form class="text-center col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12"    th:action="@{/download/} + ${resourceManager.formModel.downloadFormat}" method="get" id="downloadForm">
                                 <button class="single-button btn btn-primary btn-block" type="submit" form="downloadForm" value="Submit">Download</button>
                                 <div class="row empty-25-row"></div>
                             </form>
 
                             <form class="text-center col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12" action="/form" method="post" id="backForm">
-                                <button class="single-button btn btn-primary btn-block" type="submit" form="backForm" value="Submit">Back to evolver</button>
+                                <button class="single-button btn btn-primary btn-block" type="submit" form="backForm" value="Submit">Back to Form</button>
                             </form>
 
                         </div>
                     </div>
-                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-2 col-xs-2"></div>
+                    <div class="col-xl-4 col-lg-4 col-md-3 col-sm-2 col-xs-2"></div>
 
                     </div>
                 </div>

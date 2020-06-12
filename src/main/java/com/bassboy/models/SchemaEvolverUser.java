@@ -19,6 +19,16 @@ public class SchemaEvolverUser {
     private String password;
     private String socialId;
     private String email;
+    private String displayName;
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdTimestamp;// String used instead of java.time.LocalDateTime to let db handle setting timestamp
     @Temporal(TemporalType.TIMESTAMP)

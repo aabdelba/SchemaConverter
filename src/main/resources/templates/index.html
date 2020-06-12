@@ -17,29 +17,151 @@
 </head>
 <body>
 
-<header>
-    <nav class="empty-100-row navBar"></nav>
-</header>
+    <div th:replace="fragments/headerBeforeLogin :: header"></div>
+
+    
+
+
+   <div th:replace="fragments/carousel :: carousel"></div>
+
+
+
+
+
+
+
+
+
+
+
+
 
 <div class="container">
 
-<div class="empty-75-row"></div>
+
+    <div class="row empty-100-row"></div>
     <h3 class="text-center subtitle-text">Ali Abdelbadie presents:</h3>
-    <div class="row empty-20-row"></div>
     <h1 class="text-center">Schema Evolver</h1>
-<div class="empty-50-row"></div>
+
+    <div class="row empty-50-row"></div>
 
 
-    <div th:replace="fragments/carousel :: carousel"></div>
+
+
+
+
+
+    <div class="row">
+        <div class="col-xl-2 col-lg-2"></div>
+        <div class="col-xl-8 col-lg-8 col-md-12 col-sm-12 col-xs-12 coming-soon-background">
+            <h2>Coming Soon</h2>
+            <p>Tool functionality:</p>
+            <ul>
+                <li>Field autogenerate: initialize a new field in a record without a default value</li>
+                <li>Record autogenerate: initialize a new record without a default value</li>
+                <li>Complex data type conversion: array to object</li>
+                <li>Complex data type conversion: enum to array</li>
+                <li>Complex data type conversion: array to enum</li>
+                <li>Primitive data type conversion to another primitive type</li>
+                <li>A record type is nested into a different path in the AVRO file</li>
+            </ul>
+            <p>Support:</p>
+            <ul>
+                <li>API Endpoints and methods</li>
+                <li>Form sign-up feature</li>
+                <li>Support for SSH tool usage</li>
+                <li>Drag and drop files in the form page, instead of selecting files manually from directories</li>
+            </ul>
+
+        </div>
+        <div class="col-xl-2 col-lg-2"></div>
+    </div>
+
+    <div class="row empty-40-row"></div>
+
+
+
+
+
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-xl-12 col-lg-12 col-md-8 col-sm-8 col-xs-12">
+
+
+
+            <div class="row">
+
+
+                <div class="col-xl-2 col-lg-2"></div>
+        
+        
+                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-xs-12 disclaimer-background">
+        
+                    <h2 class="text-center">Disclaimer</h2>
+                    <p>This tool can only handle the scenarios listed in the carousel images,
+                        and those covered in AVRO libraries.
+        
+                        For specific requests, please contact me with the information in the footer.
+                    </p>
+                    
+        
+                    <div class="row empty-10-row"></div>
+                </div>
+                <div class="col-xl-1 col-lg-1"><div class="row empty-20-row"></div></div>
+        
+        
+                <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 col-xs-12">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-12 swagger-background text-center">
+                                <h2 class="swagger-text">Swagger</h2>
+                                <p class="swagger-text">For SchemaEvolver API, visit:</p>
+                                <a class="swagger-link" href="youtube.com">URL</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+        
+        
+            <div class="row empty-50-row"></div>
+        
+        </div>
+
+        </div>
+        <div class="col-md-2 col-sm-2"></div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 <div class="container">
-    <div class="row empty-50-row"></div>
     <div class="row">
         <div class="col-xl-4 col-lg-4 col-md-4 col-sm-1 col-xs-1"></div>
-            <form action="/form" method="post" id="conversionForm" class="text-center col-xl-4 col-lg-4 col-md-4 col-sm-10 col-xs-10">
-                <button type="submit" form="conversionForm" value="Submit" class="btn-text btn btn-block btn-outline-primary">Continue</button>
+            <form action="/form" method="get" id="conversionForm" class="text-center col-xl-4 col-lg-4 col-md-4 col-sm-10 col-xs-10">
+                <button type="submit" form="conversionForm" value="Submit" class="empty-50-row btn-text btn btn-block btn-outline-primary">Continue with UI</button>
             </form>
         <div class="col-xl-4 col-lg-4 col-md-4 col-sm-1 col-xs-1"></div>
     </div>
@@ -57,8 +179,14 @@
 
 </div>
 
-<div th:replace="fragments/footer :: footer"></div>
 
+
+
+
+
+
+
+<div th:replace="fragments/footer :: footer"></div>
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
