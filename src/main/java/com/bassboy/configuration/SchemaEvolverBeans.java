@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Primary;
 import java.io.IOException;
 
 @Configuration
-public class MyBeans {
+public class SchemaEvolverBeans {
 
     @Primary
     @Bean
@@ -18,11 +18,5 @@ public class MyBeans {
         srm.clearDirectories();
         return srm;
     }
-
-    @Bean
-    public ConfigProp configProp() throws IOException {
-        return ConfigProp.getInstance();
-    }
-
 
 }

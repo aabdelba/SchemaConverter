@@ -1,7 +1,7 @@
 package com.bassboy.configuration;
 
-import com.bassboy.common.ConfigProp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.FormHttpMessageConverter;
@@ -37,8 +37,11 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService userDetailsService;
 
-    @Autowired
-    private ConfigProp configProp;
+    @Value( "${custom.oauth2.baseUri}" )
+    private String oauth2BaseUri;
+
+    @Value( "${custom.oauth2.token.validitySeconds}" )
+    int oauth2TokenValiditySeconds;
 
     // use @Bean to indicate that this is a bean to be used in the web container
     // previously, bcrypt password encoder (or any other type) was used
@@ -77,7 +80,7 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
             .formLogin().loginPage("/login").defaultSuccessUrl("/form", true).permitAll().failureUrl("/login-error")
             .and()
-            .rememberMe().key(configProp.getProperty("rememberMe.secret")).tokenValiditySeconds(172800)
+            .rememberMe().key(oauth2BaseUri).tokenValiditySeconds(oauth2TokenValiditySeconds)
             .and()
             .httpBasic()
             .and()

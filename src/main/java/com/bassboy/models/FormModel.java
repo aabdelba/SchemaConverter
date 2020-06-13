@@ -10,7 +10,6 @@ import java.util.*;
 @Service
 public class FormModel {
 
-    private ConfigProp configProp = ConfigProp.getInstance();
     private MultipartFile[] oldJsonFiles;
     private MultipartFile oldSchemaFile;
     private MultipartFile newSchemaFile;
@@ -24,8 +23,7 @@ public class FormModel {
     @Override
     public String toString() {
         return "SchemaConverterModel{" +
-                "configProp=" + configProp +
-                ", oldJsonFiles=" + Arrays.toString(oldJsonFiles) +
+                "oldJsonFiles=" + Arrays.toString(oldJsonFiles) +
                 ", oldSchemaFile=" + oldSchemaFile +
                 ", newSchemaFile=" + newSchemaFile +
                 ", renamedFile=" + renamedFile +

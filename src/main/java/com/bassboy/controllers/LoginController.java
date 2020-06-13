@@ -4,6 +4,7 @@ import com.bassboy.common.ConfigProp;
 import com.bassboy.models.SchemaEvolverUser;
 import com.bassboy.services.SchemaEvolverUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ResolvableType;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -25,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -32,6 +34,9 @@ import java.util.Map;
 
 @Controller
 public class LoginController {
+
+    @Value( " {custom.oauth2.baseUri} " )
+    private String authorizationRequestBaseUri;
 
     // in-memory repository of oauth2 clients
     @Autowired
@@ -55,7 +60,7 @@ public class LoginController {
 //    }
 
     @RequestMapping("/login")
-    public String getLogin(Model model) throws IOException {
+    public String getLogin(Model model) throws IOException, URISyntaxException {
         Iterable<ClientRegistration> clientRegistrations = null;
         ResolvableType type = ResolvableType.forInstance(clientRegistrationRepository)
                 .as(Iterable.class);
@@ -63,8 +68,6 @@ public class LoginController {
                 ClientRegistration.class.isAssignableFrom(type.resolveGenerics()[0])) {
             clientRegistrations = (Iterable<ClientRegistration>) clientRegistrationRepository;
         }
-
-        String authorizationRequestBaseUri = ConfigProp.getInstance().getProperty("authorization.baseUri");
 
         clientRegistrations.forEach(registration ->
                 model.addAttribute(registration.getClientName()+"Url", authorizationRequestBaseUri + "/" + registration.getRegistrationId()));

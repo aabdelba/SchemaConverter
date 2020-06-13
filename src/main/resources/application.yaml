@@ -60,3 +60,11 @@ spring:
             user-name-attribute: id
 file:
 #  upload-dir: /Users/callicoder/uploads
+
+custom:
+  oauth2:
+    baseUri: oauth2/authorization
+    token:
+      validitySeconds: 172800
+  rememberMe:
+    secret: uniqueAndSecret
