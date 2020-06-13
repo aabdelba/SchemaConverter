@@ -7,7 +7,6 @@ import java.util.Properties;
 
 public class ConfigProp extends Properties{
 
-    final static private String configPropFile = "src/main/resources/config.properties";
     private static ConfigProp configProp = null;
 
     private ConfigProp() throws IOException {}
@@ -17,10 +16,20 @@ public class ConfigProp extends Properties{
         if (configProp == null)
             configProp = new ConfigProp();
 
-        InputStream inStream = new FileInputStream(System.getProperty("user.dir") + "/" + configPropFile);
+        // this is hardcoded. bad
+//        InputStream inStream = new FileInputStream(System.getProperty("user.dir") + "/" + configPropFile);
+
+        InputStream inStream = configProp.getClass().getClassLoader().getResourceAsStream("config.properties");
+
         configProp.load(inStream);
 
         return configProp;
     }
+
+    public static void main(String[] args) throws IOException {
+        configProp.getInstance();
+    }
+
+
 
 }

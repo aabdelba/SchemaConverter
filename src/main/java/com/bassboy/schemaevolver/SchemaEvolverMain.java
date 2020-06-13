@@ -10,13 +10,10 @@ import java.util.HashMap;
 
 public class SchemaEvolverMain {
 
-    private ConfigProp configProp;
-
     // DEBUG
     public static void main(String[] args) throws IOException, SchemaEvolverException, InvalidSchemaEntryException {
 
-        ConfigProp configProp = ConfigProp.getInstance();
-        String inputDir = System.getProperty("user.dir")+configProp.getProperty("debug.dir");
+        String inputDir = System.getProperty("user.dir")+"/debug/input/";
 
         String oldSchemaFile = inputDir + "schema/schema1.avsc";
         String newSchemaFile = inputDir + "schema/schema2.avsc";
@@ -32,8 +29,7 @@ public class SchemaEvolverMain {
     }
 
     public void convertDataAndPlaceInOutputDir(File oldSchemaFile, File newSchemaFile, File oldJsonFile, File renamedFile) throws IOException, SchemaEvolverException, InvalidSchemaEntryException {
-        configProp = ConfigProp.getInstance();
-        String outputDir = System.getProperty("user.dir") + configProp.getProperty("output.dir");
+        String outputDir = System.getProperty("user.dir") + "/output/";
 
         //create schema objects
         RecordObject oldRecord = new RecordObject(oldSchemaFile);

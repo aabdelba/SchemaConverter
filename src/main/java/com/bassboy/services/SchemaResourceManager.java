@@ -20,7 +20,11 @@ import java.util.zip.ZipOutputStream;
 @Service
 public class SchemaResourceManager {
 
-    private ConfigProp configProp;
+    private static final String inputRecordDir=System.getProperty("user.dir")+"/SchemaEvolverIO/input/record/";
+    private static final String inputSchemaDir=System.getProperty("user.dir")+"/SchemaEvolverIO/input/schema/";
+    private static final String outputJsonDir=System.getProperty("user.dir")+"/SchemaEvolverIO/output/json/";
+    private static final String outputAvroDir=System.getProperty("user.dir")+"/SchemaEvolverIO/output/avro/";
+
     private boolean completeWithError = true;
     private FormModel formModel;
 
@@ -51,50 +55,39 @@ public class SchemaResourceManager {
     }
 
     public void clearDirectories() throws IOException {
-        configProp = configProp.getInstance();
-        RwUtils.clearDirectory(System.getProperty("user.dir")+configProp.getProperty("input.dir")+"record/");
-        RwUtils.clearDirectory(System.getProperty("user.dir")+configProp.getProperty("input.dir")+"schema/");
-        RwUtils.clearDirectory(System.getProperty("user.dir")+configProp.getProperty("output.dir")+"json/");
-        RwUtils.clearDirectory(System.getProperty("user.dir")+configProp.getProperty("output.dir")+"avro/");
+        RwUtils.clearDirectory(inputRecordDir);
+        RwUtils.clearDirectory(inputSchemaDir);
+        RwUtils.clearDirectory(outputJsonDir);
+        RwUtils.clearDirectory(outputAvroDir);
     }
 
     private void writeMultifileToInputDirectories() throws IOException {
 
-        configProp = configProp.getInstance();
-        String recordDir = System.getProperty("user.dir")+configProp.getProperty("input.dir")+"record/";
-        String schemaDir = System.getProperty("user.dir")+configProp.getProperty("input.dir")+"schema/";
-
-        RwUtils.writeMultipartIntoFile(schemaDir, formModel.getOldSchemaFile());
-        RwUtils.writeMultipartIntoFile(schemaDir, formModel.getNewSchemaFile());
-        RwUtils.writeMultipartIntoFile(schemaDir, formModel.getRenamedFile());
+        RwUtils.writeMultipartIntoFile(inputSchemaDir, formModel.getOldSchemaFile());
+        RwUtils.writeMultipartIntoFile(inputSchemaDir, formModel.getNewSchemaFile());
+        RwUtils.writeMultipartIntoFile(inputSchemaDir, formModel.getRenamedFile());
 
         for (MultipartFile record: formModel.getOldJsonFiles()) {
-            RwUtils.writeMultipartIntoFile(recordDir,record);
+            RwUtils.writeMultipartIntoFile(inputRecordDir,record);
         }
     }
 
     private void writeTextboxToInputDirectories() throws IOException {
-        configProp = configProp.getInstance();
-        String recordDir = System.getProperty("user.dir")+configProp.getProperty("input.dir")+"record/";
-        String schemaDir = System.getProperty("user.dir")+configProp.getProperty("input.dir")+"schema/";
 
-        if(formModel.getOldSchemaFile().isEmpty()) RwUtils.writeStringToFile(schemaDir+"oldSchema.avsc", formModel.getOldSchemaText());
-        if(formModel.getNewSchemaFile().isEmpty()) RwUtils.writeStringToFile(schemaDir+"newSchema.avsc", formModel.getNewSchemaText());
-        if(formModel.getRenamedFile().isEmpty()) RwUtils.writeStringToFile(schemaDir+"renamedFields.txt", formModel.getRenamedText());
+        if(formModel.getOldSchemaFile().isEmpty()) RwUtils.writeStringToFile(inputSchemaDir+"oldSchema.avsc", formModel.getOldSchemaText());
+        if(formModel.getNewSchemaFile().isEmpty()) RwUtils.writeStringToFile(inputSchemaDir+"newSchema.avsc", formModel.getNewSchemaText());
+        if(formModel.getRenamedFile().isEmpty()) RwUtils.writeStringToFile(inputSchemaDir+"renamedFields.txt", formModel.getRenamedText());
 
         int i = 1;
         String recordFileStr;
         for (String record: formModel.getOldJsonText().split(";;;")) {
-            recordFileStr = recordDir+"textboxRecord"+i+".json";
+            recordFileStr = inputRecordDir+"textboxRecord"+i+".json";
             RwUtils.writeStringToFile(recordFileStr,record);
             i++;
         }
     }
 
     public void runConversion() throws IOException, SchemaEvolverException, InvalidSchemaEntryException {
-        configProp = ConfigProp.getInstance();
-        String inputDir = System.getProperty("user.dir")+configProp.getProperty("input.dir");
-        String outputDir = System.getProperty("user.dir")+configProp.getProperty("output.dir");
 
         String oldSchemaName;
         String newSchemaName;
@@ -103,10 +96,10 @@ public class SchemaResourceManager {
         if(formModel.getNewSchemaFile().isEmpty()) newSchemaName = "newSchema.avsc"; else newSchemaName  = formModel.getNewSchemaFile().getOriginalFilename();
         if(formModel.getRenamedFile().isEmpty()) renamedFileName = "renamedFields.txt"; else renamedFileName = formModel.getRenamedFile().getOriginalFilename();
 
-        File recordDir = new File(inputDir + "record/");
-        File oldSchemaFile = new File(inputDir + "schema/" + oldSchemaName);
-        File newSchemaFile = new File(inputDir + "schema/" + newSchemaName);
-        File renamedFile = new File(inputDir + "schema/" + renamedFileName);
+        File recordDir = new File(inputRecordDir);
+        File oldSchemaFile = new File(inputSchemaDir + oldSchemaName);
+        File newSchemaFile = new File(inputSchemaDir + newSchemaName);
+        File renamedFile = new File(inputSchemaDir + renamedFileName);
 
         SchemaEvolverMain schemaEvolver = new SchemaEvolverMain();
 
@@ -116,23 +109,22 @@ public class SchemaResourceManager {
                 completeWithError = false;
             } catch (Exception e){
                 e.printStackTrace();
-                RwUtils.writeStringToFile(outputDir+"json/ERROR_"+oldJsonFile.getName(),e.getMessage());
-                RwUtils.writeStringToFile(outputDir+"avro/ERROR_"+oldJsonFile.getName().substring(0,oldJsonFile.getName().indexOf('.'))+".avro",e.getMessage());
+                RwUtils.writeStringToFile(outputJsonDir+"ERROR_"+oldJsonFile.getName(),e.getMessage());
+                RwUtils.writeStringToFile(outputAvroDir+"ERROR_"+oldJsonFile.getName().substring(0,oldJsonFile.getName().indexOf('.'))+".avro",e.getMessage());
             }
         }
     }
 
     public void download(ZipOutputStream zippedOut) throws IOException {
-        ConfigProp configProp = ConfigProp.getInstance();
         String downloadFormat = getFormModel().getDownloadFormat();
         FileSystemResource resource;
         ZipEntry zipEntry;
         File dir;
 
         for (String dirStr:downloadFormat.split("-")) {
-            dir = new File(System.getProperty("user.dir")+configProp.getProperty("output.dir")+dirStr);
+            dir = new File(System.getProperty("user.dir")+"/output/"+dirStr);
             for (File file:dir.listFiles()) {
-                resource = new FileSystemResource(System.getProperty("user.dir")+configProp.getProperty("output.dir")+dirStr+"/"+file.getName());
+                resource = new FileSystemResource(System.getProperty("user.dir")+"/output/"+dirStr+"/"+file.getName());
 
                 zipEntry = new ZipEntry(file.getName());
                 // Configure the zip entry, the properties of the file
