@@ -15,7 +15,7 @@ public class SchemaEvolverBeans {
     @Bean
     public SchemaResourceManager initSchemaResourceManager() throws IOException {
         SchemaResourceManager srm = new SchemaResourceManager();
-        srm.clearDirectories();
+//        srm.clearDirectories();
         return srm;
     }
 
