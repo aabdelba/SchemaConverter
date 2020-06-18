@@ -41,7 +41,7 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
     private String oauth2BaseUri;
 
     @Value( "${custom.oauth2.token.validitySeconds}" )
-    int oauth2TokenValiditySeconds;
+    private int oauth2TokenValiditySeconds;
 
     // use @Bean to indicate that this is a bean to be used in the web container
     // previously, bcrypt password encoder (or any other type) was used

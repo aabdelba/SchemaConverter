@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.bassboy</groupId>
 	<artifactId>schemaevolver</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.10-SNAPSHOT</version>
 	<name>SchemaEvolver</name>
 	<description>schema conversion tool to help reduce work required to format data</description>
 
@@ -13,6 +13,34 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
 	</properties>
+
+	<profiles>
+		<profile>
+			<id>dev</id><!--this will tell which config file to use-->
+			<properties>
+				<spring.profiles.active>dev</spring.profiles.active><!--environment properties that only apply during build and not during runtime...unless profile properties filtering is used in build-->
+			</properties>
+<!--			<activation>-->
+<!--				<activeByDefault>true</activeByDefault>-->
+<!--				<property>-->
+<!--					<name>env</name>-->
+<!--					<value>dev</value>-->
+<!--				</property>-->
+<!--			</activation>-->
+		</profile>
+		<profile>
+			<id>prod</id>
+			<properties>
+				<spring.profiles.active>prod</spring.profiles.active><!--environment properties that only apply during build and not during runtime...unless profile properties filtering is used in build-->
+<!--				<activation>-->
+<!--					<property>-->
+<!--						<name>env</name>-->
+<!--						<value>prod</value>-->
+<!--					</property>-->
+<!--				</activation>-->
+			</properties>
+		</profile>
+	</profiles>
 
 	<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-parent -->
 	<parent>
@@ -49,6 +77,7 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -228,8 +257,30 @@
 	</dependencies>
 
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<plugins>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-help-plugin</artifactId>
+				<version>3.1.0</version>
+				<executions>
+					<execution>
+						<id>show-profiles</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>active-profiles</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
