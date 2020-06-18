@@ -4,9 +4,8 @@ import com.bassboy.models.FormModel;
 import com.bassboy.schemaevolver.InvalidSchemaEntryException;
 import com.bassboy.schemaevolver.SchemaEvolverMain;
 import com.bassboy.schemaevolver.SchemaEvolverException;
-import com.bassboy.common.ConfigProp;
 import com.bassboy.common.RwUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
@@ -20,10 +19,14 @@ import java.util.zip.ZipOutputStream;
 @Service
 public class SchemaResourceManager {
 
-    private static final String inputRecordDir=System.getProperty("user.dir")+"/SchemaEvolverIO/input/record/";
-    private static final String inputSchemaDir=System.getProperty("user.dir")+"/SchemaEvolverIO/input/schema/";
-    private static final String outputJsonDir=System.getProperty("user.dir")+"/SchemaEvolverIO/output/json/";
-    private static final String outputAvroDir=System.getProperty("user.dir")+"/SchemaEvolverIO/output/avro/";
+    @Value("${custom.schemaEvolver.ioDir}")
+    private String ioDir;
+
+    private String inputRecordDir;
+    private String inputSchemaDir;
+    private String outputJsonDir;
+    private String outputAvroDir;
+    private String outputDir;
 
     private boolean completeWithError = true;
     private FormModel formModel;
@@ -39,6 +42,19 @@ public class SchemaResourceManager {
     public SchemaResourceManager() {
     }
 
+    private void setIoDirs() {
+        if(ioDir.charAt(0)=='/')
+            System.out.println("SchemaEvolver IO directory: "+ioDir);//absolute path
+        else
+            System.out.println("SchemaEvolver IO directory: "+System.getProperty("user.dir")+"/"+ioDir);//absolute path
+        this.inputRecordDir = ioDir + "/input/record/";
+        this.inputSchemaDir = ioDir + "/input/schema/";
+        this.outputJsonDir = ioDir + "/output/json/";
+        this.outputAvroDir = ioDir + "/output/avro/";
+        this.outputDir = ioDir + "/output/";
+    }
+
+
     public FormModel getFormModel() {
         return formModel;
     }
@@ -49,12 +65,13 @@ public class SchemaResourceManager {
 
     public void init() throws IOException {
         System.out.println("Initializing resources...");
+        setIoDirs();
         clearDirectories();
         writeTextboxToInputDirectories();
         writeMultifileToInputDirectories();
     }
 
-    public void clearDirectories() throws IOException {
+    private void clearDirectories() throws IOException {
         RwUtils.clearDirectory(inputRecordDir);
         RwUtils.clearDirectory(inputSchemaDir);
         RwUtils.clearDirectory(outputJsonDir);
@@ -122,9 +139,9 @@ public class SchemaResourceManager {
         File dir;
 
         for (String dirStr:downloadFormat.split("-")) {
-            dir = new File(System.getProperty("user.dir")+"/output/"+dirStr);
+            dir = new File(outputDir+dirStr);
             for (File file:dir.listFiles()) {
-                resource = new FileSystemResource(System.getProperty("user.dir")+"/output/"+dirStr+"/"+file.getName());
+                resource = new FileSystemResource(outputDir+dirStr+"/"+file.getName());
 
                 zipEntry = new ZipEntry(file.getName());
                 // Configure the zip entry, the properties of the file
