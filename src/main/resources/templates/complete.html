@@ -35,20 +35,20 @@
 
 
             <td>
-                <span th:if="${resourceManager.isCompleteWithError() == 'false'}">
+                <span th:if="${!resourceManager.isCompleteWithError()}">
                     <h3 class="text-center">Conversion complete!</h3>
                 </span>
-                <span th:unless="${resourceManager.isCompleteWithError() == 'true'}">
+                <span th:if="${resourceManager.isCompleteWithError()}">
                     <h3 class="text-center">Complete with one or more errors</h3>
                 </span>
             </td>
             <div class="row empty-25-row"></div>
             <div class="center-button">
                 <td>
-                    <span th:if="${resourceManager.isCompleteWithError() == 'false'}">
+                    <span th:if="${!resourceManager.isCompleteWithError()}">
                         <img class="single-spinner" src="/images/complete.gif">
                     </span>
-                    <span th:unless="${resourceManager.isCompleteWithError() == 'true'}">
+                    <span th:if="${resourceManager.isCompleteWithError()}">
                         <img class="single-spinner" src="/images/complete-with-error.png">
                     </span>
                 </td>

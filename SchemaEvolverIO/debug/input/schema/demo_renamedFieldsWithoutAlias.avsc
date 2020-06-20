@@ -1,0 +1,55 @@
+{
+	"name": "PersonRecord",
+	"type": "record",
+	"fields": [
+		{
+			"name": "refId",
+			"type": "string"
+		},
+		{
+			"name": "fName",
+			"type": "string"
+		},
+		{
+			"name": "lName",
+			"type": "string"
+		},
+		{
+			"name": "personAge",
+			"type": "int"
+		},
+		{
+			"name": "organization",
+			"type": {
+				"name": "organizationRecord",
+				"type": "record",
+				"fields": [
+					{
+						"name": "organizationName",
+						"type": "string"
+					},
+					{
+						"name": "listOfDepartments",
+						"type": {
+							"type": "array",
+							"items": {
+								"name": "SchoolFriends",
+								"type": "record",
+								"fields": [
+									{
+										"name": "name",
+										"type": "string"
+									},
+									{
+										"name": "numberOfYears",
+										"type": "int"
+									}
+								]
+							}
+						}
+					}
+				]
+			}
+		}
+	]
+}

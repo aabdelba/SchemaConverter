@@ -60,6 +60,8 @@ public final class RwUtils {
 		while((line = br.readLine()) != null){
 			sb.append(line);
 		}
+		br.close();
+		fr.close();
 		return sb.toString();
 	}
 
@@ -83,11 +85,12 @@ public final class RwUtils {
 	}
 
 	public static void clearDirectory(String dirString) {
-		File dir = new File(dirString);
-		for (File file:dir.listFiles()) {
-			file.delete();
+		File dir = new File(dirString);//.listFiles() throws null pointer when directory is empty
+		for (File file : dir.listFiles()) {
+			if(!file.delete())
+				System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!");
 			System.out.println("Deleted " + file.getAbsolutePath());
-		};
+		}
 	}
 
 }
