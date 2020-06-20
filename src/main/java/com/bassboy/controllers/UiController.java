@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,6 +36,7 @@ public class UiController {
     private OAuth2AccessTokenResponseClient accessTokenResponseClient;
 
     @Autowired
+    @Qualifier("schemaResourceManager")
     private SchemaResourceManager resourceManager;
 
     @Autowired
@@ -51,7 +53,7 @@ public class UiController {
     }
 
     @RequestMapping(value="form", method={RequestMethod.GET,RequestMethod.POST})
-    public String schemaConversionForm(HttpServletRequest request, HttpServletResponse response, Model model, Principal principal) throws IOException, ServletException {
+    public String schemaEvolverForm(HttpServletRequest request, HttpServletResponse response, Model model, Principal principal) throws IOException, ServletException {
 
         JsonNode root =  mapper.readTree(mapper.writeValueAsString(principal));
         DocumentContext documentContext = JsonPath.parse(root.toString());
@@ -105,8 +107,14 @@ public class UiController {
         response.setContentType("application/zip");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        response.setHeader("Content-Disposition", "attachment; filename=SchemaConverterResults_" + sdf.format(timestamp) + ".zip");
+        String s1;
+        if(downloadFormat.equals("demo"))
+            s1 = "attachment; filename=DemoFiles.zip";
+        else
+            s1 = "attachment; filename=SchemaEvolverResults_" + sdf.format(timestamp) + ".zip";
+        response.setHeader("Content-Disposition", s1);
         try (ZipOutputStream zippedOut = new ZipOutputStream(response.getOutputStream())) {
+            resourceManager.getFormModel().setDownloadFormat(downloadFormat);
             resourceManager.download(zippedOut);
         }//if try and fail, zippedOut is closed
     }

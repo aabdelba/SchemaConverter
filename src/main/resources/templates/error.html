@@ -21,7 +21,7 @@
 <body>
 
 
-<div th:replace="fragments/header :: header"></div>
+<div th:replace="fragments/headerBeforeLogin :: header"></div>
 
 
 
@@ -41,10 +41,12 @@
     <h1>Something went wrong! </h1>
     <h2 th:text="${status} + ${errorTitle}"></h2>
     <h2 th:text="${message}"></h2>
-    <button class="btn btn-primary" onclick="goBack()">Go back</button>
 
 
 
+    <form action="/form" method="post" id="backForm">
+        <button class="btn btn-primary" type="submit" form="backForm" value="Submit">Back to Form</button>
+    </form>
 
 
 

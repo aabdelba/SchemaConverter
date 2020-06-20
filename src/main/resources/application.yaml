@@ -15,8 +15,6 @@ server:
 #        web: DEBUG
 
 spring:
-  profiles:
-    active: dev
   jackson:
     deserialization:
       fail-on-unknown-properties: true
@@ -71,4 +69,5 @@ custom:
   rememberMe:
     secret: uniqueAndSecret
   schemaEvolver:
+    version: @project.version@
     ioDir: SchemaEvolverIO

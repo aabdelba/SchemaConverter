@@ -1,0 +1,62 @@
+{
+	"name": "PersonRecord",
+	"type": "record",
+	"fields": [
+		{
+			"name": "refId",
+			"type": "string"
+		},
+		{
+			"name": "organizations",
+			"type": {
+				"type": "array",
+				"items": {
+					"name": "organizationRecord",
+					"type": "record",
+					"fields": [
+						{
+							"name": "organizationName",
+							"type": "string"
+						},
+						{
+							"name": "listOfDepartments",
+							"type": {
+								"type": "array",
+								"items": {
+									"name": "SchoolFriends",
+									"type": "record",
+									"fields": [
+										{
+											"name": "name",
+											"type": "string"
+										},
+										{
+											"name": "numberOfYears",
+											"type": "int"
+										}
+									]
+								}
+							}
+						}
+					]
+				}
+			}
+		},
+		{
+			"name": "lName",
+			"type": "string"
+		},
+		{
+			"aliases": [
+				"firstName"
+			],
+			"name": "fName",
+			"type": "string"
+		},
+		{
+			"name": "dateOfBirth",
+			"type": "string",
+			"default": "01-01-1920"
+		}
+	]
+}

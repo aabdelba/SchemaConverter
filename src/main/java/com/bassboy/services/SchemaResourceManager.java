@@ -5,9 +5,7 @@ import com.bassboy.schemaevolver.InvalidSchemaEntryException;
 import com.bassboy.schemaevolver.SchemaEvolverMain;
 import com.bassboy.schemaevolver.SchemaEvolverException;
 import com.bassboy.common.RwUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,59 +14,71 @@ import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-@Service
+//@Service
 public class SchemaResourceManager {
 
-    @Value("${custom.schemaEvolver.ioDir}")
-    private String ioDir;
+    private static SchemaResourceManager resourceManager;
 
+    private String ioDir;
     private String inputRecordDir;
     private String inputSchemaDir;
     private String outputJsonDir;
     private String outputAvroDir;
     private String outputDir;
+    private String demoDir;
 
-    private boolean completeWithError = true;
+    private boolean completeWithError = true; //always true, unless init() is called
     private FormModel formModel;
+
+
+    public static SchemaResourceManager getInstance(String ioDir) {
+        if (resourceManager == null)
+            resourceManager = new SchemaResourceManager(ioDir);
+        resourceManager.setIoDir(ioDir);
+        return resourceManager;
+    }
 
     public boolean isCompleteWithError() {
         return completeWithError;
-    }
-
-    public SchemaResourceManager(FormModel formModel) {
-        this.formModel = formModel;
-    }
-
-    public SchemaResourceManager() {
-    }
-
-    private void setIoDirs() {
-        if(ioDir.charAt(0)=='/')
-            System.out.println("SchemaEvolver IO directory: "+ioDir);//absolute path
-        else
-            System.out.println("SchemaEvolver IO directory: "+System.getProperty("user.dir")+"/"+ioDir);//absolute path
-        this.inputRecordDir = ioDir + "/input/record/";
-        this.inputSchemaDir = ioDir + "/input/schema/";
-        this.outputJsonDir = ioDir + "/output/json/";
-        this.outputAvroDir = ioDir + "/output/avro/";
-        this.outputDir = ioDir + "/output/";
-    }
-
-
-    public FormModel getFormModel() {
-        return formModel;
     }
 
     public void setFormModel(FormModel formModel) {
         this.formModel = formModel;
     }
 
+    private SchemaResourceManager(String ioDir) {
+        this.ioDir = ioDir;
+    }
+
+    private SchemaResourceManager() {}
+
+    public FormModel getFormModel() {
+        return formModel;
+    }
+
+    public void setIoDir(String ioDir) {
+        this.ioDir = ioDir;
+    }
+
     public void init() throws IOException {
         System.out.println("Initializing resources...");
-        setIoDirs();
         clearDirectories();
+        completeWithError=false;
         writeTextboxToInputDirectories();
         writeMultifileToInputDirectories();
+    }
+
+    public void setDirectories() {
+        if(ioDir.charAt(0)!='/' && !ioDir.contains(System.getProperty("user.dir")))
+            //defensive coding - if relative path provided, assume it is relative to project root
+            ioDir = System.getProperty("user.dir")+"/"+ioDir;
+        System.out.println("SchemaEvolver IO directory: "+ioDir);//absolute path
+        this.inputRecordDir=ioDir + "/input/record/";;
+        this.inputSchemaDir=ioDir + "/input/schema/";
+        this.outputJsonDir=ioDir + "/output/json/";
+        this.outputAvroDir=ioDir + "/output/avro/";
+        this.outputDir=ioDir + "/output/";
+        this.demoDir=System.getProperty("user.dir")+"/src/main/resources/demo";
     }
 
     private void clearDirectories() throws IOException {
@@ -122,9 +132,9 @@ public class SchemaResourceManager {
 
         for (File oldJsonFile:recordDir.listFiles()) {
             try {
-                schemaEvolver.convertDataAndPlaceInOutputDir(oldSchemaFile, newSchemaFile, oldJsonFile, renamedFile);
-                completeWithError = false;
+                schemaEvolver.convertDataAndPlaceInOutputDir(oldSchemaFile, newSchemaFile, oldJsonFile, renamedFile, outputDir);
             } catch (Exception e){
+                completeWithError = true;
                 e.printStackTrace();
                 RwUtils.writeStringToFile(outputJsonDir+"ERROR_"+oldJsonFile.getName(),e.getMessage());
                 RwUtils.writeStringToFile(outputAvroDir+"ERROR_"+oldJsonFile.getName().substring(0,oldJsonFile.getName().indexOf('.'))+".avro",e.getMessage());
@@ -137,12 +147,17 @@ public class SchemaResourceManager {
         FileSystemResource resource;
         ZipEntry zipEntry;
         File dir;
+        setDirectories();
+        String downloadDir;
 
-        for (String dirStr:downloadFormat.split("-")) {
-            dir = new File(outputDir+dirStr);
+        for (String format:downloadFormat.split("-")) {
+            if(format.equals("demo"))
+                downloadDir = demoDir;
+            else
+                downloadDir = outputDir+format;
+            dir = new File(downloadDir);
             for (File file:dir.listFiles()) {
-                resource = new FileSystemResource(outputDir+dirStr+"/"+file.getName());
-
+                resource = new FileSystemResource(downloadDir+"/"+file.getName());
                 zipEntry = new ZipEntry(file.getName());
                 // Configure the zip entry, the properties of the file
                 zipEntry.setSize(resource.contentLength());
@@ -175,7 +190,7 @@ public class SchemaResourceManager {
         FormModel formModel = new FormModel(oldJsonFiles,oldSchemaFile,newSchemaFile,renamedFile,
                 oldJsonText,oldSchemaText,newSchemaText,renamedText,downloadFormat);
 
-        SchemaResourceManager resourceManager = new SchemaResourceManager(formModel);
+//        SchemaResourceManager resourceManager = new SchemaResourceManager(formModel);
         resourceManager.init();
     }
 

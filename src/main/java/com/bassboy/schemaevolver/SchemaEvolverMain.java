@@ -10,26 +10,28 @@ import java.util.HashMap;
 
 public class SchemaEvolverMain {
 
+    private static final String ioDir = System.getProperty("user.dir")+"/SchemaEvolverIO/debug";
+
     // DEBUG
     public static void main(String[] args) throws IOException, SchemaEvolverException, InvalidSchemaEntryException {
 
-        String inputDir = System.getProperty("user.dir")+"/debug/input/";
+        String inputDir = ioDir+"/input/";
+        String outputDir = ioDir+"/output/";
 
-        String oldSchemaFile = inputDir + "schema/schema1.avsc";
-        String newSchemaFile = inputDir + "schema/schema2.avsc";
-        String oldJsonFile = inputDir+"record/record.json";
-        String renamedFile = inputDir+"schema/renamedFields.txt";
+        String oldSchemaFile = inputDir + "schema/demo.avsc";
+        String newSchemaFile = inputDir + "schema/demo_renamedFieldsWithoutAlias.avsc";
+        String oldJsonFile = inputDir+"record/demo.json";
+        String renamedFile = inputDir+"schema/demo_renamedFields.txt";
 
         SchemaEvolverMain schemaEvolver = new SchemaEvolverMain();
-        schemaEvolver.convertDataAndPlaceInOutputDir(oldSchemaFile,newSchemaFile,oldJsonFile,renamedFile);
+        schemaEvolver.convertDataAndPlaceInOutputDir(oldSchemaFile,newSchemaFile,oldJsonFile,renamedFile, outputDir);
     }
 
-    public void convertDataAndPlaceInOutputDir(String oldSchemaFile, String newSchemaFile, String oldJsonFile, String renamedFile) throws IOException, SchemaEvolverException, InvalidSchemaEntryException {
-        convertDataAndPlaceInOutputDir(new File(oldSchemaFile),new File(newSchemaFile),new File(oldJsonFile),new File(renamedFile));
+    public void convertDataAndPlaceInOutputDir(String oldSchemaFile, String newSchemaFile, String oldJsonFile, String renamedFile, String outputDir) throws IOException, SchemaEvolverException, InvalidSchemaEntryException {
+        convertDataAndPlaceInOutputDir(new File(oldSchemaFile),new File(newSchemaFile),new File(oldJsonFile),new File(renamedFile), outputDir);
     }
 
-    public void convertDataAndPlaceInOutputDir(File oldSchemaFile, File newSchemaFile, File oldJsonFile, File renamedFile) throws IOException, SchemaEvolverException, InvalidSchemaEntryException {
-        String outputDir = System.getProperty("user.dir") + "/output/";
+    public void convertDataAndPlaceInOutputDir(File oldSchemaFile, File newSchemaFile, File oldJsonFile, File renamedFile, String outputDir) throws IOException, SchemaEvolverException, InvalidSchemaEntryException {
 
         //create schema objects
         RecordObject oldRecord = new RecordObject(oldSchemaFile);

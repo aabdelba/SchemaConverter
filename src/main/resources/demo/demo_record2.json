@@ -1,0 +1,23 @@
+{
+	"id": "48395",
+	"age": 25,
+	"firstName": "Jane",
+	"lastName": "Doestar",
+	"organization": {
+		"organizationName": "AliCorp",
+		"listOfDepartments": [
+			{
+				"name": "sales",
+				"numberOfYears": 5
+			},
+			{
+				"name": "R&D",
+				"numberOfYears": 3
+			},
+			{
+				"name": "HR",
+				"numberOfYears": 1
+			}
+		]
+	}
+}

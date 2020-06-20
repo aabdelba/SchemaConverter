@@ -20,24 +20,25 @@
 			<properties>
 				<spring.profiles.active>dev</spring.profiles.active><!--environment properties that only apply during build and not during runtime...unless profile properties filtering is used in build-->
 			</properties>
-<!--			<activation>-->
-<!--				<activeByDefault>true</activeByDefault>-->
-<!--				<property>-->
-<!--					<name>env</name>-->
-<!--					<value>dev</value>-->
-<!--				</property>-->
-<!--			</activation>-->
+			<activation>
+				<activeByDefault>false</activeByDefault>
+				<property>
+					<name>env</name>
+					<value>dev</value>
+				</property>
+			</activation>
 		</profile>
 		<profile>
 			<id>prod</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+				<property>
+					<name>env</name>
+					<value>prod</value>
+				</property>
+			</activation>
 			<properties>
 				<spring.profiles.active>prod</spring.profiles.active><!--environment properties that only apply during build and not during runtime...unless profile properties filtering is used in build-->
-<!--				<activation>-->
-<!--					<property>-->
-<!--						<name>env</name>-->
-<!--						<value>prod</value>-->
-<!--					</property>-->
-<!--				</activation>-->
 			</properties>
 		</profile>
 	</profiles>

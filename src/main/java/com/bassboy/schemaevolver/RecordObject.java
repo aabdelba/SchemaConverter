@@ -95,6 +95,7 @@ public class RecordObject {
 				}
 			}
 			reader.close();
+			istream.close();
 		}
 		Parser parser = new Parser();
 		setSchema(parser.parse(text));
