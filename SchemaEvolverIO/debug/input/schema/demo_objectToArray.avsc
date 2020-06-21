@@ -18,30 +18,30 @@
 						"name": "firstName",
 						"type": "string"
 					},
-					{
-						"name": "lastName",
-						"type": "string"
-					},
-					{
-						"name": "organization",
-						"type": {
-							"type": "array",
-							"items": {
-								"name": "organizationRecord",
-								"type": "record",
-								"fields": [
-									{
-										"name": "organizationName",
-										"type": "string"
-									},
-									{
-										"name": "listOfDepartments",
-										"type": {
-											"type": "array",
-											"items": {
-												"name": "SchoolFriends",
-												"type": "record",
-												"fields": [
+			{
+				"name": "lastName",
+				"type": "string"
+			},
+			{
+				"name": "organization",
+				"type": {
+					"type": "array",
+					"items": {
+						"name": "organizationRecord",
+						"type": "record",
+						"fields": [
+							{
+								"name": "organizationName",
+								"type": "string"
+							},
+							{
+								"name": "listOfDepartments",
+								"type": {
+									"type": "array",
+									"items": {
+										"name": "SchoolFriends",
+										"type": "record",
+										"fields": [
 													{
 														"name": "name",
 														"type": "string"

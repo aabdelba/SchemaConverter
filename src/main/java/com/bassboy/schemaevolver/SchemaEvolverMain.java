@@ -19,7 +19,7 @@ public class SchemaEvolverMain {
         String outputDir = ioDir+"/output/";
 
         String oldSchemaFile = inputDir + "schema/demo.avsc";
-        String newSchemaFile = inputDir + "schema/demo_renamedFieldsWithoutAlias.avsc";
+        String newSchemaFile = inputDir + "schema/demo_objectToArray.avsc";
         String oldJsonFile = inputDir+"record/demo.json";
         String renamedFile = inputDir+"schema/demo_renamedFields.txt";
 

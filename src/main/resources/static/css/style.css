@@ -31,6 +31,10 @@ pre { font-family: "Courier", Courier, "Lucida Sans Typewriter", "Lucida Typewri
     height: 50px;
 }
 
+.download-button{
+    width: 100px;
+}
+
 .single-spinner{
     width: 60px;
     height: 60px;
@@ -242,7 +246,19 @@ select{
     background-color: rgba(156, 119, 119, 0.548);
     border-radius: 5px;
     border: 1px solid rgb(54, 0, 0);
-    color: #420000;
+    color: #b4b4b4;
+}
+
+.disclaimer-text-color{
+    color: #330000;
+}
+
+.demo-background{
+    background-color: rgba(141, 156, 154, 0.336);
+    border-radius: 5px;
+    border: 1px solid rgb(54, 0, 0);
+    /* color: #55535e; */
+    color: #b4b4b4;
 }
 
 .swagger-background{
