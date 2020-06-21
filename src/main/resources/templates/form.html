@@ -59,12 +59,48 @@
 
 
 
-    <div id="form1Toggle" class="row">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div id="form1Toggle">
         <div class="row empty-50-row"></div>
-        <form class="text-center" th:action="@{/download/} + 'demo'" method="get" id="downloadForm">
-            <button class="single-button btn btn-primary btn-block" type="submit" form="downloadForm" value="Submit">Download Demo Files</button>
+
+        <form class="text-center container" th:action="@{/download/} + 'demo'" method="get" id="downloadForm">
+            <div class="row">
+            <div class="col-xl-4 col-lg-4 col-md-3 col-sm-3 col-xs-3"></div>
+            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-xs-6 demo-background">
+
+                <div class="row empty-10-row"></div>
+                <div class="row">
+                    <p class="paragraph-text">Demo Files</p>
+                </div>
+                <div class="row empty-10-row"></div>
+                <div class="row">
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-3 col-xs-3"></div>
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-xs-6 ">
+                        <button class="download-button btn btn-secondary" type="submit" form="downloadForm" value="Submit">Download</button>
+                    </div>
+                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-3 col-xs-3"></div>
+                </div>
+                <div class="row empty-10-row"></div>
+            </div>
+            <div class="col-xl-4 col-lg-4 col-md-3 col-sm-3 col-xs-3"></div>
+        </div>
         </form>
-        <div class="row empty-50-row"></div>
     </div>
 
 
@@ -74,9 +110,9 @@
     <div id="form2Toggle">
 
         <div class="row empty-50-row"></div>
-
-        <h2>Please provide fields for data conversion</h2>
-
+        <div class="container">
+            <h2>Please provide fields for data conversion</h2>
+        </div>
         <div class="row empty-25-row"></div>
 
 

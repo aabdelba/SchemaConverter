@@ -1,10 +1,8 @@
 
 TODO - PRIORITY
---Page to describe deleted field, record, or array
---page to describe complex data type conversion object to array
---page to describe initialization of new fields with default
-swagger link												(UX FEATURE)
-deploy on aws												(DEPLOY)
+https
+copyright for 35-55 usd
+secure oauth2 app secrets with spring vault
 ------------------------ BREAK ----------------------
 test - unit and behavioural									(TOOL SUPPORT)
 log4j														(TOOL SUPPORT)
@@ -26,9 +24,7 @@ paypall or credit card										(PAYMENT)
 
 
 TODO - SECURITY
-secure oauth2 app secrets with spring vault
 JWT security
-set up seperate oauth2 authentication provider for database
 set up password expiry policy
 
 
@@ -40,7 +36,6 @@ SSH
 
 
 TODO - SCALABILITY
-copyright for 35-55 usd
 kafka streaming
 elk logging
 
