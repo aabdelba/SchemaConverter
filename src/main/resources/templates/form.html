@@ -57,172 +57,135 @@
 
     </div>
 
+<div id="formToggle">
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div id="form1Toggle">
-        <div class="row empty-50-row"></div>
-
-        <form class="text-center container" th:action="@{/download/} + 'demo'" method="get" id="downloadForm">
-            <div class="row">
-            <div class="col-xl-4 col-lg-4 col-md-3 col-sm-3 col-xs-3"></div>
-            <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-xs-6 demo-background">
-
-                <div class="row empty-10-row"></div>
-                <div class="row">
-                    <p class="paragraph-text">Demo Files</p>
-                </div>
-                <div class="row empty-10-row"></div>
-                <div class="row">
-                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-3 col-xs-3"></div>
-                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-xs-6 ">
-                        <button class="download-button btn btn-secondary" type="submit" form="downloadForm" value="Submit">Download</button>
-                    </div>
-                    <div class="col-xl-4 col-lg-4 col-md-4 col-sm-3 col-xs-3"></div>
-                </div>
-                <div class="row empty-10-row"></div>
-            </div>
-            <div class="col-xl-4 col-lg-4 col-md-3 col-sm-3 col-xs-3"></div>
-        </div>
-        </form>
-    </div>
-
-
-
-    <form action="#" th:action="@{/conversion}"  onsubmit="return validateForm()" method="post" th:object="${formModel}" id="form1" enctype="multipart/form-data">
-
-    <div id="form2Toggle">
+    <div>
 
         <div class="row empty-50-row"></div>
         <div class="container">
             <h2>Please provide fields for data conversion</h2>
         </div>
-        <div class="row empty-25-row"></div>
+        <div class="row empty-5-row"></div>
+    </div>
 
+    <div id="backgroundToggle" class="form-background">
 
+            <div class="row empty-25-row"></div>
+            <form class="text-center container" th:action="@{/download/} + 'demo'" method="get" id="downloadForm">
+                <div class="row">
+                    <div class="col-xl-4 col-lg-4 col-md-3 col-sm-3 col-xs-3"></div>
+                    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-xs-6 demo-background">
 
-
-
-
-
-
-
-
-
-
-
-            <div class="container form-background">
-
-
-
-
-
-
-
-
-
-
-                <div class="row empty-25-row"></div>
-
-                <div class="form-group">
-                    <label class="paragraph-text" for="oldJsonText">Old json records (separated by ';;;' or in separate files):</label>
-                    <div class="container">
+                        <div class="row empty-10-row"></div>
                         <div class="row">
-                            <textarea spellcheck="false" th:field="*{oldJsonText}"   form="form1"  id="oldJsonText" class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12 input-text" placeholder="old json records"></textarea>
-                            <div class="col-xl-2 col-lg-2 col-md-2"></div>
+                            <p class="paragraph-text">Demo Files</p>
                         </div>
-                        <div class="row empty-5-row"></div>
+                        <div class="row empty-10-row"></div>
                         <div class="row">
-                            
-                            <input th:field="*{oldJsonFiles}" type="file" class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12 form-control-file" id="oldJsonFiles" multiple placeholder="old json records">
-                            <div class="col-xl-2 col-lg-2 col-md-2"></div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-3 col-xs-3"></div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-6 col-xs-6 ">
+                                <button class="download-button btn btn-secondary" type="submit" form="downloadForm" value="Submit">Download</button>
+                            </div>
+                            <div class="col-xl-4 col-lg-4 col-md-4 col-sm-3 col-xs-3"></div>
                         </div>
+                        <div class="row empty-10-row"></div>
                     </div>
+                    <div class="col-xl-4 col-lg-4 col-md-3 col-sm-3 col-xs-3"></div>
+                </div>
+            </form>
 
+
+
+
+        <form action="#" th:action="@{/conversion}"  onsubmit="return validateForm()" method="post" th:object="${formModel}" id="form1" enctype="multipart/form-data">
+            <div class="container">
+
+            <div class="row empty-25-row"></div>
+
+            <div class="form-group">
+                <label class="paragraph-text" for="oldJsonText">Old json records (separated by ';;;' or in separate files):</label>
+                <div class="container">
+                    <div class="row">
+                        <textarea spellcheck="false" th:field="*{oldJsonText}"   form="form1"  id="oldJsonText" class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12 input-text" placeholder="old json records"></textarea>
+                        <div class="col-xl-2 col-lg-2 col-md-2"></div>
+                    </div>
+                    <div class="row empty-5-row"></div>
+                    <div class="row">
+
+                        <input th:field="*{oldJsonFiles}" type="file" class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12 form-control-file" id="oldJsonFiles" multiple placeholder="old json records">
+                        <div class="col-xl-2 col-lg-2 col-md-2"></div>
+                    </div>
                 </div>
 
+            </div>
 
-                <div class="row empty-25-row"></div>
 
-                <div class="form-group">
-                    <label class="paragraph-text" for="oldSchemaText">Old avsc schema:</label>
-                    <div class="container">
-                        <div class="row">
-                            
-                            <textarea spellcheck="false" th:field="*{oldSchemaText}"   form="form1"  id="oldSchemaText" class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12 input-text" placeholder="old avsc schema"></textarea>
-                            <div class="col-xl-2 col-lg-2 col-md-2"></div>
-                        </div>
-                        <div class="row empty-5-row"></div>
-                        <div class="row">
-                            
-                            <input th:field="*{oldSchemaFile}" type="file" class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12 form-control-file" id="oldSchemaFile" placeholder="old avsc schema">
-                            <div class="col-xl-2 col-lg-2 col-md-2"></div>
-                        </div>
+            <div class="row empty-25-row"></div>
+
+            <div class="form-group">
+                <label class="paragraph-text" for="oldSchemaText">Old avsc schema:</label>
+                <div class="container">
+                    <div class="row">
+
+                        <textarea spellcheck="false" th:field="*{oldSchemaText}"   form="form1"  id="oldSchemaText" class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12 input-text" placeholder="old avsc schema"></textarea>
+                        <div class="col-xl-2 col-lg-2 col-md-2"></div>
                     </div>
+                    <div class="row empty-5-row"></div>
+                    <div class="row">
 
+                        <input th:field="*{oldSchemaFile}" type="file" class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12 form-control-file" id="oldSchemaFile" placeholder="old avsc schema">
+                        <div class="col-xl-2 col-lg-2 col-md-2"></div>
+                    </div>
                 </div>
 
+            </div>
 
-                <div class="row empty-25-row"></div>
 
-                <div class="form-group">
-                    <label class="paragraph-text" for="newSchemaText">New avsc schema:</label>
-                    <div class="container">
-                        <div class="row">
-                            
-                            <textarea spellcheck="false" th:field="*{newSchemaText}"   form="form1"  id="newSchemaText" class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12 input-text" placeholder="new avsc schema"></textarea>
-                            <div class="col-xl-2 col-lg-2 col-md-2"></div>
-                        </div>
-                        <div class="row empty-5-row"></div>
-                        <div class="row">
-                            
-                            <input th:field="*{newSchemaFile}" type="file" class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12 form-control-file" id="newSchemaFile" placeholder="new avsc schema">
-                            <div class="col-xl-2 col-lg-2 col-md-2"></div>
-                        </div>
+            <div class="row empty-25-row"></div>
+
+            <div class="form-group">
+                <label class="paragraph-text" for="newSchemaText">New avsc schema:</label>
+                <div class="container">
+                    <div class="row">
+
+                        <textarea spellcheck="false" th:field="*{newSchemaText}"   form="form1"  id="newSchemaText" class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12 input-text" placeholder="new avsc schema"></textarea>
+                        <div class="col-xl-2 col-lg-2 col-md-2"></div>
                     </div>
+                    <div class="row empty-5-row"></div>
+                    <div class="row">
 
+                        <input th:field="*{newSchemaFile}" type="file" class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12 form-control-file" id="newSchemaFile" placeholder="new avsc schema">
+                        <div class="col-xl-2 col-lg-2 col-md-2"></div>
+                    </div>
                 </div>
 
+            </div>
 
 
-                <div class="row empty-25-row"></div>
 
-                <div class="form-group">
-                    <label class="paragraph-text" for="renamedText">Renamed avro fields that may not have alias (optional):</label>
-                    <p>list format: newName=oldName, seperated with ';'</p>
-                    <div class="container">
-                        <div class="row">
-                            <textarea spellcheck="false" th:field="*{renamedText}"   form="form1"  id="renamedText" class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12 input-text" placeholder="renamed fields"></textarea>
-                            <div class="col-xl-2 col-lg-2 col-md-2"></div>
-                        </div>
-                        <div class="row empty-5-row"></div>
-                        <div class="row">
-                            
-                            <input th:field="*{renamedFile}" type="file" class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12 form-control-file" id="renamedFile" placeholder="renamed fields">
-                            <div class="col-xl-2 col-lg-2 col-md-2"></div>
-                        </div>
+            <div class="row empty-25-row"></div>
+
+            <div class="form-group">
+                <label class="paragraph-text" for="renamedText">Renamed avro fields that may not have alias (optional):</label>
+                <p>list format: newName=oldName, seperated with ';'</p>
+                <div class="container">
+                    <div class="row">
+                        <textarea spellcheck="false" th:field="*{renamedText}"   form="form1"  id="renamedText" class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12 input-text" placeholder="renamed fields"></textarea>
+                        <div class="col-xl-2 col-lg-2 col-md-2"></div>
                     </div>
+                    <div class="row empty-5-row"></div>
+                    <div class="row">
 
+                        <input th:field="*{renamedFile}" type="file" class="col-xl-10 col-lg-10 col-md-10 col-sm-12 col-xs-12 form-control-file" id="renamedFile" placeholder="renamed fields">
+                        <div class="col-xl-2 col-lg-2 col-md-2"></div>
+                    </div>
                 </div>
 
+            </div>
 
-                <div class="row empty-25-row"></div>
+
+            <div class="row empty-25-row"></div>
 
             <div class="form-group">
                 <label class="paragraph-text" for="formatSelect">File download format:</label>
@@ -238,33 +201,29 @@
                 </div>
             </div>
 
-                <div class="row empty-25-row"></div>
+            <div class="row empty-25-row"></div>
+            </div>
+        </form>
 
+    </div>
 
+        <div class="row empty-50-row"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-5 col-lg-5 col-md-3 col-sm-1 col-xs-1"></div>
+                <button onclick="window.scrollTo(0,0)" type="submit" form="form1" class="single-button col-xl-2 col-lg-2 col-md-6 col-sm-10 col-xs-10 text-center btn btn-primary btn-block">Start conversion</button>
+
+                <div class="col-xl-5 col-lg-5 col-md-3 col-sm-1 col-xs-1"></div>
+            </div>
         </div>
 
-
-    <div class="row empty-50-row"></div>
-    <div class="container">
-    <div class="row">
-        <div class="col-xl-5 col-lg-5 col-md-3 col-sm-1 col-xs-1"></div>
-        <button onclick="window.scrollTo(0,0)" type="submit" form="form1" class="single-button col-xl-2 col-lg-2 col-md-6 col-sm-10 col-xs-10 text-center btn btn-primary btn-block">Start conversion</button>
-
-        <div class="col-xl-5 col-lg-5 col-md-3 col-sm-1 col-xs-1"></div>
-    </div>
-
-
-    </div>
-
-
-        <div class="row empty-75-row"></div>
-
-    </div>
+    <div class="row empty-75-row"></div>
+</div>
+</div>
 
 
 
 
-    </form>
 
 
 

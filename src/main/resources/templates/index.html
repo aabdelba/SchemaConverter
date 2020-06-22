@@ -13,7 +13,7 @@
     <link type="text/css" rel="stylesheet" href="/css/style.css"/>
 
 
-    <title>Schema Evolver | Rearrange Data the Way You Need to</title>
+    <title>Schema Evolver | For AVRO and JSON</title>
 </head>
 <body>
 
@@ -27,11 +27,55 @@
 
 
 
-    <div th:replace="fragments/carousel :: carousel"></div>
+    <!-- <div th:replace="fragments/carousel :: carousel"></div> -->
 
 
-
-
+    <div th:fragment="carousel">
+        <div id="carouselExampleIndicators" class="carousel-hide my-carousel-overflow carousel slide" data-ride="carousel"  data-interval="15000">
+            <ol class="carousel-indicators my-indicator">
+                <li class="active carousel-indicator-size my-indicator" data-target="#carouselExampleIndicators" data-slide-to="0"></li>
+                <li class="carousel-indicator-size my-indicator" data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                <li class="carousel-indicator-size my-indicator" data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                <li class="carousel-indicator-size my-indicator" data-target="#carouselExampleIndicators" data-slide-to="3"></li>
+            </ol>
+            <div class="carousel-inner">
+                <div class="carousel-item active my-carousel-overflow">
+                    <img class="carousel-image d-block" src="/images/carousel/Slide1.png" alt="First slide">
+                    <div class="my-carousel-caption d-none d-md-block">
+                        <p class="carousel-text-large">Convert data</p>
+                        <p class="carousel-text-small">to different schema versions</p>
+                    </div>
+                </div>
+                <div class="carousel-item my-carousel-overflow" >
+                    <img class="carousel-image d-block" src="/images/carousel/Slide2.png" alt="Second slide">
+                    <div class="my-carousel-caption d-none d-md-block">
+                        <p class="carousel-text-large">Wrap an object in an array</p>
+                    </div>
+                </div>
+                <div class="carousel-item my-carousel-overflow" >
+                    <img class="carousel-image d-block" src="/images/carousel/Slide3.png" alt="Third slide">
+                    <div class="my-carousel-caption d-none d-md-block">
+                        <p class="carousel-text-large">Rename fields without alias</p>
+                    </div>
+                </div>
+                <div class="carousel-item my-carousel-overflow">
+                    <img class="carousel-image d-block" src="/images/carousel/Slide4.png" alt="Fourth slide">
+                    <div class="my-carousel-caption d-none d-md-block">
+                        <p class="carousel-text-large">Integrate</p>
+                        <p class="carousel-text-small">with API or SSH coming soon</p>
+                    </div>
+                </div>
+            </div>
+            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </div>
 
 
 
@@ -43,16 +87,100 @@
 <div class="container">
 
 
-    <div class="row empty-100-row"></div>
+    <div class="row empty-200-row"></div>
     <h3 class="text-center subtitle-text">Ali Abdelbadie presents:</h3>
     <h1 class="text-center">Schema Evolver</h1>
 
+    <div class="row empty-200-row"></div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="goalSection">
+        <div class="empty-100-row"></div>
+        <div class="container">
+        <p class="goalText1">The Goal:</p>
+        <p class="goalText2">To efficiently convert AVRO data from one schema to another</p>
+        <div class="empty-100-row"></div>
+    </div>
+    </div>
+
+    
+    <div class="challengeSection">
+        <div class="empty-87-row"></div>
+        
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-1 col-lg-1 col-md-1"></div>
+                <div class="col-xl-9 col-lg-9 col-md-9 col-sm-12 col-xs-12">
+                    <p class="challengeText2">Did you ever need to send a POST API request to a service that constantly has different version updates?</p>            
+                </div>
+                <div class="col-3"></div>
+            </div>
+            <div class="empty-87-row"></div>
+            <div class="row">
+                <div class="col-xl-2 col-lg-2 col-md-2"></div>
+                <div class="col-xl-9 col-lg-9 col-md-9 col-sm-12 col-xs-12">
+                    <p class="challengeText2">If a QA team prefers  to save expected test results in the form of JSON objects, schema changes coming in from development may require updating hundreds of expected results which often require manual effort to update. This could be a big culprit for QA scheduling delays.</p>
+                </div>
+            </div>
+            <div class="empty-87-row"></div>
+            <div class="row">
+                <div class="col-xl-3 col-lg-3 col-md-3"></div>
+                <div class="col-xl-9 col-lg-9 col-md-9 col-sm-12 col-xs-12">
+                    <p class="challengeText2">In a CLI environment where applications are located in executable packages, certain applications can process hundreds of rows of JSON or AVRO records. Formatting input records when new columns or entry-relationships are introduced is extremely tedious.</p>
+                </div>
+            </div>
+        </div>
+        <div class="empty-87-row"></div>
+    </div>
+
+    
+    <div class="solutionSection">
+        <div class="empty-87-row"></div>
+        <p class="solutionText1 text-center">The Solution, Schema Evolver</p>
+        <div class="empty-50-row"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-1"></div>
+
+                <div class="col-5">
+                    <p class="solutionText2">Schema evolver is a tool that formats multiple JSON or AVRO records at a time to a desired format. In order to do so, it requires two schema files, each for the old and new formats.</p>
+                    <div class="empty-50-row"></div>
+                    <p class="solutionText2">The intent is to format data to simply pass it through and make it compatible with the destination the data is headed. Any new columns or nested elements of data will be given default values or auto-generated values if a default is not specified.</p>
+                    <div class="empty-50-row"></div>
+                    <p class="solutionText2">This will be a microservice to re-arrange data to a schema of choice, with added scenarios previously not handled by AVRO</p>
+                </div>
+                <div class="col-5">
+                    <p class="solutionText2">Schemas are required for this tool to work. If schemas are missing and you have classes to represent your data format, AVRO offers open-source methods for class reflection to create schemas from your old and new classes.</p>
+                    <div class="empty-50-row"></div>
+                    <p class="solutionText2">This tool is most suitable as an intermediary component in a CLI environment, but it is also available as a web-app and a web-service with an API.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="empty-87-row"></div>
+    </div>
+
+
     <div class="row empty-50-row"></div>
+    <div class="row empty-20-row"></div>
 
 
 
 
 
+    <div class="container">
 
 
     <div class="row">
@@ -73,7 +201,7 @@
             <p>Support:</p>
             <ul>
                 <li>API Endpoints and methods</li>
-                <li>Form sign-up feature</li>
+                <li>Sign-up feature</li>
                 <li>Support for SSH tool usage</li>
                 <li>Drag and drop files in the form page, instead of selecting files manually from directories</li>
             </ul>

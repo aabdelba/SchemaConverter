@@ -5,8 +5,8 @@ li { font-family: Arial, monospace; font-size: 20px; font-style: normal; font-va
 p { margin: 0px auto 0vw; font-family: Arial, monospace; font-size: 15px; font-style: normal; font-variant: normal; font-weight: 500; line-height: 25px; }
 a{ line-height: 50px; }
 h3 { color: #0f1e3e; font-family: "Courier", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace; font-size: 40px; font-style: normal; font-variant: normal; font-weight: 700; line-height: 35px; }
-p.carousel-text-large{margin: 0px auto 0.5vw; padding: 0px 0.1vw 0.1vw; color: #000000; font-weight: 700; font-size: 2.5vw; line-height: 2vw; font-family: "Courier", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;}
-p.carousel-text-small{margin: 0px auto 0.2vw; padding: 0px 0.1vw 0.1vw; color: #000000; font-weight: 600; font-size: 1.25vw; line-height: 0.2vw; font-family: "Courier", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;}
+p.carousel-text-large{margin: 0px auto 0.5vw; padding: 0px 0.1vw 0.1vw; color: #000000; font-weight: 700; font-size: 2.5vw; line-height: 4vw; font-family: "Courier", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;}
+p.carousel-text-small{margin: 0px auto 0.2vw; padding: 0px 0.1vw 0.1vw; color: #000000; font-weight: 600; font-size: 1.25vw; line-height: 0.5vw; font-family: "Courier", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;}
 blockquote { font-family: "Courier", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace; font-size: 21px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 30px; }
 pre { font-family: "Courier", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace; font-size: 13px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 18.5714px; }
 .btn-text { height: 40px; color: #007bff; font-family: "Courier", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace; font-size: 18px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 20px; }
@@ -170,6 +170,10 @@ select{
     background-color: #989898;
 }
 
+.empty-400-row{
+    height: 400px;
+}
+
 .empty-200-row{
     height: 200px;
 }
@@ -188,6 +192,10 @@ select{
 
 .empty-100-row{
     height: 100px;
+}
+
+.empty-87-row{
+    height: 87px;
 }
 
 .empty-75-row{
@@ -243,7 +251,7 @@ select{
 }
 
 .disclaimer-background{
-    background-color: rgba(156, 119, 119, 0.548);
+    background-color: rgba(167, 151, 151, 0.548);
     border-radius: 5px;
     border: 1px solid rgb(54, 0, 0);
     color: #b4b4b4;
@@ -260,6 +268,73 @@ select{
     /* color: #55535e; */
     color: #b4b4b4;
 }
+
+.goalSection{
+    background-color: rgb(71, 71, 71);
+    left: 0;
+    right:0;
+}
+
+.challengeSection{
+    background-color: rgba(130, 129, 146, 0.144);
+    left: 0;
+    right:0;
+}
+
+.solutionSection{
+    background-color: rgba(87, 95, 94, 0.171);
+    left: 0;
+    right:0;
+}
+
+.goalText1{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 35px;
+    font-weight: 700;
+    color: #b4b4b4;
+    line-height: 70px;
+    left: 10;
+}
+
+.goalText2{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 30px;
+    font-weight: 500;
+    color: #b4b4b4;
+    line-height: 70px;
+
+}
+
+.challengeText1{
+    font-weight: 700;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 25px;
+    line-height: 40px;
+    color: #505050;
+}
+
+.challengeText2{
+    font-style:italic;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    line-height: 40px;
+    color: #505050;
+}
+
+.solutionText1{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 25px;
+    font-weight: 700;
+    color: #444444;
+}
+
+.solutionText2{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    color: #444444;
+}
+
+
 
 .swagger-background{
     background-color: rgb(128,128,128);
