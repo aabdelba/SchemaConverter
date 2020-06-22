@@ -4,8 +4,7 @@ function validateForm() {
   var oldSchemaNotEmpty = validateNotEmpty("oldSchemaText","oldSchemaFile","Old schema");
   var newSchemaNotEmpty = validateNotEmpty("newSchemaText","newSchemaFile","New schema");
   if(oldJsonNotEmpty && oldSchemaNotEmpty && newSchemaNotEmpty) {
-    $('#form1Toggle').toggleClass("hidden");
-    $('#form2Toggle').toggleClass("hidden");
+    $('#formToggle').toggleClass("hidden");
     $('#loadingToggle').toggleClass("hidden");
     return true;
   } else {

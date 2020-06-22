@@ -78,7 +78,7 @@ public class SchemaResourceManager {
         this.outputJsonDir=ioDir + "/output/json/";
         this.outputAvroDir=ioDir + "/output/avro/";
         this.outputDir=ioDir + "/output/";
-        this.demoDir=System.getProperty("user.dir")+"/src/main/resources/demo";
+        this.demoDir=ioDir + "/demo/";
     }
 
     private void clearDirectories() throws IOException {
