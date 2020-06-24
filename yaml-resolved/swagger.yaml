@@ -1,0 +1,40 @@
+---
+swagger: "2.0"
+info:
+  description: |-
+    __Please note that version 1.0.0 is coming soon.__
+
+    Schema Evolver converts JSON or AVRO data from one schema to another with added scenarios not present in open-source AVRO libraries.
+  version: 1.0.0
+  title: Schema Evolver
+  contact:
+    email: aliabdelbadie@gmail.com
+host: virtserver.swaggerhub.com
+basePath: /aabdelba/SchemaEvolver/1.0.0
+schemes:
+- https
+paths:
+  /convert:
+    post:
+      tags:
+      - convert
+      summary: Run a conversion
+      operationId: postConvert
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: Records that need to be converted
+        required: true
+        schema:
+          type: object
+          additionalProperties:
+            type: integer
+            format: int32
+      responses:
+        "405":
+          description: Invalid input
+definitions: {}
