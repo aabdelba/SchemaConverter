@@ -75,7 +75,7 @@ public class AppSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http
             .csrf().disable()//security that stops cross-site reference to the app is disabled
-            .authorizeRequests().antMatchers("/","/login*").permitAll()
+            .authorizeRequests().antMatchers("/","/login*","/signup*").permitAll()
             .anyRequest().authenticated()
             .and()
             .formLogin().loginPage("/login").defaultSuccessUrl("/form", true).permitAll().failureUrl("/login-error")

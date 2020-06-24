@@ -73,7 +73,8 @@
 
             
             <div class="container col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12">
-                <form th:action="@{/login}" method="post">
+                <form th:action="@{/login}" method="post" id="loginForm"></form>
+                <form th:action="@{/signup}" method="get" id="signupForm"></form>
                     <div claoss="rw">
                         <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-xs-2"></div>
 
@@ -81,13 +82,13 @@
                             <div class="row empty-75-row"></div>
                             <p th:text="${errorMessage}" style="color:#FF0000";>Error logging in</p>
                             <p class="login-text">username or email</p>
-                            <input type="text" id="username" name="username" autofocus="autofocus" /> <br/>
+                            <input type="text" form="loginForm" id="username" name="username" autofocus="autofocus" /> <br/>
                             <div class="row empty-25-row"></div>
                             <p class="login-text">password</p>
-                            <input type="password" id="password" name="password"/> <br/>
+                            <input type="password" form="loginForm" id="password" name="password"/> <br/>
                             <div class="row empty-25-row"></div>
                             <label for="remember-me">remember me:</label>
-                            <input id="remember-me" type="checkbox" name="remember-me">
+                            <input id="remember-me"  form="loginForm" type="checkbox" name="remember-me">
                             <div class="row empty-40-row"></div>
                         </div>
 
@@ -102,19 +103,17 @@
                         <div class="col-xl-8 col-lg-8 col-md-8 col-sm-8 col-xs-8 container">
                             <div class="container">
                                 <div class="row">
-                                    <input class="col-xl-4 col-lg-4 col-md-5 col-sm-5 col-xs-5 btn-block btn btn-primary" type="submit" value="Log In" />
+                                    <input class="col-xl-4 col-lg-4 col-md-5 col-sm-5 col-xs-5 btn-block btn btn-primary" type="submit" form="loginForm" value="Log In" />
                                     <div class="col-xl-1 col-lg-1 col-md-2 col-sm-2 col-xs-2">
                                         <div class="row empty-10-row"></div>
-                                </div>
-                                    <a class="col-xl-4 col-lg-4 col-md-5 col-sm-5 col-xs-5 btn-block btn btn-primary" href="">Sign Up</a>
+                                    </div>
+                                    <input class="col-xl-4 col-lg-4 col-md-5 col-sm-5 col-xs-5 btn-block btn btn-primary" type="submit" form="signupForm" value="Sign Up" />
                                     <div class="col-xl-3 col-lg-3"></div>
                                 </div>
                             </div>
                         </div>
                         <div class="col-xl-2 col-lg-2 col-md-2 col-sm-2 col-xs-2"></div>
                     </div>
-
-                </form>
             </div>
 
 

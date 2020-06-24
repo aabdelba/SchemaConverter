@@ -116,4 +116,7 @@ public class LoginController {
         return "logout";
     }
 
+    @GetMapping("/signup")
+    public String signup() { return "signup"; }
+
 }
