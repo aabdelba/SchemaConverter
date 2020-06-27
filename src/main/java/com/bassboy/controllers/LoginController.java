@@ -14,10 +14,7 @@ import org.springframework.security.web.WebAttributes;
 import org.springframework.social.connect.Connection;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.NativeWebRequest;
 
@@ -117,6 +114,15 @@ public class LoginController {
     }
 
     @GetMapping("/signup")
-    public String signup() { return "signup"; }
+    public String getSignup() { return "signup"; }
+
+    @PostMapping("/signup")
+    public String postSignup(Model model, @RequestParam String username, @RequestParam String password, @RequestParam String email){
+        model.addAttribute("usernameError", "errorMessage");
+        model.addAttribute("passwordError", "errorMessage");
+        model.addAttribute("emailError", "errorMessage");
+
+        return "login";
+    }
 
 }

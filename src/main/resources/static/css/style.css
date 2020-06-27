@@ -121,13 +121,6 @@ select{
     background-size: contain;
 }
 
-.carousel-indicator-size.my-indicator{
-    width: 1.5vw;
-    height: 0.5vw;
-    margin: 0.05vw 0.5vw 0.05vw;
-    border-width: 0.1vw;
-}
-
 .carousel-indicators.my-indicator{
     margin: 0px 0.2vw 0.2vw;
 }
