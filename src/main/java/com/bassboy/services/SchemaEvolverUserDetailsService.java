@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,10 +27,23 @@ public class SchemaEvolverUserDetailsService implements UserDetailsService {
         return new UserPrincipal(user);
     }
 
+    public void createUser(String username, String email, String password){
+        SchemaEvolverUser user = new SchemaEvolverUser();
+        user.setUsername(username);
+        user.setEmail(email);
+
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(13);
+        password = "{bcrypt}"+encoder.encode(password);
+        user.setPassword(password);
+
+        user.setCreatedTimestamp();
+        user.setModifiedTimestamp();
+        this.repo.save(user);
+    }
+
     public void createSocialUserIfNotFound(String socialId, String displayName) throws UsernameNotFoundException {
         if (!repo.existsUserBySocialId(socialId)) {
-            SchemaEvolverUser user;
-            user = new SchemaEvolverUser();
+            SchemaEvolverUser user = new SchemaEvolverUser();
             user.setSocialId(socialId);
             user.setDisplayName(displayName);
             user.setCreatedTimestamp();
@@ -62,4 +76,11 @@ public class SchemaEvolverUserDetailsService implements UserDetailsService {
         return user;
     }
 
+    public boolean usernameExists(String username) {
+        return repo.existsUserByUsername(username);
+    }
+
+    public boolean emailExists(String email) {
+        return repo.existsUserByEmail(email);
+    }
 }

@@ -16,7 +16,7 @@
 </head>
 <body>
 
-<div th:replace="fragments/header :: header"></div>
+<div th:replace="fragments/headerBeforeLogin :: header"></div>
 
 <div class="container">
 
@@ -38,16 +38,27 @@
                     <div class="container">
 
                         <div class="row empty-50-row"></div>
+                        <p th:text="${usernameMessage}" class="errorText">Invalid Username</p>
                         <label class="paragraph-text" for="username">Username</label><br/>
-                        <input type="text" id="username" name="username"/><br/>
+                        <input type="text" id="username" name="username" th:value="${username}"/><br/>
 
                         <div class="row empty-50-row"></div>
+                        <p th:text="${emailMessage}" class="errorText">Invalid Email Address</p>
+                        <label class="paragraph-text" for="password">Email Address</label><br/>
+                        <input type="email" id="email" name="email" th:value="${email}"/><br/>
+
+                        <div class="row empty-50-row"></div>
+                        <ul th:unless="${#lists.isEmpty(passwordMessages)}" class="errorText">
+                            <li th:each="passwordMessage : ${passwordMessages}" th:text="${passwordMessage}" class="errorText">Invalid Password</li>
+                        </ul>
+
                         <label class="paragraph-text" for="password">Password</label><br/>
-                        <input type="text" id="password" name="password"/><br/>
+                        <input type="password" id="password" name="password"/><br/>
 
                         <div class="row empty-50-row"></div>
-                        <label class="paragraph-text" for="password">Email</label><br/>
-                        <input type="text" id="email" name="email"/><br/>
+                        <p th:text="${retypePasswordMessage}" class="errorText">Invalid Password</p>
+                        <label class="paragraph-text" for="retype-password">Re-type Password</label><br/>
+                        <input type="password" id="retype-password" name="retypePassword"/><br/>
 
                         <div class="row empty-50-row"></div>
                         <div class="row">
