@@ -17,6 +17,13 @@ pre { font-family: "Courier", Courier, "Lucida Sans Typewriter", "Lucida Typewri
 .hyperlink-text { font-family: "Courier", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace; font-size: 18px; font-style: normal; font-variant: normal; font-weight: 400; line-height: 20px; }
 .input-text {font-weight: 600;font-family: "Courier", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;}
 
+.footer-text{
+    padding: 0;
+    color: #505050;
+    list-style-type: none;
+    font-size: 15px;
+}
+
 .errorText{
     padding: 0;
     color:#FF0000;
