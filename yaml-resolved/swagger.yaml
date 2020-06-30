@@ -2,7 +2,7 @@
 swagger: "2.0"
 info:
   description: |-
-    __Please note that version 1.0.0 is coming soon. Swagger documentation will be embedded in the UI to reflect API directly mapped to the controllers in this project.__
+    __Please note that version 1.1.0 is coming soon. Swagger documentation will be embedded in the UI to reflect API directly mapped to the controllers in this project.__
 
     Schema Evolver converts JSON or AVRO data from one schema to another with added scenarios not present in open-source AVRO libraries.
   version: 1.0.0
