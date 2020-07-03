@@ -4,7 +4,6 @@ import java.io.*;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Properties;
-import org.json.JSONObject;
 import org.springframework.web.multipart.MultipartFile;
 
 public final class RwUtils {

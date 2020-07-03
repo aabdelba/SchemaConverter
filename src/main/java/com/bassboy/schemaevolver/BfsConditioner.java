@@ -1,11 +1,11 @@
 
 package com.bassboy.schemaevolver;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.Map.Entry;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.apache.avro.generic.GenericData;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
@@ -20,27 +20,31 @@ public class BfsConditioner {
 	private JsonNode oldSchema;
 	private JsonNode latestSchema;
 
-	private JsonNode oldJson;
+	private ArrayList<JsonNode> jsonRecords;
 	private HashMap<String,String> renamedFields;
 
-	private BfsConditioner(RecordObject oldSchemaObject, RecordObject latestSchemaObject, JsonNode oldJson, HashMap<String,String> renamedFields) throws IOException {
+	private BfsConditioner(EvolvingRecords oldSchemaObject, EvolvingRecords latestSchemaObject, ArrayList<JsonNode> oldJsons, HashMap<String,String> renamedFields) throws IOException {
 		ObjectMapper mapper = new ObjectMapper();
 
 		setOldSchema(mapper.readTree(oldSchemaObject.getSchema().toString()));
 		setLatestSchema(mapper.readTree(latestSchemaObject.getSchema().toString()));
-		setOldJson(oldJson);
+		setJsonRecords(oldJsons);
 		setRenamedFields(renamedFields);
 	}
 
-	public static BfsConditioner getInstance(RecordObject oldSchemaObject, RecordObject latestSchemaObject, HashMap<String,String> renamedFields) throws IOException {
+	public static BfsConditioner getInstance(EvolvingRecords oldSchemaObject, EvolvingRecords latestSchemaObject, HashMap<String,String> renamedFields) throws IOException {
 		ObjectMapper mapper = new ObjectMapper();
-		JsonNode oldJsonNode = mapper.readTree(oldSchemaObject.getRecord().toString());
+
+		ArrayList<JsonNode> oldJsonNodes = new ArrayList<>();
+		for (GenericData.Record record : oldSchemaObject.getRecords())
+			oldJsonNodes.add(mapper.readTree(record.toString()));
+
 		if(bfsUtilsInstance == null) {
-			bfsUtilsInstance = new BfsConditioner(oldSchemaObject, latestSchemaObject, oldJsonNode, renamedFields);
+			bfsUtilsInstance = new BfsConditioner(oldSchemaObject, latestSchemaObject, oldJsonNodes, renamedFields);
 		} else {
 			bfsUtilsInstance.setLatestSchema(mapper.readTree(latestSchemaObject.getSchema().toString()));
 			bfsUtilsInstance.setOldSchema(mapper.readTree(oldSchemaObject.getSchema().toString()));
-			bfsUtilsInstance.setOldJson(oldJsonNode);
+			bfsUtilsInstance.setJsonRecords(oldJsonNodes);
 			bfsUtilsInstance.setRenamedFields(renamedFields);
 		}
 		return bfsUtilsInstance;
@@ -62,12 +66,21 @@ public class BfsConditioner {
 		this.latestSchema = latestSchema;
 	}
 
-	public JsonNode getOldJson() {
-		return oldJson;
+	public ArrayList<JsonNode> getJsonRecords() {
+		return jsonRecords;
 	}
 
-	public void setOldJson(JsonNode oldJson) {
-		this.oldJson = oldJson;
+	public void setJsonRecords(ArrayList<JsonNode> jsonRecords) {
+		this.jsonRecords = jsonRecords;
+	}
+
+	public void addJsonRecord(JsonNode oldJson) {
+		jsonRecords.add(oldJson);
+	}
+
+	public void  addJsonRecord(String oldJson) throws JsonProcessingException {
+		ObjectMapper mapper = new ObjectMapper();
+		jsonRecords.add(mapper.readTree(oldJson));
 	}
 
 	public HashMap<String, String> getRenamedFields() {
@@ -88,7 +101,9 @@ public class BfsConditioner {
 			System.out.println(key);
 			System.out.println(getRenamedFields().get(key));
 		}
-		goInsideNode(oldSchema, latestSchema,"/");
+		for (JsonNode record : jsonRecords) {
+			goInsideNode(oldSchema, latestSchema, "/");
+		}
 	}
 
 	// recursive method to traverse through old and latest schemas using breadth-first
@@ -111,7 +126,7 @@ public class BfsConditioner {
 					try {
 						JSONAssert.assertEquals(latestParent.toString(), oldParent.toString(),JSONCompareMode.NON_EXTENSIBLE);
 					} catch (AssertionError | Exception e1) {
-						EvolutionScenarios.latestSchema_missingSensitiveKey(this,e1);
+						SchemaManipulator.latestSchema_missingSensitiveKey(this,e1);
 					}
 					break;
 				} finally {
@@ -150,21 +165,21 @@ public class BfsConditioner {
 					JsonNode latestType = latestNode.get("type");
 					JsonNode oldType = oldNode.get("type");
 
-				/*if(latestType.toString().equals("\"record\"") && oldType.toString().equals("\"record\"")) {
+				if(latestType.toString().equals("\"record\"") && oldType.toString().equals("\"record\"")) {
 					JsonNode latestName = latestNode.get("name");
 					JsonNode oldName = oldNode.get("name");
 
 					if (!oldName.equals(latestName) && !foundInAliases(oldName, latestEntry.getValue())) {
 						if(areTheSameRenamedObject(oldEntry.getValue(),latestEntry.getValue())) {
-							ConversionScenarios.latestSchema_addAliasToFieldInArray(this,latestEntry,oldEntry.getValue(),latestPath);
+							SchemaManipulator.latestSchema_addAliasToFieldInArray(this,latestEntry,oldEntry.getValue(),latestPath);
 							startConversion();
 							return;
 						}
 					}
 //					ObjectMapper mapper = new ObjectMapper();
 //					goInsideNode(mapper.readTree("{\"fields\":"+oldNode.get("fields")+"}"), mapper.readTree("{\"fields\":"+latestNode.get("fields")+"}"),latestPath);
-					goInsideNode(oldType,latestType,latestPath+"type/");
-				} else*/ if(latestType.toString().equals("\"array\"") && oldType.toString().equals("\"array\"")) {
+					goInsideNode(oldNode,latestNode,latestPath+"type/");
+				} else if(latestType.toString().equals("\"array\"") && oldType.toString().equals("\"array\"")) {
 
 					JsonNode oldItems = oldNode.get("items");
 					JsonNode latestItems = latestNode.get("items");
@@ -174,7 +189,7 @@ public class BfsConditioner {
 					if (!oldName.equals(latestName) && !foundInAliases(oldName, latestItems)) {
 
 						if(areTheSameRenamedObject(oldItems,latestItems)) {
-							EvolutionScenarios.latestSchema_addAliasToFieldInSchemaArray(this,latestEntry,oldEntry,latestPath);
+							SchemaManipulator.latestSchema_addAliasToFieldInSchemaArray(this,latestEntry,oldEntry,latestPath);
 							startConversion();
 							return;
 						}
@@ -182,15 +197,15 @@ public class BfsConditioner {
 
 					goInsideNode(oldItems, latestItems, latestPath);
 				} else if (!latestType.equals(oldType)) {
-					if (latestType.toString().equals("\"record\"") && oldType.toString().equals("\"array\""))
-						EvolutionScenarios.oldSchema_unwrapRecordFromArray(this, oldEntry, latestEntry);
-					else if (latestType.toString().equals("\"array\"") && oldType.toString().equals("\"record\"")) {
-						EvolutionScenarios.oldSchema_wrapRecordInArray(this,oldEntry,latestEntry,oldParent,latestParent);
-						startConversion();
-						return;
-					}
-					else
+					if (latestType.toString().equals("\"record\"") && oldType.toString().equals("\"array\"")) {
+						SchemaManipulator.oldSchema_unwrapRecordFromArray(this, oldEntry, oldParent);
+					} else if (latestType.toString().equals("\"array\"") && oldType.toString().equals("\"record\"")) {
+						SchemaManipulator.oldSchema_wrapRecordInArray(this,oldEntry,oldParent);
+					} else {
 						throw (new SchemaEvolverException("Unhandled case\nold: " + oldNode + "\nnew: " + latestNode));
+					}
+					startConversion();
+					return;
 				} else {
 					throw (new SchemaEvolverException("Unhandled case\nold: " + oldNode + "\nnew: " + latestNode));
 				}
@@ -200,7 +215,7 @@ public class BfsConditioner {
 				case ARRAY:
 					if (!nodesAreEqual(oldEntry,latestEntry)) {
 						if(isArrayOfObjects(oldEntry,latestEntry))
-							processArray(oldEntry,latestEntry,oldParent,latestParent, latestPath);
+							processArray(oldEntry,latestEntry,oldParent,latestParent,latestPath);
 						else
 							processArray(oldEntry,latestEntry);
 					}
@@ -228,7 +243,7 @@ public class BfsConditioner {
 						break;
 					} else {
 						if(areTheSameRenamedObject(oldArrayEntry,latestArrayEntry)) {
-							EvolutionScenarios.latestSchema_addAliasToFieldInArray(this,latestEntry,oldArrayEntry, latestPath);
+							SchemaManipulator.latestSchema_addAliasToFieldInArray(this,latestEntry,oldArrayEntry, latestPath);
 							startConversion();
 							return;
 						}
@@ -249,7 +264,7 @@ public class BfsConditioner {
 					arrayEntryWasFoundInLatest = true;
 			}
 			if (!arrayEntryWasFoundInLatest)
-				EvolutionScenarios.latestSchema_addType(this,oldEntry,latestEntry,oldArrayEntry);
+				SchemaManipulator.latestSchema_addType(this,oldEntry,latestEntry,oldArrayEntry);
 			arrayEntryWasFoundInLatest = false;
 		}
 	}
@@ -358,5 +373,4 @@ public class BfsConditioner {
 //			System.out.println("   " + latestNode);
 //		}
 	}
-
 }
