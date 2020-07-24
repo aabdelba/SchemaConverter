@@ -93,9 +93,7 @@ public class UiController {
             e.printStackTrace();
         }
 
-        resourceManager.setFormModel(formModel);
-        resourceManager.init();
-        resourceManager.runConversion();
+        resourceManager.runConversion(formModel);
         model.addAttribute("resourceManager", resourceManager);
         model.addAttribute("username", displayName);
 
@@ -114,10 +112,6 @@ public class UiController {
             s1 = "attachment; filename=SchemaEvolverResults_" + sdf.format(timestamp) + ".zip";
         response.setHeader("Content-Disposition", s1);
         try (ZipOutputStream zippedOut = new ZipOutputStream(response.getOutputStream())) {
-            FormModel formModel = resourceManager.getFormModel();
-            if(formModel==null)
-                formModel = new FormModel();
-            formModel.setDownloadFormat(downloadFormat);
             resourceManager.download(zippedOut);
         }//if try and fail, zippedOut is closed
     }

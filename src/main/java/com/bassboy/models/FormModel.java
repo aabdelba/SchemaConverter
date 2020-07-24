@@ -36,6 +36,11 @@ public class FormModel {
     }
 
     public FormModel() throws IOException {
+        this.oldJsonText = "";
+        this.oldSchemaText = "";
+        this.newSchemaText = "";
+        this.renamedText = "";
+        this.downloadFormat = "json & avro";
     }
 
     public FormModel(MultipartFile[] oldJsonFiles, MultipartFile oldSchemaFile, MultipartFile newSchemaFile, MultipartFile renamedFile, String oldJsonText, String oldSchemaText, String newSchemaText, String renamedText, String fileFormat) throws IOException {

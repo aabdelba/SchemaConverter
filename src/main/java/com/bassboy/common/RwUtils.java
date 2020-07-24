@@ -77,17 +77,28 @@ public final class RwUtils {
 	public static void writeMultipartIntoFile(String inputPath, MultipartFile mpf) throws IOException {
 		if(mpf!=null){
 			if(!mpf.isEmpty()) {
-				mpf.transferTo(new File(inputPath + mpf.getOriginalFilename()));
-				System.out.println("Created " + inputPath + mpf.getOriginalFilename());
+				File destFile = createFileWithNewNameIfNotUnique(inputPath,mpf.getOriginalFilename());
+				mpf.transferTo(destFile);
+				System.out.println("Created " + destFile);
 			}
 		}
+	}
+
+	public static File createFileWithNewNameIfNotUnique(String inputPath, String originalFileName) {
+		File destFile = new File(inputPath + originalFileName);
+		if(destFile.exists()){
+			String fileNameWithoutExtension = originalFileName.substring(0,originalFileName.lastIndexOf('.'));
+			String fileExtension = originalFileName.substring(originalFileName.lastIndexOf('.'),originalFileName.length());
+			fileNameWithoutExtension = fileNameWithoutExtension + "_renamed";
+			destFile = createFileWithNewNameIfNotUnique(inputPath,fileNameWithoutExtension+fileExtension);
+		}
+		return destFile;
 	}
 
 	public static void clearDirectory(String dirString) {
 		File dir = new File(dirString);//.listFiles() throws null pointer when directory is empty
 		for (File file : dir.listFiles()) {
 			if(!file.delete())
-				System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!");
 			System.out.println("Deleted " + file.getAbsolutePath());
 		}
 	}

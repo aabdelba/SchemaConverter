@@ -2,7 +2,7 @@ package com.bassboy.services;
 
 import com.bassboy.models.FormModel;
 import com.bassboy.schemaevolver.InvalidSchemaEntryException;
-import com.bassboy.schemaevolver.SchemaEvolverMain;
+import com.bassboy.schemaevolver.SchemaEvolver;
 import com.bassboy.schemaevolver.SchemaEvolverException;
 import com.bassboy.common.RwUtils;
 import org.springframework.core.io.FileSystemResource;
@@ -15,60 +15,49 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 //@Service
+// if this is annotated with @Service, must remove its @Bean method in configuration class as
+// @Service will autocreate this bean
 public class SchemaResourceManager {
 
-    private static SchemaResourceManager resourceManager;
-
-    private String ioDir;
+    private final SchemaEvolver schemaEvolver;
     private String inputRecordDir;
     private String inputSchemaDir;
     private String outputJsonDir;
     private String outputAvroDir;
     private String outputDir;
     private String demoDir;
-
+    private String downloadFormat;
     private boolean completeWithError = true; //always true, unless init() is called
-    private FormModel formModel;
-
-
-    public static SchemaResourceManager getInstance(String ioDir) {
-        if (resourceManager == null)
-            resourceManager = new SchemaResourceManager(ioDir);
-        resourceManager.setIoDir(ioDir);
-        return resourceManager;
-    }
 
     public boolean isCompleteWithError() {
         return completeWithError;
     }
 
-    public void setFormModel(FormModel formModel) {
-        this.formModel = formModel;
+    public String getDownloadFormat() {
+        return downloadFormat;
     }
 
-    private SchemaResourceManager(String ioDir) {
-        this.ioDir = ioDir;
+    public void setDownloadFormat(String downloadFormat) {
+        this.downloadFormat = downloadFormat;
     }
 
-    private SchemaResourceManager() {}
-
-    public FormModel getFormModel() {
-        return formModel;
+    public SchemaEvolver getSchemaEvolver() {
+        return schemaEvolver;
     }
 
-    public void setIoDir(String ioDir) {
-        this.ioDir = ioDir;
+    public SchemaResourceManager(SchemaEvolver schemaEvolver) {
+        this.schemaEvolver = schemaEvolver;
     }
 
     public void init() throws IOException {
         System.out.println("Initializing resources...");
+        setDirectories();
         clearDirectories();
         completeWithError=false;
-        writeTextboxToInputDirectories();
-        writeMultifileToInputDirectories();
     }
 
     public void setDirectories() {
+        String ioDir = schemaEvolver.getIoDir();
         if(ioDir.charAt(0)!='/' && !ioDir.contains(System.getProperty("user.dir")))
             //defensive coding - if relative path provided, assume it is relative to project root
             ioDir = System.getProperty("user.dir")+"/"+ioDir;
@@ -88,22 +77,25 @@ public class SchemaResourceManager {
         RwUtils.clearDirectory(outputAvroDir);
     }
 
-    private void writeMultifileToInputDirectories() throws IOException {
+    public void writeMultifileToInputDirectories(FormModel formModel) throws IOException {
 
+        System.out.println("Writing uploaded files to "+inputSchemaDir);
         RwUtils.writeMultipartIntoFile(inputSchemaDir, formModel.getOldSchemaFile());
         RwUtils.writeMultipartIntoFile(inputSchemaDir, formModel.getNewSchemaFile());
         RwUtils.writeMultipartIntoFile(inputSchemaDir, formModel.getRenamedFile());
 
-        for (MultipartFile record: formModel.getOldJsonFiles()) {
-            RwUtils.writeMultipartIntoFile(inputRecordDir,record);
-        }
+        if(formModel.getOldJsonFiles()!=null)
+            for (MultipartFile record: formModel.getOldJsonFiles()) {
+                RwUtils.writeMultipartIntoFile(inputRecordDir,record);
+            }
     }
 
-    private void writeTextboxToInputDirectories() throws IOException {
+    public void writeTextboxToInputDirectories(FormModel formModel) throws IOException {
 
-        if(formModel.getOldSchemaFile().isEmpty()) RwUtils.writeStringToFile(inputSchemaDir+"oldSchema.avsc", formModel.getOldSchemaText());
-        if(formModel.getNewSchemaFile().isEmpty()) RwUtils.writeStringToFile(inputSchemaDir+"newSchema.avsc", formModel.getNewSchemaText());
-        if(formModel.getRenamedFile().isEmpty()) RwUtils.writeStringToFile(inputSchemaDir+"renamedFields.txt", formModel.getRenamedText());
+        System.out.println("Writing textbox data into files in "+inputSchemaDir);
+        if(formModel.getOldSchemaFile()==null || formModel.getOldSchemaFile().isEmpty()) RwUtils.writeStringToFile(inputSchemaDir+"oldSchema.avsc", formModel.getOldSchemaText());
+        if(formModel.getNewSchemaFile()==null || formModel.getNewSchemaFile().isEmpty()) RwUtils.writeStringToFile(inputSchemaDir+"newSchema.avsc", formModel.getNewSchemaText());
+        if(formModel.getRenamedFile()==null || formModel.getRenamedFile().isEmpty()) RwUtils.writeStringToFile(inputSchemaDir+"renamedFields.txt", formModel.getRenamedText());
 
         int i = 1;
         String recordFileStr;
@@ -114,8 +106,11 @@ public class SchemaResourceManager {
         }
     }
 
-    public void runConversion() throws IOException, SchemaEvolverException, InvalidSchemaEntryException {
-
+    public void runConversion(FormModel formModel) throws IOException, SchemaEvolverException, InvalidSchemaEntryException {
+        init();
+        writeTextboxToInputDirectories(formModel);
+        writeMultifileToInputDirectories(formModel);
+        setDownloadFormat(formModel.getDownloadFormat());
         String oldSchemaName;
         String newSchemaName;
         String renamedFileName;
@@ -124,15 +119,13 @@ public class SchemaResourceManager {
         if(formModel.getRenamedFile().isEmpty()) renamedFileName = "renamedFields.txt"; else renamedFileName = formModel.getRenamedFile().getOriginalFilename();
 
         File recordDir = new File(inputRecordDir);
-        File oldSchemaFile = new File(inputSchemaDir + oldSchemaName);
-        File newSchemaFile = new File(inputSchemaDir + newSchemaName);
-        File renamedFile = new File(inputSchemaDir + renamedFileName);
-
-        SchemaEvolverMain schemaEvolver = new SchemaEvolverMain();
+        String oldSchemaFile = inputSchemaDir + oldSchemaName;
+        String newSchemaFile = inputSchemaDir + newSchemaName;
+        String renamedFile = inputSchemaDir + renamedFileName;
 
         for (File oldJsonFile:recordDir.listFiles()) {
             try {
-                schemaEvolver.convertDataAndPlaceInOutputDir(oldSchemaFile, newSchemaFile, oldJsonFile, renamedFile, outputDir);
+                schemaEvolver.convertDataAndPlaceInOutputDir(oldSchemaFile, newSchemaFile, oldJsonFile.getAbsolutePath(), renamedFile, outputDir);
             } catch (Exception e){
                 completeWithError = true;
                 e.printStackTrace();
@@ -143,7 +136,6 @@ public class SchemaResourceManager {
     }
 
     public void download(ZipOutputStream zippedOut) throws IOException {
-        String downloadFormat = getFormModel().getDownloadFormat();
         FileSystemResource resource;
         ZipEntry zipEntry;
         File dir;
@@ -190,8 +182,9 @@ public class SchemaResourceManager {
         FormModel formModel = new FormModel(oldJsonFiles,oldSchemaFile,newSchemaFile,renamedFile,
                 oldJsonText,oldSchemaText,newSchemaText,renamedText,downloadFormat);
 
-//        SchemaResourceManager resourceManager = new SchemaResourceManager(formModel);
-        resourceManager.init();
+//        SchemaResourceManager resourceManager = new SchemaResourceManager();
+//        resourceManager.setFormModel(formModel);
+//        resourceManager.init();
     }
 
 }
