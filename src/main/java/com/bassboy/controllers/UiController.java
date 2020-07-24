@@ -93,7 +93,11 @@ public class UiController {
             e.printStackTrace();
         }
 
-        resourceManager.runConversion(formModel);
+        try {
+            resourceManager.runConversion(formModel);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
         model.addAttribute("resourceManager", resourceManager);
         model.addAttribute("username", displayName);
 
@@ -106,11 +110,15 @@ public class UiController {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String s1;
+
         if(downloadFormat.equals("demo"))
             s1 = "attachment; filename=DemoFiles.zip";
         else
             s1 = "attachment; filename=SchemaEvolverResults_" + sdf.format(timestamp) + ".zip";
+
         response.setHeader("Content-Disposition", s1);
+        resourceManager.setDownloadFormat(downloadFormat);
+
         try (ZipOutputStream zippedOut = new ZipOutputStream(response.getOutputStream())) {
             resourceManager.download(zippedOut);
         }//if try and fail, zippedOut is closed

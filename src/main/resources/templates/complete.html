@@ -81,7 +81,7 @@
                     <div class="container col-xl-4 col-lg-4 col-md-6 col-sm-8 col-xs-8">
                         <div class="row">
 
-                            <form class="text-center col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12"    th:action="@{/download/} + ${resourceManager.formModel.downloadFormat}" method="get" id="downloadForm">
+                            <form class="text-center col-xl-6 col-lg-6 col-md-6 col-sm-12 col-xs-12"    th:action="@{/download/} + ${resourceManager.downloadFormat}" method="get" id="downloadForm">
                                 <button class="single-button btn btn-primary btn-block" type="submit" form="downloadForm" value="Submit">Download</button>
                                 <div class="row empty-25-row"></div>
                             </form>

@@ -106,7 +106,7 @@ public class SchemaResourceManager {
         }
     }
 
-    public void runConversion(FormModel formModel) throws IOException, SchemaEvolverException, InvalidSchemaEntryException {
+    public void runConversion(FormModel formModel) throws IOException {
         init();
         writeTextboxToInputDirectories(formModel);
         writeMultifileToInputDirectories(formModel);
