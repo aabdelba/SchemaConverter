@@ -28,7 +28,7 @@ import static org.mockito.Mockito.times;
 @RunWith(SpringRunner.class)//needed for autowire and dependency injection
 @ContextConfiguration(classes = {SchemaEvolverBeans.class})
 @TestPropertySource(locations = "file:./src/test/resources/test.properties")
-public class ioFilesObjectInteraction extends TestUtils {
+public class ioFilesObjectInteractionTests extends TestUtils {
 
     @Mock private JsonSchemaEvolver schemaEvolver;
     @Mock private FormModel formModel;

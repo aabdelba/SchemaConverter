@@ -29,7 +29,7 @@ import java.io.IOException;
 //@TestPropertySource(properties = {
 //        "custom.schemaEvolver.ioDir=SchemaEvolverIO",
 //})
-public class IoFiles extends TestUtils{
+public class IoFilesTests extends TestUtils{
 
     @Autowired
     @Qualifier("schemaResourceManager")
