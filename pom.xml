@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.bassboy</groupId>
 	<artifactId>schemaevolver</artifactId>
-	<version>1.0.12-SNAPSHOT</version>
+	<version>1.0.16-SNAPSHOT</version>
 	<name>SchemaEvolver</name>
 	<description>schema conversion tool to help reduce work required to format data</description>
 
@@ -116,7 +116,11 @@
 		<!--		</dependency>-->
 
 
-
+		<dependency>
+			<groupId>com.github.ulisesbocchio</groupId>
+			<artifactId>jasypt-spring-boot-starter</artifactId>
+			<version>2.0.0</version>
+		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.springframework.social/spring-social-google -->
 		<dependency>
