@@ -1,0 +1,76 @@
+server:
+  port: 8080
+  error:
+    whitelabel:
+      enabled: false
+  servlet:
+    session:
+      timeout: 1800s
+      cookie:
+        max-age: 604800s
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        web: DEBUG
+
+spring:
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
+  h2:
+    console.enabled: true
+  session:
+    timeout:
+      seconds: 900
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  datasource:
+    url: jdbc:mysql://localhost:3306/schemaevolver
+    username: ENC(jaO5qCPivvRFezUcwex1pQ==)
+    password: ENC(cv2kkThOVrkEXlkukj9EA8GIkdsO6dry)
+    driver-class-name: com.mysql.jdbc.Driver
+  security:
+    oauth2:
+      client:
+        registration:
+          linkedin:
+            clientId: ENC(o7Mj/pbUbGXThsTrkkoWM2UR+6ghCjYL)
+            clientSecret: ENC(1r5KKHjfd0OLfPt0tpVixhhydkb8pymSFl073UjiIlk=)
+            scope:  r_liteprofile, r_emailaddress
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            client-name: LinkedIn
+            client-authentication-method: post
+            token-type: bearer
+          github:
+            clientId: ENC(/gR9q8AWyl7NuV7G53/UxzHynP6r9syTPUNzX3++044=)
+            clientSecret: ENC(s6dK+J/2K0lgRf9whkKgnInd1LV4pDbWFGdepmFY3E0QIOLD4eym95f9MFiHHY+adkA2y+z9X3o=)
+          google:
+            clientId: ENC(Phfab1MPuixN0MxqOTZLhwrOPGYZHzC8mOvt1Qs6U4J3n/PF6mmD440Tf6GBng+YPh6MGmRNjUQcj/dFRNeVOGRDLYLABdIW4A4GNyisnMYkurdr59/DXg==)
+            clientSecret: ENC(QpMkRg1P9L4+g/DbEVOOUqqmN9THi4DN+256y1CItHc2WD9MVhthtw==)
+        provider:
+          linkedin:
+            authorization-uri: https://www.linkedin.com/oauth/v2/authorization
+            token-uri: https://www.linkedin.com/oauth/v2/accessToken
+            user-info-uri: https://api.linkedin.com/v2/me
+            jwk-set-uri:
+            user-name-attribute: id
+file:
+#  upload-dir: /Users/callicoder/uploads
+
+jasypt:
+  encryptor:
+    password: SchemaEvolver
+custom:
+  oauth2:
+    baseUri: oauth2/authorization
+    token:
+      validitySeconds: 172800
+  rememberMe:
+    secret: ENC(7DUne+vCwboP60hX2gjzC+1tpb2U0fr5)
+  schemaEvolver:
+    version: @project.version@
+    ioDir: SchemaEvolverIO
